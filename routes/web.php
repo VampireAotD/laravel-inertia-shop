@@ -17,9 +17,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/', function () {
+Route::get('/', function () {
     return Inertia\Inertia::render('Dashboard');
 })->name('dashboard');
+
+//Admin routes
+
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['auth', 'admin']], function (){
+
+    Route::get('/', function (){
+        return \Inertia\Inertia::render('Admin/AdminDashboard');
+    })->name('dashboard');
+
+    Route::resource('categories', 'Categories\CategoryController')->names('categories');
+
+});
 
 Route::resource('categories', CategoryController::class)->names('categories');
 

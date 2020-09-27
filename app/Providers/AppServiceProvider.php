@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Category;
+use App\Observers\Admin\Categories\CategoryObserver;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +26,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // Observers
+        Category::observe(CategoryObserver::class);
+
+        // Inertia flash messages
+        Inertia::share('flash', function () {
+            return [
+                'messages' => \session()->get('messages'),
+            ];
+        });
     }
 }

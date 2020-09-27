@@ -1,15 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: VampireSteamPC
- * Date: 27.09.2020
- * Time: 12:45
- */
 
 namespace App\Repositories\Admin\Categories;
 
+use App\Repositories\Interfaces\FindItemById;
+use App\Repositories\Interfaces\FindItemBySlug;
+use App\Repositories\Interfaces\GetItemsCollectionWithPagination;
 
-interface CategoryRepositoryInterface
+interface CategoryRepositoryInterface extends FindItemById, FindItemBySlug, GetItemsCollectionWithPagination
 {
 
 }

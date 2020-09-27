@@ -5,6 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Models\Slide
+ *
+ * @property int $id
+ * @property int $product_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Image|null $image
+ * @property-read \App\Models\Product|null $product
+ * @method static \Illuminate\Database\Eloquent\Builder|Slide newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Slide newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Slide query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Slide whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Slide whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Slide whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Slide whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Slide extends Model
 {
     use HasFactory;

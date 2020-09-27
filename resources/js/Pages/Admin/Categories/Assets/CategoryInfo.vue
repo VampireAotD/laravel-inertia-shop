@@ -16,8 +16,8 @@
 </template>
 
 <script>
-    import ControlButtons from './../../../Assets/ControlButtons'
-    import DefaultCrudRoutes from './../../../Mixins/Admin/Categories/DefaultCrudRoutes'
+    import ControlButtons from '../../../../Assets/ControlButtons'
+    import DefaultCrudRoutes from '../../../../Mixins/Admin/Categories/DefaultCrudRoutes'
 
     export default {
         name: "category-info",

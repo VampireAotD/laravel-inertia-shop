@@ -1,15 +1,31 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: VampireSteamPC
- * Date: 27.09.2020
- * Time: 12:26
- */
 
 namespace App\Repositories;
 
+use App\Repositories\Interfaces\SetRepositoryModel;
+use Illuminate\Database\Eloquent\Model;
 
-class BaseRepository
+abstract class BaseRepository implements SetRepositoryModel
 {
+    /**
+     * Model that repository works with
+     *
+     * @var Model
+     */
+    private $model;
 
+    public function __construct()
+    {
+        $this->model = app($this->setRepositoryModel());
+    }
+
+    /**
+     * Return model to work with
+     *
+     * @return Model
+     */
+    protected function startConditions() : Model
+    {
+        return clone $this->model;
+    }
 }
