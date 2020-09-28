@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Traits\DiffForHumansTimestampAttributes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * App\Models\Product
@@ -42,6 +44,9 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
+    use DiffForHumansTimestampAttributes;
+
+    const DEFALUT_IMAGE = 'https://res.cloudinary.com/dwcqlqa5y/image/upload/v1601292121/sample.jpg'; // needs to be replaced in service
 
     protected $fillable = [
         'name',
@@ -49,6 +54,15 @@ class Product extends Model
         'price',
         'amount',
         'description'
+    ];
+
+    protected $appends = [
+        'created_date',
+        'updated_date',
+        'html_description',
+        'excerpt',
+        'count_amount',
+        'main_image_path'
     ];
 
     /**
@@ -79,5 +93,47 @@ class Product extends Model
     public function images()
     {
         return $this->morphMany(Image::class, 'model');
+    }
+
+    /**
+     * XSS clean product description
+     *
+     * @return \Parsedown|string
+     */
+    public function getHtmlDescriptionAttribute()
+    {
+        return parsedown($this->description, $this->description);
+    }
+
+    /**
+     * Short text from product description
+     *
+     * @return string
+     */
+    public function getExcerptAttribute()
+    {
+        return Str::limit($this->html_description, 50);
+    }
+
+    /**
+     * Return plural value for current product amount
+     *
+     * @return string
+     */
+    public function getCountAmountAttribute()
+    {
+        return Str::plural('item', $this->amount);
+    }
+
+    /**
+     * Return main image path for current product
+     *
+     * If there is no image, return default image from Cloudinary storage
+     *
+     * @return mixed|string
+     */
+    public function getMainImagePathAttribute()
+    {
+        return $this->images->where('is_main', 1)->first()->path ?? self::DEFALUT_IMAGE;
     }
 }

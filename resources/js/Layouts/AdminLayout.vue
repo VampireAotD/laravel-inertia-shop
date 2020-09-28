@@ -23,6 +23,11 @@
                                           :active="$page.currentRouteName == 'categories'">
                                 Categories
                             </jet-nav-link>
+
+                            <jet-nav-link :href="$route('admin.products.index')"
+                                          :active="$page.currentRouteName == 'products'">
+                                Products
+                            </jet-nav-link>
                         </div>
                     </div>
 
@@ -127,8 +132,18 @@
             <!-- Responsive Navigation Menu -->
             <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
                 <div class="pt-2 pb-3 space-y-1">
-                    <jet-responsive-nav-link href="/dashboard" :active="$page.currentRouteName == 'dashboard'">
+                    <jet-responsive-nav-link href="/admin" :active="$page.currentRouteName == 'dashboard'">
                         Dashboard
+                    </jet-responsive-nav-link>
+
+                    <jet-responsive-nav-link :href="$route('admin.categories.index')"
+                                  :active="$page.currentRouteName == 'categories'">
+                        Categories
+                    </jet-responsive-nav-link>
+
+                    <jet-responsive-nav-link :href="$route('admin.products.index')"
+                                  :active="$page.currentRouteName == 'admin/products'">
+                        Products
                     </jet-responsive-nav-link>
                 </div>
 

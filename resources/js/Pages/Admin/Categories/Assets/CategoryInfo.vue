@@ -6,7 +6,7 @@
                 {{ category.name }}
             </inertia-link>
         </td>
-        <td class="border px-4 py-2">{{ category.created_date}}</td>
+        <td class="border px-4 py-2">{{ category.created_date }}</td>
         <td class="border px-4 py-2">
             <control-buttons
                     :routes="routes"

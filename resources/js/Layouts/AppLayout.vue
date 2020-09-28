@@ -7,14 +7,14 @@
                     <div class="flex">
                         <!-- Logo -->
                         <div class="flex-shrink-0 flex items-center">
-                            <a href="/dashboard">
+                            <a href="/">
                                 <jet-application-mark class="block h-9 w-auto" />
                             </a>
                         </div>
 
                         <!-- Navigation Links -->
                         <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                            <jet-nav-link href="/dashboard" :active="$page.currentRouteName == 'dashboard'">
+                            <jet-nav-link href="/" :active="$page.currentRouteName == 'dashboard'">
                                 Dashboard
                             </jet-nav-link>
                         </div>
@@ -93,7 +93,10 @@
                         </div>
                     </div>
 
-                    <inertia-link v-else href="/login">Login</inertia-link>
+                    <div v-else>
+                        <a href="/login">Login</a>
+                        <a href="/register">Register</a>
+                    </div>
 
                     <!-- Hamburger -->
                     <div class="-mr-2 flex items-center sm:hidden">

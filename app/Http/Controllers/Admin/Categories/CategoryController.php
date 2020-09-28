@@ -6,11 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use App\Repositories\Admin\Categories\CategoryRepositoryInterface;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CategoryController extends Controller
 {
+    /**
+     * Main repository for this controller
+     *
+     * @var CategoryRepositoryInterface
+     */
     private $repository;
 
     public function __construct(CategoryRepositoryInterface $categoryRepository)

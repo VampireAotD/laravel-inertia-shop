@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Category;
+use App\Models\Product;
 use App\Observers\Admin\Categories\CategoryObserver;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;

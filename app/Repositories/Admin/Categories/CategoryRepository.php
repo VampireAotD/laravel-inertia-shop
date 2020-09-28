@@ -40,19 +40,6 @@ class CategoryRepository extends BaseRepository implements CategoryRepositoryInt
     }
 
     /**
-     * Return one entity by slug with its relations
-     *
-     * @param string $slug
-     * @param array $relations
-     * @return mixed
-     */
-    public function getCategoryBySlugWithRelations(string $slug, array $relations = ['products'])
-    {
-        $category = $this->findItemBySlug($slug);
-        return $category->load($relations);
-    }
-
-    /**
      * Return collection of entities
      * By default returns 10 items per page
      *
@@ -62,5 +49,18 @@ class CategoryRepository extends BaseRepository implements CategoryRepositoryInt
     public function getItemsWithPagination(int $perPage = 10)
     {
         return $this->startConditions()->latest()->paginate($perPage);
+    }
+
+    /**
+     * Return one category entity by slug with its relations
+     *
+     * @param string $slug
+     * @param array $relations
+     * @return mixed
+     */
+    public function getCategoryBySlugWithRelations(string $slug, array $relations = ['products'])
+    {
+        $category = $this->findItemBySlug($slug);
+        return $category->load($relations);
     }
 }

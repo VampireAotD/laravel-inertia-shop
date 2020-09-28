@@ -24,10 +24,10 @@
                 <ul class=" list-reset flex flex-col">
                     <li
                             class="relative -mb-px block border p-4 border-grey"
-                            v-for="(product, index) in productList"
+                            v-for="(product, index) in productsList"
                             :key="index"
                     >
-                        <inertia-link href="#">
+                        <inertia-link :href="$route('admin.products.show', {product : product.slug})">
                             {{ product.name }}
                         </inertia-link>
                     </li>
@@ -64,7 +64,7 @@
 
         data() {
             return {
-                productList: this.category.products
+                productsList: this.category.products
             }
         },
 
@@ -73,7 +73,7 @@
                 return `${this.category.name} details`
             },
             categoryProducts() {
-                return this.category.products.length > 0
+                return this.productsList.length > 0
             }
         }
     }
