@@ -4,9 +4,10 @@ namespace App\Repositories\Admin\Categories;
 
 use App\Repositories\Interfaces\FindItemById;
 use App\Repositories\Interfaces\FindItemBySlug;
+use App\Repositories\Interfaces\GetItemsCollection;
 use App\Repositories\Interfaces\GetItemsCollectionWithPagination;
 
-interface CategoryRepositoryInterface extends FindItemById, FindItemBySlug, GetItemsCollectionWithPagination
+interface CategoryRepositoryInterface extends FindItemById, FindItemBySlug, GetItemsCollection, GetItemsCollectionWithPagination
 {
     /**
      * Return one category entity by slug with its relations

@@ -75,7 +75,7 @@ class CategoryController extends Controller
      */
     public function show(string $slug)
     {
-        $category = $this->repository->getCategoryBySlugWithRelations($slug);
+        $category = $this->repository->getCategoryBySlugWithRelations($slug, ['products:name,slug']);
         return Inertia::render('Admin/Categories/Show', compact('category'));
     }
 

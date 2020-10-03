@@ -26,6 +26,8 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "@ckeditor/ckeditor5-build-classic": "^22.0.0",
+        "@ckeditor/ckeditor5-vue": "^1.0.3",
         "laravel-vue-pagination": "^2.3.1",
         "vue-izitoast": "^1.2.1",
         "vue-slick-carousel": "^1.0.6"

@@ -48,7 +48,7 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
      */
     public function getItemsWithPagination(int $perPage = 10)
     {
-        return $this->startConditions()->latest()->paginate($perPage);
+        return $this->startConditions()->with('images')->latest()->paginate($perPage);
     }
 
     /**

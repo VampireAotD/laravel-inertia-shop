@@ -12,6 +12,10 @@
         <div class="container bg-white rounded shadow mx-auto mt-2">
 
             <header class="p-4">
+                <div class="w-48 h-48 mb-5">
+                    <img :src="product.main_image_path" :alt="product.name" class="object-cover max-w-fll max-h-full">
+                </div>
+
                 <h3 class="text-lg font-bold">{{ product.name }}</h3>
                 <p class="text-sm text-gray-600">Created {{ product.created_date }}</p>
                 <p class="text-sm text-gray-600">Last updated {{ product.updated_date }}</p>
@@ -125,7 +129,8 @@
                     focusOnSelect: true,
                     infinite: true,
                     slidesToShow: 3,
-                    speed: 500
+                    speed: 500,
+                    autoplay: true
                 }
             }
         },

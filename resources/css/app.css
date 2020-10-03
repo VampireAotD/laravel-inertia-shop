@@ -21,3 +21,7 @@
     </svg>) !important;
     color: black !important;
 }
+
+.ck-editor__editable{
+    height: 250px!important;
+}

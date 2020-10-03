@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read mixed $updated_date
  */
 class Category extends Model
 {

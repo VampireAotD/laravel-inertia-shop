@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Images\ImageController;
 use App\Http\Controllers\Categories\CategoryController;
 use App\Http\Controllers\Orders\OrderController;
 use App\Http\Controllers\Products\ProductController;
@@ -32,6 +33,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
     Route::resource('categories', 'Categories\CategoryController')->names('categories');
 
     Route::resource('products', 'Products\ProductController')->names('products');
+
+    Route::get('/images/{image}', [ImageController::class, 'updateImage'])->name('images.update-main-image');
 
 });
 

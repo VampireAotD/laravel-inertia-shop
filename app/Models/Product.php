@@ -40,13 +40,19 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereViews($value)
  * @mixin \Eloquent
+ * @property-read string $count_amount
+ * @property-read mixed $created_date
+ * @property-read string $excerpt
+ * @property-read \Parsedown|string $html_description
+ * @property-read mixed|string $main_image_path
+ * @property-read mixed $updated_date
  */
 class Product extends Model
 {
     use HasFactory;
     use DiffForHumansTimestampAttributes;
 
-    const DEFALUT_IMAGE = 'https://res.cloudinary.com/dwcqlqa5y/image/upload/v1601292121/sample.jpg'; // needs to be replaced in service
+    const PRODUCTS_FOLDER = 'products';
 
     protected $fillable = [
         'name',
@@ -72,7 +78,7 @@ class Product extends Model
      */
     public function categories()
     {
-        return $this->belongsToMany(Category::class, ProductCategory::class);
+        return $this->belongsToMany(Category::class, ProductCategory::class)->withTimestamps();
     }
 
     /**
@@ -92,7 +98,7 @@ class Product extends Model
      */
     public function images()
     {
-        return $this->morphMany(Image::class, 'model');
+        return $this->morphMany(Image::class, 'model')->orderByDesc('is_main');
     }
 
     /**
@@ -134,6 +140,6 @@ class Product extends Model
      */
     public function getMainImagePathAttribute()
     {
-        return $this->images->where('is_main', 1)->first()->path ?? self::DEFALUT_IMAGE;
+        return $this->images->where('is_main', 1)->first()->path ?? Image::DEFAULT_PRODUCT_IMAGE;
     }
 }

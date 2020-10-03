@@ -56,7 +56,7 @@
             description(value) {
                 return value === '' ? 'No description...' : value
             }
-        }
+        },
     }
 </script>
 

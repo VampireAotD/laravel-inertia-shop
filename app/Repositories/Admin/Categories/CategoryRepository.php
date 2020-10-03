@@ -41,6 +41,16 @@ class CategoryRepository extends BaseRepository implements CategoryRepositoryInt
 
     /**
      * Return collection of entities
+     *
+     * @return mixed
+     */
+    public function getItemsCollection()
+    {
+        return $this->startConditions()->all();
+    }
+
+    /**
+     * Return collection of entities
      * By default returns 10 items per page
      *
      * @param int $perPage

@@ -6,6 +6,7 @@ import { InertiaApp } from '@inertiajs/inertia-vue';
 import { InertiaForm } from 'laravel-jetstream';
 import PortalVue from 'portal-vue';
 import VueIziToast from 'vue-izitoast';
+import CKEditor from '@ckeditor/ckeditor5-vue'
 
 import 'izitoast/dist/css/iziToast.min.css';
 import 'vue-slick-carousel/dist/vue-slick-carousel.css'
@@ -15,6 +16,7 @@ Vue.use(InertiaApp);
 Vue.use(InertiaForm);
 Vue.use(PortalVue);
 Vue.use(VueIziToast);
+Vue.use(CKEditor);
 
 const app = document.getElementById('app');
 Vue.prototype.$route = (...args) => route(...args).url();

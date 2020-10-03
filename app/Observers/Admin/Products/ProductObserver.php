@@ -1,0 +1,98 @@
+<?php
+
+namespace App\Observers\Admin\Products;
+
+use App\Models\Image;
+use App\Models\Product;
+use App\Observers\Traits\SetSlug;
+use App\Services\Admin\Interfaces\Images\ImageServiceInterface;
+
+class ProductObserver
+{
+    use SetSlug;
+
+    private $imageService;
+
+    public function __construct(ImageServiceInterface $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
+    /**
+     * Handle the product "creating" event.
+     *
+     * @param Product $product
+     */
+    public function creating(Product $product)
+    {
+        $this->setSlug($product);
+    }
+
+    /**
+     * Handle the product "created" event.
+     *
+     * @param  \App\Models\Product $product
+     * @return void
+     */
+    public function created(Product $product)
+    {
+        //
+    }
+
+    /**
+     * Handle the product "creating" event.
+     *
+     * @param Product $product
+     */
+    public function updating(Product $product)
+    {
+
+    }
+
+    /**
+     * Handle the product "updated" event.
+     *
+     * @param  \App\Models\Product $product
+     * @return void
+     */
+    public function updated(Product $product)
+    {
+
+    }
+
+    /**
+     * Handle the product "deleted" event.
+     *
+     * @param  \App\Models\Product $product
+     * @return void
+     * @throws \Cloudinary\Api\Exception\ApiError
+     */
+    public function deleted(Product $product)
+    {
+        if ($this->imageService->deleteImagesWithFolderFromCDN("products/$product->slug", Product::class, $product)) {
+            $this->imageService->deleteImagesFromDB($product, Product::class);
+        }
+    }
+
+    /**
+     * Handle the product "restored" event.
+     *
+     * @param  \App\Models\Product $product
+     * @return void
+     */
+    public function restored(Product $product)
+    {
+        //
+    }
+
+    /**
+     * Handle the product "force deleted" event.
+     *
+     * @param  \App\Models\Product $product
+     * @return void
+     */
+    public function forceDeleted(Product $product)
+    {
+        //
+    }
+}
