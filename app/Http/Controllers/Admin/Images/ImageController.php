@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin\Images;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\Admin\API\Images\ImageRepositoryInterface;
+use App\Repositories\Admin\Images\ImageRepositoryInterface;
 use App\Services\Admin\Interfaces\Images\ImageServiceInterface;
 
 class ImageController extends Controller

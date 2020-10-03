@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Admin\API\Images;
+namespace App\Repositories\Admin\Images;
 
 use App\Repositories\Interfaces\FindItemById;
 

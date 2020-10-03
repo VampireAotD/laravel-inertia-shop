@@ -2,7 +2,6 @@
 
 namespace App\Observers\Admin\Products;
 
-use App\Models\Image;
 use App\Models\Product;
 use App\Observers\Traits\SetSlug;
 use App\Services\Admin\Interfaces\Images\ImageServiceInterface;
@@ -65,12 +64,11 @@ class ProductObserver
      *
      * @param  \App\Models\Product $product
      * @return void
-     * @throws \Cloudinary\Api\Exception\ApiError
      */
     public function deleted(Product $product)
     {
         if ($this->imageService->deleteImagesWithFolderFromCDN("products/$product->slug", Product::class, $product)) {
-            $this->imageService->deleteImagesFromDB($product, Product::class);
+            $this->imageService->deleteImagesFromDB($product);
         }
     }
 

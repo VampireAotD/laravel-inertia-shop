@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Repositories\Admin\API\Images\ImageRepository;
-use App\Repositories\Admin\API\Images\ImageRepositoryInterface;
+use App\Repositories\Admin\Images\ImageRepository;
+use App\Repositories\Admin\Images\ImageRepositoryInterface;
 use App\Repositories\Admin\Categories\CategoryRepository;
 use App\Repositories\Admin\Categories\CategoryRepositoryInterface;
 use App\Repositories\Admin\Products\ProductRepository;
