@@ -30,11 +30,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
         return \Inertia\Inertia::render('Admin/AdminDashboard');
     })->name('dashboard');
 
+    Route::get('categories/search', 'Categories\CategoryController@search')->name('categories.search');
+
     Route::resource('categories', 'Categories\CategoryController')->names('categories');
 
     Route::resource('products', 'Products\ProductController')->names('products');
 
     Route::get('/images/{image}', [ImageController::class, 'updateImage'])->name('images.update-main-image');
+
+    Route::delete('/images/{image}', [ImageController::class, 'destroyImage'])->name('images.destroy-image');
 
 });
 

@@ -29,7 +29,7 @@ class ProductRequest extends FormRequest
             'price' => 'required|numeric|min:1',
             'amount' => 'required|numeric|min:0',
             'description' => 'nullable|max:1000',
-            'images' => 'array',
+            'images' => 'array|max:8',
             'images.*' => 'image|mimes:jpeg,jpg,png,gif|max:10000',
             'categories' => 'array',
             'categories.*' => 'numeric|exists:categories,id'

@@ -45,7 +45,7 @@ class ProductObserver
      */
     public function updating(Product $product)
     {
-
+        $this->setSlug($product);
     }
 
     /**
@@ -67,7 +67,7 @@ class ProductObserver
      */
     public function deleted(Product $product)
     {
-        if ($this->imageService->deleteImagesWithFolderFromCDN("products/$product->slug", Product::class, $product)) {
+        if ($this->imageService->deleteImagesWithFolderFromCDN($product, "products/$product->slug",Product::class)) {
             $this->imageService->deleteImagesFromDB($product);
         }
     }

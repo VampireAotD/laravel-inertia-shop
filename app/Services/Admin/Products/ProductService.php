@@ -56,12 +56,21 @@ class ProductService
                 }
             }
         } catch (\Throwable $e) {
-            dd($e->getMessage());
+            dd($e->getFile(), $e->getMessage(), $e->getLine());
         }
 
         return false;
     }
 
+    /**
+     * Updates a Product instance
+     *
+     * Return true and commits the transaction if it successfully updated
+     *
+     * @param UpdateProductRequest $request
+     * @param Product $product
+     * @return bool
+     */
     public function update(UpdateProductRequest $request, Product $product)
     {
         try {
@@ -69,7 +78,7 @@ class ProductService
             if ($product->fill($request->input())->save()) {
                 if ($product->categories()->sync($request->input('categories'))) {
                     foreach ($request->images as $key => $image) {
-                        if($image instanceof UploadedFile){
+                        if ($image instanceof UploadedFile) {
                             $product->images()->save(
                                 $this->imageService->createImage(
                                     $product,

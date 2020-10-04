@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use App\Repositories\Admin\Categories\CategoryRepositoryInterface;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CategoryController extends Controller
@@ -31,6 +32,20 @@ class CategoryController extends Controller
     {
         $categories = $this->repository->getItemsWithPagination();
         return Inertia::render('Admin/Categories/Index', compact('categories'));
+    }
+
+    /**
+     * Display a listing of resources with pagination and filtered by request
+     *
+     * @param Request $request
+     * @return \Inertia\Response
+     */
+    public function search(Request $request)
+    {
+        $categories = $this->repository->searchWithPagination($request);
+        $perPage = (int)$request->input('perPage');
+
+        return Inertia::render('Admin/Categories/Index', compact('categories', 'perPage'));
     }
 
     /**
@@ -105,7 +120,7 @@ class CategoryController extends Controller
          */
         $category = $this->repository->findItemBySlug($slug);
 
-        if($category->update($request->input())){
+        if ($category->update($request->input())) {
             return redirect()
                 ->route('admin.categories.index')
                 ->with('messages', [

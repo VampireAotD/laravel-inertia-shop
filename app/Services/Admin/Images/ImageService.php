@@ -3,6 +3,9 @@
 namespace App\Services\Admin\Images;
 
 use App\Models\Image;
+use App\Models\Product;
+use App\Models\Slide;
+use App\Repositories\Admin\Products\ProductRepositoryInterface;
 use App\Services\Admin\Interfaces\Images\ImageServiceInterface;
 use Cloudinary\Api\Admin\AdminApi;
 use Cloudinary\Api\Upload\UploadApi;
@@ -12,6 +15,13 @@ use Illuminate\Support\Str;
 
 class ImageService implements ImageServiceInterface
 {
+    private $api;
+
+    public function __construct(AdminApi $adminApi)
+    {
+        $this->api = $adminApi;
+    }
+
     /**
      * Creates an Image instance
      *
@@ -25,14 +35,14 @@ class ImageService implements ImageServiceInterface
      *
      * Variable $image is instance of UploadedFile class, but the method storeOnCloudinary() came from CloudinaryServiceProvider
      *
-     * @param Model $model
+     * @param Product|Slide $model
      * @param string $model_type
      * @param int $number
      * @param string $folder
      * @param UploadedFile $image
      * @return Image
      */
-    public function createImage(Model $model, string $model_type, int $number = 0, string $folder, UploadedFile $image): Image
+    public function createImage($model, string $model_type, int $number = 0, string $folder, UploadedFile $image): Image
     {
         $storage_folder = $this->makeStorageFolder($folder, $model->slug);
         $alias = $this->makeImageAlias();
@@ -52,46 +62,60 @@ class ImageService implements ImageServiceInterface
     /**
      * Removes entry/ies from database
      *
-     * @param Model $model
+     * @param Product|Slide $model
      * @return bool
      */
-    public function deleteImagesFromDB(Model $model): bool
+    public function deleteImagesFromDB($model): bool
     {
         return $model->images()->delete();
     }
 
     /**
-     * Deletes images and entity folder from Cloudinary storage
+     * Deletes images and entity folder from CDN storage
      *
+     * @param Product|Slide $model
      * @param string $folder
      * @param string $model_type
-     * @param Model $model
      * @return bool
      * @throws \Cloudinary\Api\Exception\ApiError
      */
-    public function deleteImagesWithFolderFromCDN(string $folder, string $model_type, Model $model): bool
+    public function deleteImagesWithFolderFromCDN($model, string $folder, string $model_type): bool
     {
         $images = collect(Image::modelImages($model_type, $model->id)->get())->pluck('alias')->toArray();
 
-        $api = new AdminApi();
-        if ($api->deleteResources($images) && $api->deleteFolder($folder)) {
-            return true;
+        if ($images) {
+            if ($this->api->deleteResources($images) && $this->api->deleteFolder($folder)) {
+                return true;
+            }
         }
 
         return false;
     }
 
+    /**
+     * Updates main image by entity type and entity id
+     *
+     * @param Image $image
+     * @return bool
+     */
     public function updateMainImage(Image $image)
     {
-        Image::modelImages($image->model_type, $image->model_id)->get()->map(function ($image){
-            $image->update([
-                'is_main' => 0
-            ]);
-        });
+        Image::modelImages($image->model_type, $image->model_id)->update(['is_main' => false]);
 
         return $image->update([
-           'is_main' => 1
+            'is_main' => true
         ]);
+    }
+
+    /**
+     * @param Image $image
+     * @return bool
+     * @throws \Cloudinary\Api\Exception\ApiError
+     * @throws \Exception
+     */
+    public function deleteImage(Image $image): bool
+    {
+        return $this->api->deleteResources($image->alias) && $image->delete();
     }
 
     /**

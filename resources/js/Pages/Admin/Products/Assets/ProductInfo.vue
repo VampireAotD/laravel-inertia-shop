@@ -1,8 +1,8 @@
 <template>
     <tr :class="numberInList % 2 ? null : 'bg-gray-100'">
         <td class="border px-4 py-2">{{ numberInList }}</td>
-        <td class="border px-4 py-2 w-32 max-w-sm">
-            <img :src="product.main_image_path" :alt="product.name" class="object-contain">
+        <td class="border px-4 py-2 w-32 h-16 max-w-sm">
+            <img :src="product.main_image_path" :alt="product.name" class="object-cover">
         </td>
         <td class="border px-4 py-2">
             <inertia-link :href="routes.view">

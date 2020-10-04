@@ -2,12 +2,11 @@
     <admin-layout header-title="Create new product">
         <loader v-if="form.processing"/>
 
-        <div class="py-5">
-            <inertia-link :href="$route('admin.products.index')"
-                          class="bg-transparent hover:bg-blue-500 text-white-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                Products list
-            </inertia-link>
-        </div>
+        <inner-header
+                route="admin.products.index"
+                title="Products list"
+                classes="bg-transparent hover:bg-blue-500 text-white-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+        />
 
         <hr>
 
@@ -23,6 +22,7 @@
 
 <script>
     import AdminLayout from './../../../Layouts/AdminLayout'
+    import InnerHeader from './../Components/InnerHeader'
     import Loader from './../../../Assets/Loader'
     import ProductForm from './Assets/ProductForm'
 
@@ -44,6 +44,7 @@
 
         components: {
             AdminLayout,
+            InnerHeader,
             Loader,
             ProductForm
         },

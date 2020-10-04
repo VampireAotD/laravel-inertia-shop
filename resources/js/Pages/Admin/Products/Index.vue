@@ -2,12 +2,11 @@
     <admin-layout header-title="Products">
         <flash/>
 
-        <div class="py-5">
-            <inertia-link :href="$route('admin.products.create')"
-                          class="bg-transparent hover:bg-green-500 text-white-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">
-                Create product
-            </inertia-link>
-        </div>
+        <inner-header
+                route="admin.products.create"
+                title="Create product"
+                classes="bg-transparent hover:bg-green-500 text-white-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded mr-3"
+        />
 
         <hr>
 
@@ -53,6 +52,7 @@
 
 <script>
     import AdminLayout from './../../../Layouts/AdminLayout'
+    import InnerHeader from './../Components/InnerHeader'
     import Flash from './../../../Assets/Flash'
     import ProductInfo from './Assets/ProductInfo'
 
@@ -68,6 +68,7 @@
 
         components: {
             AdminLayout,
+            InnerHeader,
             ProductInfo,
             Flash
         },

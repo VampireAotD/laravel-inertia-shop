@@ -2,25 +2,26 @@
 
 namespace App\Services\Admin\Interfaces\Images;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Product;
+use App\Models\Slide;
 
 interface ImageServiceInterface
 {
     /**
      * Removes entry/ies from database by its relation
      *
-     * @param Model $model
+     * @param Product|Slide $model
      * @return bool
      */
-    public function deleteImagesFromDB(Model $model) : bool;
+    public function deleteImagesFromDB($model): bool;
 
     /**
      * Deletes images and entity folder from CDN storage
      *
+     * @param Product|Slide $model
      * @param string $folder
      * @param string $model_type
-     * @param Model $model
      * @return bool
      */
-    public function deleteImagesWithFolderFromCDN(string $folder, string $model_type, Model $model) : bool;
+    public function deleteImagesWithFolderFromCDN($model, string $folder, string $model_type): bool;
 }

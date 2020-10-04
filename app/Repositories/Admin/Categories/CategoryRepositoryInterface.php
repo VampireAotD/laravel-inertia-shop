@@ -6,8 +6,9 @@ use App\Repositories\Interfaces\FindItemById;
 use App\Repositories\Interfaces\FindItemBySlug;
 use App\Repositories\Interfaces\GetItemsCollection;
 use App\Repositories\Interfaces\GetItemsCollectionWithPagination;
+use App\Repositories\Interfaces\SearchWithPagination;
 
-interface CategoryRepositoryInterface extends FindItemById, FindItemBySlug, GetItemsCollection, GetItemsCollectionWithPagination
+interface CategoryRepositoryInterface extends FindItemById, FindItemBySlug, GetItemsCollection, GetItemsCollectionWithPagination, SearchWithPagination
 {
     /**
      * Return one category entity by slug with its relations

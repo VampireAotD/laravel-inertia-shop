@@ -33,7 +33,7 @@ class ImageController extends Controller
         }
 
         return redirect()
-            ->route('admin.product.index')
+            ->route('admin.products.index')
             ->withErrors([
                 'error' => 'Error while updating main image'
             ]);
@@ -45,8 +45,18 @@ class ImageController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroyImage($id)
     {
-        //TODO: delete image
+        $image = $this->repository->findItemById($id);
+
+        if ($this->service->deleteImage($image)) {
+            return back();
+        }
+
+        return redirect()
+            ->route('admin.products.index')
+            ->withErrors([
+                'error' => 'Error while deleting image'
+            ]);
     }
 }

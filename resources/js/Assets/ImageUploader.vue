@@ -12,7 +12,8 @@
                     <div class="inline-flex items-center justify-center image-controls" v-if="image.is_main !== 1">
                         <inertia-link :href="$route('admin.images.update-main-image', {image})"
                                       title="Set this image as main image"
-                                      class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded-l">
+                                      class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded-l"
+                                      preserve-scroll>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                  class="fill-current w-5 h-5">
                                 <path fill-rule="evenodd"
@@ -21,14 +22,17 @@
                             </svg>
                         </inertia-link>
 
-                        <inertia-link href="#" title="Delete this image"
-                                      class="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 rounded-r">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="fill-current w-5 h-5">
-                                <path fill-rule="evenodd"
-                                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                      clip-rule="evenodd"/>
-                            </svg>
-                        </inertia-link>
+                        <form @submit.prevent="deleteImage(image)">
+                            <button type="submit" title="Delete this image"
+                                    class="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 rounded-r">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                     class="fill-current w-5 h-5">
+                                    <path fill-rule="evenodd"
+                                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                          clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+                        </form>
                     </div>
                 </div>
 
@@ -50,7 +54,8 @@
                 <svg class="w-8 h-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                     <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z"/>
                 </svg>
-                <input type='file' class="hidden" name="images[]" accept="image/*" @input="addToFilesArray" multiple/>
+                <input type='file' class="hidden" name="images[]" accept="image/*" @input="addToFilesArray"
+                       :multiple="multiple"/>
             </label>
             <button class="w-64 p-2 bg-white text-red rounded-lg shadow-lg tracking-wide uppercase border border-red-300 cursor-pointer hover:bg-red-400 hover:text-white"
                     @click.prevent="resetImagesArray" v-if="issetImages">
@@ -68,13 +73,26 @@
         props: {
             images: {
                 type: Array
+            },
+            multiple: {
+                type: Boolean
             }
         },
 
         methods: {
             addToFilesArray(e) {
-                if (this.validateImage(e.target.files[0])) {
-                    this.addImage(e.target.files[0])
+                let files = e.target.files
+
+                if (this.multiple) {
+                    [...files].map(image => {
+                        if (this.validateImage(image)) {
+                            this.addImage(image)
+                        }
+                    })
+                } else {
+                    if (this.validateImage(files[0])) {
+                        this.addImage(files[0])
+                    }
                 }
             },
             validateImage(image) {
@@ -89,6 +107,9 @@
             },
             removeImage(id) {
                 this.images.splice(id, 1)
+            },
+            deleteImage(image) {
+                this.$inertia.delete(this.$route('admin.images.destroy-image', {image}))
             }
         },
 

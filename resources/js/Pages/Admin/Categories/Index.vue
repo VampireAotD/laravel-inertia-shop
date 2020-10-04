@@ -2,12 +2,17 @@
     <admin-layout header-title="Categories">
         <flash/>
 
-        <div class="py-5">
-            <inertia-link :href="$route('admin.categories.create')"
-                          class="bg-transparent hover:bg-green-500 text-white-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">
-                Create category
-            </inertia-link>
-        </div>
+        <inner-header
+                mainRoute="admin.categories.create"
+                title="Create category"
+                classes="bg-transparent hover:bg-green-500 text-white-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded mr-3"
+        >
+            <search-form
+                    :search-form="searchForm"
+                    :per-page="perPage"
+                    reset-link="admin.categories.index"
+            />
+        </inner-header>
 
         <hr>
 
@@ -23,12 +28,12 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <category-info
-                                v-for="(category, index) in categoriesList"
-                                :category="category"
-                                :key="index"
-                                :number="index"
-                        />
+                    <category-info
+                            v-for="(category, index) in categoriesList"
+                            :category="category"
+                            :key="index"
+                            :number="index"
+                    />
                     </tbody>
                 </table>
             </div>
@@ -49,6 +54,8 @@
 
 <script>
     import AdminLayout from './../../../Layouts/AdminLayout'
+    import InnerHeader from './../Components/InnerHeader'
+    import SearchForm from './../Components/SearchForm'
     import Flash from './../../../Assets/Flash'
     import CategoryInfo from './Assets/CategoryInfo'
 
@@ -59,18 +66,27 @@
             categories: {
                 type: Object,
                 required: true
+            },
+            perPage: {
+                type: Number
             }
         },
 
         components: {
             AdminLayout,
+            InnerHeader,
+            SearchForm,
             CategoryInfo,
             Flash
         },
 
         data() {
             return {
-                categoriesList: this.categories.data
+                categoriesList: this.categories.data,
+                searchForm: {
+                    name: "",
+                    perPage: 10
+                }
             }
         },
 

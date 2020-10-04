@@ -1,11 +1,13 @@
 <template>
     <admin-layout :header-title="title">
-        <div class="py-5">
-            <inertia-link :href="$route('admin.categories.index')"
-                          class="bg-transparent hover:bg-blue-500 text-white-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                Categories list
-            </inertia-link>
-        </div>
+
+        <loader v-if="form.processing"/>
+
+        <inner-header
+                route="admin.categories.index"
+                title="Categories list"
+                classes="bg-transparent hover:bg-blue-500 text-white-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+        />
 
         <hr>
 
@@ -20,7 +22,9 @@
 
 <script>
     import AdminLayout from './../../../Layouts/AdminLayout'
+    import InnerHeader from './../Components/InnerHeader'
     import CategoryForm from './Assets/CategoryForm'
+    import Loader from './../../../Assets/Loader'
 
     export default {
         name: "create",
@@ -34,7 +38,9 @@
 
         components: {
             AdminLayout,
-            CategoryForm
+            InnerHeader,
+            CategoryForm,
+            Loader
         },
 
         data() {

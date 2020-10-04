@@ -47,11 +47,15 @@
                 <p class="text-red-500 text-xs" v-if="form.error('description')">{{ form.error('description') }}</p>
             </div>
 
-            <image-uploader
-                    :images="form.images"
-                    @file-uploaded="addFile"
-                    @clear-images-from-uploaded="clearImagesFromUploaded"
-            />
+            <div class="w-full">
+                <image-uploader
+                        :images="form.images"
+                        :multiple="true"
+                        @file-uploaded="addFile"
+                        @clear-images-from-uploaded="clearImagesFromUploaded"
+                />
+                <p class="text-red-500 text-xs" v-if="form.error('images')">{{ form.error('images') }}</p>
+            </div>
 
             <div class="w-full px-3 mt-3">
                 <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
@@ -87,7 +91,7 @@
 
         props: ['form', 'product', 'mode'],
 
-        components : {
+        components: {
             ImageUploader
         },
 
@@ -103,7 +107,9 @@
         methods: {
             sendRequest() {
                 if (this.mode === 'edit') {
-                    this.form.post(this.$route('admin.products.update', {product: this.product.slug}))
+                    this.form.post(this.$route('admin.products.update', {product: this.product.slug}), {
+                        preserveScroll: true
+                    })
                 } else {
                     this.form.post(this.$route('admin.products.store'))
                 }
@@ -113,10 +119,10 @@
                 e.target.checked ? this.form.categories.push(value) : this.form.categories.splice(this.form.categories.indexOf(value), 1)
                 this.form.categories = [...new Set(this.form.categories)]
             },
-            addFile(files){
+            addFile(files) {
                 this.$emit('file-uploaded', files)
             },
-            clearImagesFromUploaded(){
+            clearImagesFromUploaded() {
                 this.$emit('clear-images-from-uploaded')
             }
         }
