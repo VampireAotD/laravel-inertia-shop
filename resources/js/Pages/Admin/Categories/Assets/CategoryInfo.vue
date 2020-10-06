@@ -10,6 +10,7 @@
         <td class="border px-4 py-2">
             <control-buttons
                     :routes="routes"
+                    :permissions="permissions"
             />
         </td>
     </tr>
@@ -27,6 +28,9 @@
                 type: Object,
                 required: true
             },
+            permissions: {
+                type: Object
+            },
             number: {
                 type: Number
             }
@@ -36,7 +40,7 @@
             ControlButtons
         },
 
-        mixins : [
+        mixins: [
             DefaultCrudRoutes
         ],
 

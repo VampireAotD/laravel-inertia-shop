@@ -4,6 +4,7 @@ namespace App\Repositories\Admin\Products;
 
 use App\Models\Product;
 use App\Repositories\BaseRepository;
+use Illuminate\Http\Request;
 
 class ProductRepository extends BaseRepository implements ProductRepositoryInterface
 {
@@ -41,6 +42,16 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
 
     /**
      * Return collection of entities
+     *
+     * @return mixed
+     */
+    public function getItemsCollection()
+    {
+        return $this->startConditions()->all();
+    }
+
+    /**
+     * Return collection of entities
      * By default returns 10 items per page
      *
      * @param int $perPage
@@ -49,6 +60,30 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
     public function getItemsWithPagination(int $perPage = 10)
     {
         return $this->startConditions()->with('images')->latest()->paginate($perPage);
+    }
+
+    public function searchWithPagination(Request $request)
+    {
+        $perPage = 10;
+
+        if ($perPageRequest = $request->input('perPage')) {
+            $perPage = $perPageRequest;
+        }
+
+        $query = $this->startConditions();
+
+        return $query
+            ->when($name = $request->input('name'), function ($q) use ($name) {
+                $q->where('name', 'like', "%$name%");
+            })
+            ->when($priceArray = $request->input('price'), function ($q) use ($priceArray) {
+                $q->whereBetween('price', $priceArray);
+            })
+            ->when($amountArray = $request->input('amount'), function ($q) use ($amountArray) {
+                $q->whereBetween('amount', $amountArray);
+            })
+            ->latest()
+            ->paginate($perPage);
     }
 
     /**
@@ -64,5 +99,25 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
     {
         $product = $this->findItemBySlug($slug);
         return $product->load($relations);
+    }
+
+    /**
+     * Find the maximum price among all the products
+     * @return mixed
+     */
+    public function findMaximumPrice(): int
+    {
+        $products = $this->getItemsCollection();
+        return $products->max('price');
+    }
+
+    /**
+     * Find the maximum amount among all the products
+     * @return mixed
+     */
+    public function findMaximumAmount(): int
+    {
+        $products = $this->getItemsCollection();
+        return $products->max('amount');
     }
 }

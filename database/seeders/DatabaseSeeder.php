@@ -19,11 +19,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         User::factory(10)->create();
-         Category::factory(15)->create();
-         Product::factory(100)->create();
-         Slide::factory(8)->create();
-         ProductCategory::factory(250)->create();
-         Order::factory(150)->create();
+        $this->call(RolesAndPermissionsSeeder::class);
+
+        User::factory(10)->create()->each(function ($user) {
+            /**
+             * @var $user User
+             */
+            if ($user->id === 1) {
+                $user->assignRole('admin');
+            }
+        });
+        Category::factory(15)->create();
+        Product::factory(100)->create();
+        Slide::factory(8)->create();
+        ProductCategory::factory(250)->create();
+        Order::factory(150)->create();
     }
 }

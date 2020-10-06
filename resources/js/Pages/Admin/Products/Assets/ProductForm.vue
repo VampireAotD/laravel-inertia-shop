@@ -47,10 +47,12 @@
                 <p class="text-red-500 text-xs" v-if="form.error('description')">{{ form.error('description') }}</p>
             </div>
 
+            <!--Image uploader-->
             <div class="w-full">
                 <image-uploader
                         :images="form.images"
                         :multiple="true"
+                        :permissions="permissions"
                         @file-uploaded="addFile"
                         @clear-images-from-uploaded="clearImagesFromUploaded"
                 />
@@ -89,7 +91,7 @@
     export default {
         name: "product-form",
 
-        props: ['form', 'product', 'mode'],
+        props: ['form', 'product', 'mode', 'permissions'],
 
         components: {
             ImageUploader
@@ -114,14 +116,17 @@
                     this.form.post(this.$route('admin.products.store'))
                 }
             },
+
             syncWithCategories(e) {
                 let value = +e.target.value
                 e.target.checked ? this.form.categories.push(value) : this.form.categories.splice(this.form.categories.indexOf(value), 1)
                 this.form.categories = [...new Set(this.form.categories)]
             },
+
             addFile(files) {
                 this.$emit('file-uploaded', files)
             },
+
             clearImagesFromUploaded() {
                 this.$emit('clear-images-from-uploaded')
             }

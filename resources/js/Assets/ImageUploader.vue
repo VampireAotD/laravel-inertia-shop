@@ -2,6 +2,9 @@
     <div class="file-uploader px-3 my-5 w-full">
 
         <div class="images-preview flex justify-center flex-wrap mb-5">
+
+            <!--Images display-->
+
             <div class="w-1/4 h-48 m-1 lg:shadow-xl" v-for="(image, index) in images">
                 <div class="image w-full h-full max-w-full max-h-full relative"
                      v-if="typeof image === 'object' && image.model_type">
@@ -9,10 +12,12 @@
                          class="min-w-0 min-h-0 max-w-full w-full h-full object-cover cursor-pointer">
 
                     <!--Image controls-->
-                    <div class="inline-flex items-center justify-center image-controls" v-if="image.is_main !== 1">
+
+                    <div class="inline-flex items-center justify-center image-controls">
                         <inertia-link :href="$route('admin.images.update-main-image', {image})"
                                       title="Set this image as main image"
                                       class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded-l"
+                                      v-if="image.is_main !== 1 && $can('update product main image')"
                                       preserve-scroll>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                  class="fill-current w-5 h-5">
@@ -22,7 +27,7 @@
                             </svg>
                         </inertia-link>
 
-                        <form @submit.prevent="deleteImage(image)">
+                        <form @submit.prevent="deleteImage(image)" v-if="$can('remove product images')">
                             <button type="submit" title="Delete this image"
                                     class="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 rounded-r">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
@@ -36,7 +41,10 @@
                     </div>
                 </div>
 
+                <!--Image controls end-->
+
                 <!--Recent uploaded images-->
+
                 <div class="w-full h-full max-w-full max-h-full relative" v-else>
                     <img :src='image | createImageUrl'
                          class="min-w-0 min-h-0 max-w-full w-full h-full object-cover cursor-pointer">
@@ -45,7 +53,9 @@
                         x
                     </button>
                 </div>
+
             </div>
+
         </div>
 
         <!--Upload input-->
@@ -76,6 +86,9 @@
             },
             multiple: {
                 type: Boolean
+            },
+            permissions: {
+                type: Object
             }
         },
 
@@ -95,21 +108,28 @@
                     }
                 }
             },
+
             validateImage(image) {
                 return image && image.type.match('image/*');
             },
+
             addImage(image) {
                 this.images.push(image)
                 this.$emit('file-uploaded', this.images)
             },
+
             resetImagesArray() {
                 this.$emit('clear-images-from-uploaded')
             },
+
             removeImage(id) {
                 this.images.splice(id, 1)
             },
+
             deleteImage(image) {
-                this.$inertia.delete(this.$route('admin.images.destroy-image', {image}))
+                this.$inertia.delete(this.$route('admin.images.destroy-image', {image}), {
+                    preserveScroll: true
+                })
             }
         },
 

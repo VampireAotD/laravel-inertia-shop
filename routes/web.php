@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\Images\ImageController;
+use App\Http\Controllers\Admin\Categories\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\Products\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\Orders\OrderController as AdminOrderController;
 use App\Http\Controllers\Categories\CategoryController;
 use App\Http\Controllers\Orders\OrderController;
 use App\Http\Controllers\Products\ProductController;
@@ -18,29 +21,39 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return Inertia\Inertia::render('Dashboard');
-})->name('dashboard');
+// Admin routes
 
-//Admin routes
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanctum', 'authority']], function () {
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['auth:sanctum', 'admin']], function (){
-
-    Route::get('/', function (){
+    // Dashboard
+    Route::get('/', function () {
         return \Inertia\Inertia::render('Admin/AdminDashboard');
     })->name('dashboard');
 
-    Route::get('categories/search', 'Categories\CategoryController@search')->name('categories.search');
+    // Categories
+    Route::get('categories/search', [AdminCategoryController::class, 'search'])->name('categories.search');
 
-    Route::resource('categories', 'Categories\CategoryController')->names('categories');
+    Route::resource('categories', AdminCategoryController::class)->names('categories');
 
-    Route::resource('products', 'Products\ProductController')->names('products');
+    // Products
+    Route::get('products/search', [AdminProductController::class, 'search'])->name('products.search');
 
+    Route::resource('products', AdminProductController::class)->names('products');
+
+    // Images
     Route::get('/images/{image}', [ImageController::class, 'updateImage'])->name('images.update-main-image');
 
     Route::delete('/images/{image}', [ImageController::class, 'destroyImage'])->name('images.destroy-image');
 
+    // Orders
+    Route::resource('orders', AdminOrderController::class)->names('orders');
 });
+
+// Frontend routes
+
+Route::get('/', function () {
+    return Inertia\Inertia::render('Dashboard');
+})->name('dashboard');
 
 Route::resource('categories', CategoryController::class)->names('categories');
 

@@ -1,6 +1,8 @@
 <template>
     <admin-layout header-title="Create new product">
-        <loader v-if="form.processing"/>
+        <loader
+                v-if="form.processing"
+        />
 
         <inner-header
                 route="admin.products.index"

@@ -16,6 +16,7 @@
         <td class="border px-4 py-2">
             <control-buttons
                     :routes="routes"
+                    :permissions="permissions"
             />
         </td>
     </tr>
@@ -30,6 +31,10 @@
 
         props: {
             product: {
+                type: Object,
+                required: true
+            },
+            permissions: {
                 type: Object,
                 required: true
             },

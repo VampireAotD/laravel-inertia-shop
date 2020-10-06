@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Repositories\Admin\Categories\CategoryRepositoryInterface;
 use App\Repositories\Admin\Products\ProductRepositoryInterface;
 use App\Services\Admin\Products\ProductService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -47,7 +48,42 @@ class ProductController extends Controller
     public function index()
     {
         $products = $this->repository->getItemsWithPagination();
-        return Inertia::render('Admin/Products/Index', compact('products'));
+        $maximumPrice = $this->repository->findMaximumPrice();
+        $maximumAmount = $this->repository->findMaximumAmount();
+
+        return Inertia::render('Admin/Products/Index', compact('products', 'maximumPrice', 'maximumAmount'));
+    }
+
+    /**
+     * Display a listing of resources with pagination and filtered by request
+     *
+     * @param Request $request
+     * @return \Inertia\Response
+     */
+    public function search(Request $request)
+    {
+        $products = $this->repository->searchWithPagination($request);
+
+        $name = (string)$request->input('name');
+        $minimumPrice = (int)$request->input('price')[0];
+        $minimumAmount = (int)$request->input('amount')[0];
+        $perPage = (int)$request->input('perPage');
+
+        $maximumPrice = $this->repository->findMaximumPrice();
+        $maximumAmount = $this->repository->findMaximumAmount();
+
+        return Inertia::render(
+            'Admin/Products/Index',
+            compact(
+                'products',
+                'name',
+                'minimumPrice',
+                'maximumPrice',
+                'minimumAmount',
+                'maximumAmount',
+                'perPage'
+            )
+        );
     }
 
     /**

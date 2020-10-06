@@ -43,9 +43,11 @@ class CategoryController extends Controller
     public function search(Request $request)
     {
         $categories = $this->repository->searchWithPagination($request);
+
+        $name = (string)$request->input('name');
         $perPage = (int)$request->input('perPage');
 
-        return Inertia::render('Admin/Categories/Index', compact('categories', 'perPage'));
+        return Inertia::render('Admin/Categories/Index', compact('categories', 'name', 'perPage'));
     }
 
     /**

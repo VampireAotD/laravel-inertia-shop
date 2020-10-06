@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class IsAdmin
+class IsAuthority
 {
     /**
      * Handle an incoming request.
@@ -16,7 +16,7 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->user()->is_admin) {
+        if (!$request->user()->hasAnyRole(['admin', 'moderator'])) {
             abort(403);
         }
 

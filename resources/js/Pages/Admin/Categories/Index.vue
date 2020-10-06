@@ -3,12 +3,13 @@
         <flash/>
 
         <inner-header
-                mainRoute="admin.categories.create"
+                route="admin.categories.create"
                 title="Create category"
                 classes="bg-transparent hover:bg-green-500 text-white-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded mr-3"
         >
             <search-form
                     :search-form="searchForm"
+                    search-link="admin.categories.search"
                     :per-page="perPage"
                     reset-link="admin.categories.index"
             />
@@ -33,6 +34,7 @@
                             :category="category"
                             :key="index"
                             :number="index"
+                            :permissions="permissions"
                     />
                     </tbody>
                 </table>
@@ -59,6 +61,8 @@
     import Flash from './../../../Assets/Flash'
     import CategoryInfo from './Assets/CategoryInfo'
 
+    import CategoryPermissions from '../../../Mixins/Admin/Categories/CategoryPermissions'
+
     export default {
         name: "index",
 
@@ -67,9 +71,14 @@
                 type: Object,
                 required: true
             },
+            name: {
+                type: String,
+                default: ""
+            },
             perPage: {
-                type: Number
-            }
+                type: Number,
+                default: 10
+            },
         },
 
         components: {
@@ -80,19 +89,31 @@
             Flash
         },
 
+        mixins: [
+            CategoryPermissions
+        ],
+
         data() {
             return {
                 categoriesList: this.categories.data,
+
                 searchForm: {
-                    name: "",
-                    perPage: 10
+                    name: this.name,
+                    perPage: this.perPage
                 }
             }
         },
 
         methods: {
             paginate(page = 1) {
-                this.$inertia.visit(`/admin/categories?page=${page}`)
+                if (this.$page.currentRouteName === 'admin.categories.search') {
+                    return this.$inertia.replace(this.$route('admin.categories.search', {page}), {
+                        data: this.searchForm,
+                        preserveScroll: false,
+                    })
+                }
+
+                this.$inertia.visit(this.$route('admin.categories.index', {page}))
             }
         },
 

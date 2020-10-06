@@ -1,7 +1,9 @@
 <template>
     <admin-layout :header-title="title">
 
-        <loader v-if="form.processing"/>
+        <loader
+                v-if="form.processing"
+        />
 
         <inner-header
                 route="admin.categories.index"
@@ -13,8 +15,8 @@
 
         <div class="container mx-auto mt-5">
             <category-form
-                :form="form"
-                mode="edit"
+                    :form="form"
+                    mode="edit"
             />
         </div>
     </admin-layout>
@@ -46,15 +48,15 @@
         data() {
             return {
                 form: this.$inertia.form({
-                    '_method' : 'PUT',
+                    '_method': 'PUT',
                     name: this.category.name,
                     slug: this.category.slug
                 })
             }
         },
 
-        computed : {
-            title(){
+        computed: {
+            title() {
                 return `Edit ${this.category.name}`
             }
         }

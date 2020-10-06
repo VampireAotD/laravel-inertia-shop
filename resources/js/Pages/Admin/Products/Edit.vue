@@ -1,7 +1,9 @@
 <template>
     <admin-layout :header-title="title">
 
-        <loader v-if="form.processing"/>
+        <loader
+                v-if="form.processing"
+        />
 
         <inner-header
                 route="admin.products.index"
@@ -15,6 +17,7 @@
             <product-form
                     :form="form"
                     :product="product"
+                    :permissions="permissions"
                     mode="edit"
                     @file-uploaded="refreshImagesArray"
                     @clear-images-from-uploaded="clearImagesFromUploaded"
@@ -31,6 +34,7 @@
     import ProductForm from './Assets/ProductForm'
 
     import ImagesMethods from './../../../Mixins/Admin/Products/ImagesArrayMethods'
+    import ProductPermissions from './../../../Mixins/Admin/Products/ProductPermissions'
 
     export default {
         name: "edit",
@@ -53,26 +57,29 @@
             ProductForm
         },
 
-        mixins : [ImagesMethods],
+        mixins: [
+            ImagesMethods,
+            ProductPermissions
+        ],
 
         data() {
             return {
                 form: this.$inertia.form({
-                    '_method' : 'PUT',
+                    '_method': 'PUT',
                     name: this.product.name,
                     slug: this.product.slug,
-                    price : this.product.price,
-                    amount : this.product.amount,
-                    description : this.product.description,
-                    images : this.product.images,
-                    categoriesList : this.categoriesList,
-                    categories : this.product.categories.map( category => category.id),
+                    price: this.product.price,
+                    amount: this.product.amount,
+                    description: this.product.description,
+                    images: this.product.images,
+                    categoriesList: this.categoriesList,
+                    categories: this.product.categories.map(category => category.id),
                 })
             }
         },
 
-        computed : {
-            title(){
+        computed: {
+            title() {
                 return `Edit ${this.product.name}`
             }
         }

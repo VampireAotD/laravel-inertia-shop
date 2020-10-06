@@ -15,7 +15,11 @@
                 <p class="text-sm text-gray-600">Created {{ category.created_date }}</p>
                 <p class="text-sm text-gray-600">Last updated {{ category.updated_date }}</p>
                 <p>Slug : <span class="border bg-gray-200 text-gray-400 px-1">{{ category.slug }}</span></p>
-                <control-buttons :routes="routes" class="mt-2"/>
+                <control-buttons
+                        :routes="routes"
+                        :permissions="permissions"
+                        class="mt-2"
+                />
             </header>
 
             <section v-if="categoryProducts" class="p-4">
@@ -42,6 +46,8 @@
     import AdminLayout from './../../../Layouts/AdminLayout'
     import InnerHeader from './../Components/InnerHeader'
     import ControlButtons from './../../../Assets/ControlButtons'
+
+    import CategoryPermissions from '../../../Mixins/Admin/Categories/CategoryPermissions'
     import DefaultCrudRoutes from './../../../Mixins/Admin/Categories/DefaultCrudRoutes'
 
     export default {
@@ -61,6 +67,7 @@
         },
 
         mixins: [
+            CategoryPermissions,
             DefaultCrudRoutes
         ],
 
@@ -74,6 +81,7 @@
             title() {
                 return `${this.category.name} details`
             },
+
             categoryProducts() {
                 return this.productsList.length > 0
             }

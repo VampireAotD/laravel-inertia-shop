@@ -20,7 +20,11 @@
                 <p class="text-sm text-gray-600">Created {{ product.created_date }}</p>
                 <p class="text-sm text-gray-600">Last updated {{ product.updated_date }}</p>
                 <p>Slug : <span class="border bg-gray-200 text-gray-400 px-1">{{ product.slug }}</span></p>
-                <control-buttons :routes="routes" class="mt-4"/>
+                <control-buttons
+                        :routes="routes"
+                        class="mt-4"
+                        :permissions="permissions"
+                />
             </header>
 
             <section class="p-4">
@@ -28,7 +32,7 @@
                 <!--Slider-->
                 <div class="sm:container mx-auto px-4 mb-8" v-if="imagesListLength">
                     <slick-slider
-                            v-bind="settings"
+                            v-bind="sliderSettings"
                     >
                         <img
                                 v-for="(image, index) in imagesList"
@@ -93,7 +97,9 @@
     import AdminLayout from './../../../Layouts/AdminLayout'
     import InnerHeader from './../Components/InnerHeader'
     import ControlButtons from './../../../Assets/ControlButtons'
+
     import DefaultCrudRoutes from './../../../Mixins/Admin/Products/DefaultCrudRoutes'
+    import ProductPermissions from '../../../Mixins/Admin/Products/ProductPermissions'
 
     export default {
         name: "show",
@@ -112,18 +118,22 @@
         },
 
         mixins: [
-            DefaultCrudRoutes
+            DefaultCrudRoutes,
+            ProductPermissions
         ],
 
         data() {
             return {
                 categoriesList: this.product.categories,
+
                 imagesList: this.product.images,
+
                 showDescription: false,
-                settings: {
+
+                sliderSettings: {
                     arrows: true,
                     adaptiveHeight: true,
-                    dots : true,
+                    dots: true,
                     fade: true,
                     swipe: true,
                     centerMode: true,
@@ -147,16 +157,20 @@
             title() {
                 return `${this.product.name} details`
             },
+
             productCategories() {
                 return this.categoriesList.length > 0
             },
+
             imagesListLength() {
                 return this.imagesList.length > 0
             },
+
             buttonTitle() {
                 return this.showDescription ? 'Show excerpt' : 'Show description'
             },
-            issetDescription(){
+
+            issetDescription() {
                 return this.product.html_description === ''
             }
         }

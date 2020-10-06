@@ -1,7 +1,9 @@
 <template>
     <admin-layout header-title="Create new category">
 
-        <loader v-if="form.processing"/>
+        <loader
+                v-if="form.processing"
+        />
 
         <inner-header
                 route="admin.categories.index"
@@ -12,7 +14,9 @@
         <hr>
 
         <div class="container mx-auto mt-5">
-            <category-form :form="form"/>
+            <category-form
+                    :form="form"
+            />
         </div>
     </admin-layout>
 </template>

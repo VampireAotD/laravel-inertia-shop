@@ -1,7 +1,7 @@
 <template>
     <div class="inline-flex">
 
-        <inertia-link :href="routes.view" title="View"
+        <inertia-link :href="routes.view" title="View" v-if="permissions.view"
                       class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded-l">
             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="fill-current w-5 h-5">
                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
@@ -11,7 +11,7 @@
             </svg>
         </inertia-link>
 
-        <inertia-link :href="routes.edit" title="Update"
+        <inertia-link :href="routes.edit" title="Update" v-if="permissions.update"
                       class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                  class="fill-current w-5 h-5">
@@ -24,8 +24,8 @@
 
         <slot name="additional-links"></slot>
 
-        <form @submit.prevent="destroy">
-            <button type="submit" class="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 rounded-r">
+        <form @submit.prevent="destroy" v-if="permissions.destroy">
+            <button type="submit" title="Delete" class="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 rounded-r">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="fill-current w-5 h-5">
                     <path fill-rule="evenodd"
                           d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -42,6 +42,10 @@
         name: "control-buttons",
 
         props: {
+            permissions: {
+                type: Object,
+                required: true
+            },
             routes: {
                 type: Object,
                 required: true
