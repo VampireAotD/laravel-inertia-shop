@@ -8,12 +8,14 @@ import PortalVue from 'portal-vue';
 import VueIziToast from 'vue-izitoast';
 import CKEditor from '@ckeditor/ckeditor5-vue'
 import VueSlider from 'vue-slider-component'
-import Authorize from './Authorize/Authorize'
+import Authorize from './Backend/Authorize/Authorize'
+import Viewer from 'v-viewer'
 
 import 'izitoast/dist/css/iziToast.min.css';
 import 'vue-slick-carousel/dist/vue-slick-carousel.css'
 import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
 import 'vue-slider-component/theme/default.css'
+import 'viewerjs/dist/viewer.css'
 
 Vue.use(InertiaApp);
 Vue.use(InertiaForm);
@@ -21,6 +23,7 @@ Vue.use(PortalVue);
 Vue.use(VueIziToast);
 Vue.use(CKEditor);
 Vue.use(Authorize);
+Vue.use(Viewer);
 
 const app = document.getElementById('app');
 

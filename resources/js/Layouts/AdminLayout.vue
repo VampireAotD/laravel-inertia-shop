@@ -15,19 +15,25 @@
                         <!-- Navigation Links -->
                         <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                             <jet-nav-link :href="$route('admin.dashboard')"
-                                          :active="$page.currentRouteName == 'dashboard'">
+                                          :active="$page.currentRouteName == 'admin.dashboard'">
                                 Dashboard
                             </jet-nav-link>
 
                             <jet-nav-link :href="$route('admin.categories.index')"
-                                          :active="$page.currentRouteName == 'categories'">
+                                          :active="$page.currentRouteName == 'admin.categories.index'">
                                 Categories
                             </jet-nav-link>
 
                             <jet-nav-link :href="$route('admin.products.index')"
-                                          :active="$page.currentRouteName == 'products'">
+                                          :active="$page.currentRouteName == 'admin.products.index'">
                                 Products
                             </jet-nav-link>
+
+                            <jet-nav-link :href="$route('admin.users.index')"
+                                          :active="$page.currentRouteName == 'admin.users.index'">
+                                Users
+                            </jet-nav-link>
+
                         </div>
                     </div>
 

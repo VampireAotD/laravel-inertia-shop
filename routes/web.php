@@ -3,7 +3,7 @@
 use App\Http\Controllers\Admin\Images\ImageController;
 use App\Http\Controllers\Admin\Categories\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\Products\ProductController as AdminProductController;
-use App\Http\Controllers\Admin\Orders\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\Users\UserController;
 use App\Http\Controllers\Categories\CategoryController;
 use App\Http\Controllers\Orders\OrderController;
 use App\Http\Controllers\Products\ProductController;
@@ -23,12 +23,19 @@ use Illuminate\Support\Facades\Route;
 
 // Admin routes
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanctum', 'authority']], function () {
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanctum', 'authority', 'user-data']], function () {
 
     // Dashboard
     Route::get('/', function () {
         return \Inertia\Inertia::render('Admin/AdminDashboard');
     })->name('dashboard');
+
+    // Users
+    Route::get('users/search', [UserController::class, 'search'])->name('users.search');
+
+    Route::patch('/users/{user}', [UserController::class, 'changeRole'])->name('users.change-role');
+
+    Route::resource('users', UserController::class)->only(['index', 'show', 'destroy'])->names('users');
 
     // Categories
     Route::get('categories/search', [AdminCategoryController::class, 'search'])->name('categories.search');
@@ -44,9 +51,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanc
     Route::get('/images/{image}', [ImageController::class, 'updateImage'])->name('images.update-main-image');
 
     Route::delete('/images/{image}', [ImageController::class, 'destroyImage'])->name('images.destroy-image');
-
-    // Orders
-    Route::resource('orders', AdminOrderController::class)->names('orders');
 });
 
 // Frontend routes

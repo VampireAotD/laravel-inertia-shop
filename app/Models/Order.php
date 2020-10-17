@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\DiffForHumansTimestampAttributes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -30,10 +31,17 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserId($value)
  * @mixin \Eloquent
+ * @property int $amount
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereAmount($value)
+ * @property string $uuid
+ * @property-read mixed $created_date
+ * @property-read mixed $updated_date
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereUuid($value)
  */
 class Order extends Model
 {
     use HasFactory;
+    use DiffForHumansTimestampAttributes;
 
     protected $fillable = [
         'user_id',
@@ -47,14 +55,19 @@ class Order extends Model
         'status' => 'integer',
     ];
 
+    protected $appends = [
+        'created_date',
+        'updated_date',
+    ];
+
     /**
      * Related users for current order
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function users()
     {
-        return $this->hasMany(User::class);
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 
     /**
@@ -64,6 +77,6 @@ class Order extends Model
      */
     public function products()
     {
-        return $this->hasMany(Product::class, 'id');
+        return $this->hasMany(Product::class, 'id', 'product_id');
     }
 }

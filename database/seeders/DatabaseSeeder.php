@@ -21,7 +21,9 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(RolesAndPermissionsSeeder::class);
 
-        User::factory(10)->create()->each(function ($user) {
+        User::factory(10)
+            ->create()
+            ->each(function ($user) {
             /**
              * @var $user User
              */

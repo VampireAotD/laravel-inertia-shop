@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Image whereUpdatedAt($value)
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|Image whereAlias($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Image modelImages($type, $id)
  */
 class Image extends Model
 {

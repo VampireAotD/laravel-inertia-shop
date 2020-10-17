@@ -3,7 +3,7 @@
         <flash/>
 
         <inner-header
-                route="admin.categories.create"
+                :route="$route('admin.categories.create')"
                 title="Create category"
                 classes="bg-transparent hover:bg-green-500 text-white-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded mr-3"
         >
@@ -42,6 +42,7 @@
 
             <pagination
                     :data="categories"
+                    :limit="3"
                     @pagination-change-page="paginate"
                     class="flex justify-center"
             >

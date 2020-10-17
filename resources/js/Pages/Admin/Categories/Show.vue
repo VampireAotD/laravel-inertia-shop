@@ -2,7 +2,7 @@
     <admin-layout :header-title="title">
 
         <inner-header
-                route="admin.categories.index"
+                :route="$route('admin.categories.index')"
                 title="Categories list"
                 classes="bg-transparent hover:bg-blue-500 text-white-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
         />

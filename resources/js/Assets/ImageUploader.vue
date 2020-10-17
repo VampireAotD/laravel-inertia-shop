@@ -7,7 +7,7 @@
 
             <div class="w-1/4 h-48 m-1 lg:shadow-xl" v-for="(image, index) in images">
                 <div class="image w-full h-full max-w-full max-h-full relative"
-                     v-if="typeof image === 'object' && image.model_type">
+                     v-if="typeof image === 'object' && image.model_type" v-viewer>
                     <img :src='image.path'
                          class="min-w-0 min-h-0 max-w-full w-full h-full object-cover cursor-pointer">
 
@@ -45,7 +45,7 @@
 
                 <!--Recent uploaded images-->
 
-                <div class="w-full h-full max-w-full max-h-full relative" v-else>
+                <div class="w-full h-full max-w-full max-h-full relative" v-else v-viewer>
                     <img :src='image | createImageUrl'
                          class="min-w-0 min-h-0 max-w-full w-full h-full object-cover cursor-pointer">
                     <button @click.prevent="removeImage(index)" class="text-lg text-red-500 absolute top-0 right-2 z-50"

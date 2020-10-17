@@ -21,9 +21,10 @@
 
             <div class="w-full px-3 mt-2 flex justify-center">
                 <input class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border border-green-700 rounded shadow-md cursor-pointer"
-                       type="submit" value="Submit">
+                       type="submit" value="Submit" :disabled="form.processing">
                 <inertia-link
-                        :href="$route('admin.categories.index')"
+                        :href="$route($page.previousRoute, $page.previousRouteParameters)"
+                        :disabled="form.processing"
                         class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 border border-green-700 rounded shadow-md cursor-pointer ml-2">
                     Cancel
                 </inertia-link>

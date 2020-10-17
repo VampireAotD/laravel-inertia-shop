@@ -2,7 +2,7 @@
     <admin-layout :header-title="title">
 
         <inner-header
-                route="admin.products.index"
+                :route="$route('admin.products.index')"
                 title="Products list"
                 classes="bg-transparent hover:bg-blue-500 text-white-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
         />
@@ -31,17 +31,16 @@
 
                 <!--Slider-->
                 <div class="sm:container mx-auto px-4 mb-8" v-if="imagesListLength">
-                    <slick-slider
-                            v-bind="sliderSettings"
-                    >
-                        <img
-                                v-for="(image, index) in imagesList"
-                                :src="image.path"
-                                :key="index"
-                                :alt="`${product.name}-image-${index}`"
-                                class="object-contain h-64 w-full"
-                        >
-                    </slick-slider>
+                    <viewer :images="imagesList" class="flex flex-wrap justify-center">
+                        <div class="w-3/12 h-64 m-1" v-for="(image, index) in imagesList">
+                            <img
+                                    :src="image.path"
+                                    :key="index"
+                                    :alt="`${product.name}-image-${index}`"
+                                    class="object-cover h-full w-full"
+                            >
+                        </div>
+                    </viewer>
                 </div>
 
                 <div class="text-gray-300 p-5" v-else>
@@ -68,6 +67,24 @@
                     </ul>
                 </div>
                 <!--Categories list end-->
+
+                <!--Orders list-->
+                <!--<div class="categories mt-4">
+                    <p class="text-sm text-gray-600">Orders with this product :</p>
+
+                    <ul class=" list-reset flex flex-col">
+                        <li
+                                class="relative -mb-px block border p-4 border-grey"
+                                v-for="(order, index) in product.orders"
+                                :key="index"
+                        >
+                            <inertia-link :href="$route('admin.orders.show', {order})">
+                                Order # {{ order.id }}
+                            </inertia-link>
+                        </li>
+                    </ul>
+                </div>-->
+                <!--Orders list end-->
 
                 <!--Description-->
                 <div class="description mt-4" v-if="!issetDescription">

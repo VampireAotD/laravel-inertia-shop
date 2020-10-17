@@ -10,6 +10,9 @@ class ProductObserver
 {
     use SetSlug;
 
+    /**
+     * @var ImageServiceInterface
+     */
     private $imageService;
 
     public function __construct(ImageServiceInterface $imageService)

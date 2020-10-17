@@ -40,6 +40,10 @@
                                         Profile
                                     </jet-dropdown-link>
 
+                                    <jet-dropdown-link href="/admin" v-if="$hasRole('admin') || $hasRole('moderator')">
+                                        Admin dashboard
+                                    </jet-dropdown-link>
+
                                     <jet-dropdown-link href="/user/api-tokens" v-if="$page.jetstream.hasApiFeatures">
                                         API Tokens
                                     </jet-dropdown-link>

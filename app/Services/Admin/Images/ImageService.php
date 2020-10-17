@@ -5,6 +5,7 @@ namespace App\Services\Admin\Images;
 use App\Models\Image;
 use App\Models\Product;
 use App\Models\Slide;
+use App\Models\User;
 use App\Repositories\Admin\Products\ProductRepositoryInterface;
 use App\Services\Admin\Interfaces\Images\ImageServiceInterface;
 use Cloudinary\Api\Admin\AdminApi;
@@ -35,7 +36,7 @@ class ImageService implements ImageServiceInterface
      *
      * Variable $image is instance of UploadedFile class, but the method storeOnCloudinary() came from CloudinaryServiceProvider
      *
-     * @param Product|Slide $model
+     * @param Product|Slide|User $model
      * @param string $model_type
      * @param int $number
      * @param string $folder
@@ -44,7 +45,7 @@ class ImageService implements ImageServiceInterface
      */
     public function createImage($model, string $model_type, int $number = 0, string $folder, UploadedFile $image): Image
     {
-        $storage_folder = $this->makeStorageFolder($folder, $model->slug);
+        $storage_folder = $this->makeStorageFolder($folder, $model->slug ?? $model->name);
         $alias = $this->makeImageAlias();
 
         return Image::create([
@@ -62,18 +63,24 @@ class ImageService implements ImageServiceInterface
     /**
      * Removes entry/ies from database
      *
-     * @param Product|Slide $model
+     * @param Product|Slide|User $model
      * @return bool
      */
     public function deleteImagesFromDB($model): bool
     {
-        return $model->images()->delete();
+        if(method_exists($model, 'images')){
+            $images = $model->images();
+        }else{
+            $images = $model->image();
+        }
+
+        return $images->delete();
     }
 
     /**
      * Deletes images and entity folder from CDN storage
      *
-     * @param Product|Slide $model
+     * @param Product|Slide|User $model
      * @param string $folder
      * @param string $model_type
      * @return bool

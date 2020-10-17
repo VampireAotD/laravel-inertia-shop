@@ -82,6 +82,16 @@ class Product extends Model
     }
 
     /**
+     * Product that belongs to orders
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function order()
+    {
+       return $this->belongsToMany(Order::class);
+    }
+
+    /**
      * Related orders for current product
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -99,6 +109,16 @@ class Product extends Model
     public function images()
     {
         return $this->morphMany(Image::class, 'model')->orderByDesc('is_main');
+    }
+
+    /**
+     * Related users that ordered this product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function users()
+    {
+        return $this->hasMany(User::class);
     }
 
     /**

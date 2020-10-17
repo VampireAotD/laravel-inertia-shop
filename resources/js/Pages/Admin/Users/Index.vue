@@ -1,24 +1,19 @@
 <template>
-    <admin-layout header-title="Products">
+    <admin-layout header-title="Users">
         <flash/>
 
-        <inner-header
-                :route="$route('admin.products.create')"
-                title="Create product"
-                :permissions="permissions"
-                classes="bg-transparent hover:bg-green-500 text-white-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded mr-3"
-        >
+        <inner-header>
             <search-form
                     :search-form="searchForm"
-                    search-link="admin.products.search"
+                    search-link="admin.users.search"
                     :per-page="perPage"
-                    reset-link="admin.products.index"
+                    reset-link="admin.users.index"
             />
         </inner-header>
 
         <hr>
 
-        <div class="orders" v-if="productsListLength">
+        <div class="users" v-if="usersListLength">
             <div class="container py-10">
                 <table class="table-auto mx-auto">
                     <thead>
@@ -26,17 +21,17 @@
                         <th class="px-4 py-2">#</th>
                         <th class="px-4 py-2">Image</th>
                         <th class="px-4 py-2">Name</th>
-                        <th class="px-4 py-2">Description</th>
-                        <th class="px-4 py-2">Price</th>
-                        <th class="px-4 py-2">Amount</th>
+                        <th class="px-4 py-2">Email</th>
+                        <th class="px-4 py-2">Role</th>
+                        <th class="px-4 py-2">Total orders</th>
                         <th class="px-4 py-2">Created</th>
                         <th class="px-4 py-2">Controls</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <product-info
-                            v-for="(product, index) in productsList"
-                            :product="product"
+                    <user-info
+                            v-for="(user, index) in usersList"
+                            :user="user"
                             :key="index"
                             :number="index"
                             :permissions="permissions"
@@ -46,7 +41,7 @@
             </div>
 
             <pagination
-                    :data="products"
+                    :data="users"
                     :limit="3"
                     @pagination-change-page="paginate"
                     class="flex justify-center"
@@ -55,7 +50,7 @@
         </div>
 
         <div class="empty-list mt-3 flex justify-center" v-else>
-            <h1>No products right now...</h1>
+            <h1>No users right now...</h1>
         </div>
     </admin-layout>
 </template>
@@ -65,90 +60,74 @@
     import InnerHeader from './../Components/InnerHeader'
     import SearchForm from './../Components/SearchForm'
     import Flash from './../../../Assets/Flash'
-    import ProductInfo from './Assets/ProductInfo'
+    import UserInfo from './Assets/UserInfo'
 
-    import ProductPermissions from '../../../Mixins/Admin/Products/ProductPermissions'
+    import UserPermissions from '../../../Mixins/Admin/Users/UserPermissions'
 
     export default {
         name: "index",
 
         props: {
-            products: {
+            users: {
                 type: Object,
                 required: true
             },
-
             name: {
                 type: String,
                 default: ""
             },
-
-            minimumPrice: {
-                type: Number,
-                default: 0
+            email: {
+                type: String,
+                default: ""
             },
-
-            maximumPrice: {
-                type: Number
-            },
-
-            minimumAmount: {
-                type: Number,
-                default: 0
-            },
-
-            maximumAmount: {
-                type: Number
-            },
-
             perPage: {
                 type: Number,
                 default: 10
-            }
+            },
         },
 
         components: {
             AdminLayout,
             InnerHeader,
             SearchForm,
-            ProductInfo,
+            UserInfo,
             Flash
         },
 
-        mixins : [
-            ProductPermissions
+        mixins: [
+            UserPermissions
         ],
 
         data() {
             return {
-                productsList: this.products.data,
+                usersList: this.users.data,
+
                 searchForm: {
                     name: this.name,
-                    price: [this.minimumPrice, this.maximumPrice],
-                    amount: [this.minimumAmount, this.maximumAmount],
-                    perPage: this.perPage,
+                    email: this.email,
+                    perPage: this.perPage
                 }
             }
         },
 
         methods: {
             paginate(page = 1) {
-                if (this.$page.currentRouteName === 'admin.products.search') {
-                    return this.$inertia.visit(this.$route('admin.products.search', {page}), {
+                if (this.$page.currentRouteName === 'admin.users.search') {
+                    return this.$inertia.replace(this.$route('admin.users.search', {page}), {
                         data: this.searchForm,
                         preserveScroll: false,
                     })
                 }
 
-                this.$inertia.visit(this.$route('admin.products.index', {page}))
+                this.$inertia.visit(this.$route('admin.users.index', {page}))
             }
         },
 
         computed: {
-            productsListLength() {
-                return this.productsList.length > 0
+            usersListLength() {
+                return this.usersList.length > 0
             }
-        },
+        }
     }
 </script>
 

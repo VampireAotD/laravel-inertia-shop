@@ -1,8 +1,10 @@
 <template>
     <div class="py-5 flex flex-col">
         <div class="flex w-full">
-            <inertia-link :href="$route(route)"
-                          :class="classes">
+            <inertia-link :href="route"
+                          :class="classes"
+                          v-if="route && title"
+            >
                 {{ title }}
             </inertia-link>
         </div>
@@ -18,14 +20,13 @@
         props: {
             route: {
                 type: String,
-                required: true
+                default : '#'
             },
             classes: {
                 type: String
             },
             title: {
-                type: String,
-                required: true
+                type: String
             },
         }
     }

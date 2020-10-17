@@ -26,7 +26,8 @@ class OrderFactory extends Factory
         return [
             'user_id' => User::pluck('id')->random(),
             'product_id' => Product::pluck('id')->random(),
-            'status' => rand(0, 1)
+            'status' => rand(0, 1),
+            'amount' => $this->faker->numberBetween(2, 5)
         ];
     }
 }

@@ -32,11 +32,14 @@ class AppServiceProvider extends ServiceProvider
         Category::observe(CategoryObserver::class);
         Product::observe(ProductObserver::class);
 
-        // Inertia flash messages
-        Inertia::share('flash', function () {
-            return [
-                'messages' => \session()->get('messages'),
-            ];
-        });
+        // Share data to inertia
+        // This data will be available in global, and can be used anywhere by typing : $page.
+        Inertia::share([
+            'flash' => function () {
+                return [
+                    'messages' => \session()->get('messages'),
+                ];
+            },
+        ]);
     }
 }

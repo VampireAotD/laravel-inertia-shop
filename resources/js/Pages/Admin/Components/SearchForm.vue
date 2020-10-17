@@ -5,6 +5,11 @@
                    v-model="searchForm.name">
         </div>
 
+        <div class="mr-3" v-if="issetProperty('email')">
+            <input type="search" class="bg-purple-white shadow rounded border-0 p-3" placeholder="Search by email..."
+                   v-model="searchForm.email">
+        </div>
+
         <div class="mr-3" v-if="issetProperty('perPage')">
             <select name="per_page" @change="changePerPage" class="bg-purple-white shadow rounded border-0 p-3">
                 <option value="10" selected>{{ dropDownTitle }}</option>
@@ -75,6 +80,13 @@
 
         data() {
             return {
+                orderOptions: {
+                    width: '100%',
+                    height: 6,
+                    min: 0,
+                    max: this.searchForm.orders ? this.searchForm.orders[1] : null,
+                },
+
                 priceOptions: {
                     width: '100%',
                     height: 6,

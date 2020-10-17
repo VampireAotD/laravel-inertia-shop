@@ -23,12 +23,14 @@ interface ProductRepositoryInterface extends FindItemBySlug, FindItemById, GetIt
 
     /**
      * Find the maximum price among all the products
+     *
      * @return mixed
      */
     public function findMaximumPrice(): int;
 
     /**
      * Find the maximum amount among all the products
+     *
      * @return mixed
      */
     public function findMaximumAmount(): int;
