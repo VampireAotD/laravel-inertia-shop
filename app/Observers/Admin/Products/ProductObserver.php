@@ -38,7 +38,10 @@ class ProductObserver
      */
     public function created(Product $product)
     {
-        //
+        \Log::channel('products')->info('New product was created by user', [
+            'product name' => $product->name,
+            'user' => request()->user()->name ?? 'migrations'
+        ]);
     }
 
     /**
@@ -59,7 +62,10 @@ class ProductObserver
      */
     public function updated(Product $product)
     {
-
+        \Log::channel('products')->info('Product was updated by user', [
+            'product name' => $product->name,
+            'user' => request()->user()->name ?? 'migrations'
+        ]);
     }
 
     /**
@@ -70,9 +76,14 @@ class ProductObserver
      */
     public function deleted(Product $product)
     {
-        if ($this->imageService->deleteImagesWithFolderFromCDN($product, "products/$product->slug",Product::class)) {
+        if ($this->imageService->deleteImagesWithFolderFromCDN($product, "products/$product->slug", Product::class)) {
             $this->imageService->deleteImagesFromDB($product);
         }
+
+        \Log::channel('products')->warning('Product was deleted by user', [
+            'product name' => $product->name,
+            'user' => request()->user()->name ?? 'migrations'
+        ]);
     }
 
     /**

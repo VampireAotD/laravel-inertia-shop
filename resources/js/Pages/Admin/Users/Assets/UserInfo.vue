@@ -15,6 +15,7 @@
         <td class="border px-4 py-2">{{ user.created_date }}</td>
         <td class="border px-4 py-2">
             <control-buttons
+                    v-if="user.id !== $page.user.id"
                     :routes="routes"
                     :permissions="permissions"
             />

@@ -20,7 +20,6 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(RolesAndPermissionsSeeder::class);
-
         User::factory(10)
             ->create()
             ->each(function ($user) {
@@ -29,6 +28,8 @@ class DatabaseSeeder extends Seeder
              */
             if ($user->id === 1) {
                 $user->assignRole('admin');
+            }else{
+                $user->assignRole('user');
             }
         });
         Category::factory(15)->create();

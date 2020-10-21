@@ -17,7 +17,10 @@ class CategoryObserver
      */
     public function created(Category $category)
     {
-        //
+        \Log::channel('categories')->info('New category was created by user', [
+            'category name' => $category->name,
+            'user' => request()->user()->name ?? 'migrations'
+        ]);
     }
 
     /**
@@ -38,7 +41,10 @@ class CategoryObserver
      */
     public function updated(Category $category)
     {
-        //
+        \Log::channel('categories')->info('Category was updated by user', [
+            'category name' => $category->name,
+            'user' => request()->user()->name ?? 'migrations'
+        ]);
     }
 
     /**
@@ -59,7 +65,10 @@ class CategoryObserver
      */
     public function deleted(Category $category)
     {
-        //
+        \Log::channel('categories')->warning('Category was deleted by user', [
+            'category name' => $category->name,
+            'user' => request()->user()->name ?? 'migrations'
+        ]);
     }
 
     /**

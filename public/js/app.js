@@ -5571,6 +5571,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -37454,9 +37455,11 @@ var render = function() {
       "td",
       { staticClass: "border px-4 py-2" },
       [
-        _c("control-buttons", {
-          attrs: { routes: _vm.routes, permissions: _vm.permissions }
-        })
+        _vm.user.id !== _vm.$page.user.id
+          ? _c("control-buttons", {
+              attrs: { routes: _vm.routes, permissions: _vm.permissions }
+            })
+          : _vm._e()
       ],
       1
     )
@@ -37813,7 +37816,10 @@ var render = function() {
                           [
                             _c(
                               "option",
-                              { attrs: { value: "0", selected: "" } },
+                              {
+                                attrs: { selected: "" },
+                                domProps: { value: 0 }
+                              },
                               [_vm._v("Choose role")]
                             ),
                             _vm._v(" "),

@@ -48,6 +48,11 @@ class ImageService implements ImageServiceInterface
         $storage_folder = $this->makeStorageFolder($folder, $model->slug ?? $model->name);
         $alias = $this->makeImageAlias();
 
+        \Log::channel('images')->info('Set new image for model', [
+            'model id' => $model->id,
+            'model type' => $model_type,
+        ]);
+
         return Image::create([
             'model_type' => $model_type,
             'model_id' => $model->id,
@@ -68,9 +73,9 @@ class ImageService implements ImageServiceInterface
      */
     public function deleteImagesFromDB($model): bool
     {
-        if(method_exists($model, 'images')){
+        if (method_exists($model, 'images')) {
             $images = $model->images();
-        }else{
+        } else {
             $images = $model->image();
         }
 
@@ -109,6 +114,11 @@ class ImageService implements ImageServiceInterface
     {
         Image::modelImages($image->model_type, $image->model_id)->update(['is_main' => false]);
 
+        \Log::channel('images')->warning('Updated main image for model', [
+            'model id' => $image->model_id,
+            'model type' => $image->model_type
+        ]);
+
         return $image->update([
             'is_main' => true
         ]);
@@ -122,6 +132,11 @@ class ImageService implements ImageServiceInterface
      */
     public function deleteImage(Image $image): bool
     {
+        \Log::channel('images')->warning('Deleted image from model', [
+            'model id' => $image->model_id,
+            'model type' => $image->model_type
+        ]);
+
         return $this->api->deleteResources($image->alias) && $image->delete();
     }
 

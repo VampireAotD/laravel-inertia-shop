@@ -78,7 +78,14 @@ class UserController extends Controller
         $user = $this->repository->findItemById($id);
 
         if ($user->syncRoles($request->input('role'))) {
-            return back();
+
+            \Log::channel('users')->notice('User granted role for user', [
+                'user' => $request->user()->name,
+                'granted to' => $user->name,
+                'role' => $request->input('role')
+            ]);
+
+            return redirect()->route('admin.users.show', $user->id);
         }
 
         return redirect()->route('admin.users.index')->withErrors([

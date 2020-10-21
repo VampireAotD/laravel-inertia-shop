@@ -70,7 +70,7 @@
                     <div class="flex flex-wrap -mx-3 mb-6">
                         <div class="w-full px-3">
                             <select class="form-select block w-full mt-1" v-model="form.role">
-                                <option value="0" selected>Choose role</option>
+                                <option :value="0" selected>Choose role</option>
                                 <option
                                         v-for="role in $page.allRoles"
                                         :selected="user.roles[0] ? (role.id === user.roles[0].id) : null"

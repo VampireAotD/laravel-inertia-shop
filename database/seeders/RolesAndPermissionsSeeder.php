@@ -43,6 +43,8 @@ class RolesAndPermissionsSeeder extends Seeder
             Permission::create(['name' => 'delete user']),
         ];
 
+        $userRole = Role::create(['name' => 'user']);
+
         $moderator_role = Role::create(['name' => 'moderator']);
         $moderator_role->syncPermissions($moderator_permissions);
 
