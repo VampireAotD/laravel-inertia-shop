@@ -37,6 +37,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read mixed $created_date
  * @property-read mixed $updated_date
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUuid($value)
+ * @property-read \App\Models\Product|null $product
  */
 class Order extends Model
 {
@@ -44,13 +45,11 @@ class Order extends Model
     use DiffForHumansTimestampAttributes;
 
     protected $fillable = [
-        'user_id',
         'product_id',
         'status'
     ];
 
     protected $casts = [
-        'user_id' => 'integer',
         'product_id' => 'integer',
         'status' => 'integer',
     ];
@@ -63,20 +62,20 @@ class Order extends Model
     /**
      * Related users for current order
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function users()
     {
-        return $this->hasOne(User::class, 'id', 'user_id');
+        return $this->belongsToMany(User::class, UserOrder::class)->orderBy('user_id')->groupBy('user_id');
     }
 
     /**
      * Related products for current order
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function products()
     {
-        return $this->hasMany(Product::class, 'id', 'product_id');
+        return $this->belongsToMany(Product::class, UserOrder::class);
     }
 }

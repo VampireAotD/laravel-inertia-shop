@@ -50,8 +50,9 @@
                             class="relative -mb-px block border p-4 border-grey"
                             v-for="(order, index) in ordersList"
                             :key="index"
+                            v-if="order.users[0]"
                     >
-                        <inertia-link href="#">
+                        <inertia-link :href="$route('admin.orders.show', {user : order.users[0], date : order.created_at})">
                             Order #{{ order.id }}
                         </inertia-link>
                     </li>

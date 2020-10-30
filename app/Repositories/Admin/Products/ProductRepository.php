@@ -4,6 +4,7 @@ namespace App\Repositories\Admin\Products;
 
 use App\Models\Product;
 use App\Repositories\BaseRepository;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 class ProductRepository extends BaseRepository implements ProductRepositoryInterface
@@ -62,6 +63,10 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         return $this->startConditions()->with('images')->latest()->paginate($perPage);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public function searchWithPagination(Request $request)
     {
         $perPage = 10;
@@ -95,7 +100,7 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
      * @param array $relations
      * @return mixed
      */
-    public function getProductBySlugWithRelations(string $slug, array $relations = ['images', 'categories', 'orders'])
+    public function getProductBySlugWithRelations(string $slug, array $relations = ['images', 'categories', 'orders', 'orders.users'])
     {
         $product = $this->findItemBySlug($slug);
         return $product->load($relations);
@@ -103,6 +108,7 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
 
     /**
      * Find the maximum price among all the products
+     *
      * @return mixed
      */
     public function findMaximumPrice(): int
@@ -113,11 +119,23 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
 
     /**
      * Find the maximum amount among all the products
+     *
      * @return mixed
      */
     public function findMaximumAmount(): int
     {
         $products = $this->getItemsCollection();
         return $products->max('amount');
+    }
+
+    /**
+     * Return products collection by array of product id's
+     *
+     * @param array $ids
+     * @return Collection
+     */
+    public function getProductsByIds(array $ids): Collection
+    {
+        return $this->startConditions()->whereIn('id', $ids)->get();
     }
 }

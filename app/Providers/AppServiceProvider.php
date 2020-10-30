@@ -36,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
         User::observe(UserObserver::class);
 
         // Share data to inertia
+
         // This data will be available in global, and can be used anywhere by typing : $page.
         Inertia::share([
             'flash' => function () {

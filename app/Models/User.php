@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use App\Models\Traits\DiffForHumansTimestampAttributes;
+use App\Models\Traits\HasCdnProfilePhoto;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
-use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -56,17 +56,25 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read int|null $roles_count
  * @method static \Illuminate\Database\Eloquent\Builder|User permission($permissions)
  * @method static \Illuminate\Database\Eloquent\Builder|User role($roles, $guard = null)
+ * @property-read mixed $created_date
+ * @property-read string $role
+ * @property-read mixed $updated_date
+ * @property-read \App\Models\Image|null $image
+ * @property-read int|null $orders_count
  */
 class User extends Authenticatable
 {
     use HasApiTokens;
     use HasFactory;
-    use HasProfilePhoto;
+    use HasCdnProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
     use HasRoles;
     use DiffForHumansTimestampAttributes;
 
+    /**
+     * Folder witch contains user profile photo
+     */
     const USERS_PROFILE_PICTURE_FOLDER = 'users';
 
     /**
@@ -74,7 +82,11 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name',
+        'email',
+        'password'
+    ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -112,11 +124,11 @@ class User extends Authenticatable
     /**
      * Related orders for current user
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function orders()
     {
-        return $this->hasMany(Order::class);
+        return $this->belongsToMany(Order::class, UserOrder::class)->orderByDesc('user_id')->groupBy(['user_id', 'created_at']);
     }
 
     /**

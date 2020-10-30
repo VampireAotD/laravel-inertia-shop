@@ -1,13 +1,14 @@
 <?php
 
+use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\Images\ImageController;
 use App\Http\Controllers\Admin\Categories\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\Products\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\Orders\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\Users\UserController;
-use App\Http\Controllers\Categories\CategoryController;
-use App\Http\Controllers\Orders\OrderController;
-use App\Http\Controllers\Products\ProductController;
-use App\Http\Controllers\Slides\SlideController;
+use App\Http\Controllers\Frontend\Cart\CartContoller;
+use App\Http\Controllers\Frontend\Favorite\FavoriteController;
+use App\Http\Controllers\Frontend\Home\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,9 +27,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanctum', 'authority', 'user-data']], function () {
 
     // Dashboard
-    Route::get('/', function () {
-        return \Inertia\Inertia::render('Admin/AdminDashboard');
-    })->name('dashboard');
+    Route::get('/', [AdminHomeController::class, 'index'])->name('dashboard');
 
     // Users
     Route::get('users/search', [UserController::class, 'search'])->name('users.search');
@@ -51,18 +50,39 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanc
     Route::get('/images/{image}', [ImageController::class, 'updateImage'])->name('images.update-main-image');
 
     Route::delete('/images/{image}', [ImageController::class, 'destroyImage'])->name('images.destroy-image');
+
+    // Orders
+
+    Route::resource('orders', AdminOrderController::class)->except(['show'])->names('orders');
+
+    Route::get('/orders/{user}/{date}', [AdminOrderController::class, 'show'])->name('orders.show');
 });
 
 // Frontend routes
 
-Route::get('/', function () {
-    return Inertia\Inertia::render('Dashboard');
-})->name('dashboard');
+Route::group(['middleware' => 'favorite-list', 'cart'], function () {
 
-Route::resource('categories', CategoryController::class)->names('categories');
+    // Home
 
-Route::resource('products', ProductController::class)->names('products');
+    Route::get('/', [HomeController::class, 'index'])->middleware(['favorite-list', 'cart'])->name('home');
 
-Route::resource('orders', OrderController::class)->names('orders');
+    // Cart
 
-Route::resource('slides', SlideController::class)->names('slides');
+    Route::get('/cart', [CartContoller::class, 'index'])->name('cart');
+
+    Route::get('/add-to-cart/{product}', [CartContoller::class, 'add'])->name('add-to-cart');
+
+    Route::get('/remove-from-cart/{product}', [CartContoller::class, 'remove'])->name('remove-from-cart');
+
+    Route::get('/destroy-cart', [CartContoller::class, 'destroy'])->name('destroy-cart');
+
+    // Favorite list
+
+    Route::get('/favorite-list', [FavoriteController::class, 'index'])->name('favorite-list');
+
+    Route::get('/add-to-favorite/{product}', [FavoriteController::class, 'add'])->name('add-to-favorite');
+
+    Route::get('/remove-from-favorite/{product}', [FavoriteController::class, 'remove'])->name('remove-from-favorite');
+
+    Route::get('/destroy-favorite-list', [FavoriteController::class, 'destroy'])->name('destroy-favorite-list');
+});

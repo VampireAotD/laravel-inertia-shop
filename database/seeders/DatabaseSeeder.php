@@ -8,6 +8,8 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Slide;
 use App\Models\User;
+use App\Models\UserOrder;
+use Database\Factories\UserOrderFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -37,5 +39,6 @@ class DatabaseSeeder extends Seeder
         Slide::factory(8)->create();
         ProductCategory::factory(250)->create();
         Order::factory(150)->create();
+        UserOrder::factory(250)->create();
     }
 }

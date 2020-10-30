@@ -95,6 +95,7 @@ class ProductController extends Controller
     public function create(Product $product)
     {
         $categoriesList = $this->categoryRepository->getItemsCollection();
+
         return Inertia::render('Admin/Products/Create', compact('product', 'categoriesList'));
     }
 
@@ -128,6 +129,7 @@ class ProductController extends Controller
     public function show(string $slug)
     {
         $product = $this->repository->getProductBySlugWithRelations($slug);
+
         return Inertia::render('Admin/Products/Show', compact('product'));
     }
 

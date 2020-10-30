@@ -3,6 +3,8 @@
 namespace App\Http;
 
 use App\Http\Middleware\IsAuthority;
+use App\Http\Middleware\ShareCart;
+use App\Http\Middleware\ShareFavoriteList;
 use App\Http\Middleware\ShareInertiaData;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -65,6 +67,8 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'authority' => IsAuthority::class,
-        'user-data' => ShareInertiaData::class
+        'user-data' => ShareInertiaData::class,
+        'favorite-list' => ShareFavoriteList::class,
+        'cart' => ShareCart::class,
     ];
 }

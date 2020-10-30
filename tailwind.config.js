@@ -13,6 +13,13 @@ module.exports = {
             fontFamily: {
                 sans: ['Nunito', ...defaultTheme.fontFamily.sans],
             },
+            fill: theme => ({
+                ...theme('colors'),
+            }),
+            inset: {
+                '-1': '-0.75rem',
+                '-2': '-0.45rem',
+            }
         },
     },
 

@@ -10,6 +10,7 @@ import CKEditor from '@ckeditor/ckeditor5-vue'
 import VueSlider from 'vue-slider-component'
 import Authorize from './Backend/Authorize/Authorize'
 import Viewer from 'v-viewer'
+import VueSmoothScroll from 'vue2-smooth-scroll'
 
 import 'izitoast/dist/css/iziToast.min.css';
 import 'vue-slick-carousel/dist/vue-slick-carousel.css'
@@ -24,6 +25,7 @@ Vue.use(VueIziToast);
 Vue.use(CKEditor);
 Vue.use(Authorize);
 Vue.use(Viewer);
+Vue.use(VueSmoothScroll)
 
 const app = document.getElementById('app');
 

@@ -2,6 +2,12 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+@variants focus, hover {
+    .fill-red {
+        @apply fill-red-500;
+    }
+}
+
 .page-item {
     @apply .border .px-4 .py-2;
 }

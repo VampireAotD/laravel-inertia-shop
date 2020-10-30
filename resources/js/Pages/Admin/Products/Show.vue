@@ -19,6 +19,7 @@
                 <h3 class="text-lg font-bold">{{ product.name }}</h3>
                 <p class="text-sm text-gray-600">Created {{ product.created_date }}</p>
                 <p class="text-sm text-gray-600">Last updated {{ product.updated_date }}</p>
+                <p>ID : <span class="border bg-gray-200 text-gray-400 px-1">{{ product.id }}</span></p>
                 <p>Slug : <span class="border bg-gray-200 text-gray-400 px-1">{{ product.slug }}</span></p>
                 <control-buttons
                         :routes="routes"
@@ -51,7 +52,7 @@
                 <hr>
 
                 <!--Categories list-->
-                <div class="categories mt-4">
+                <div class="categories mt-4" v-if="productCategories">
                     <p class="text-sm text-gray-600">Categories in this product :</p>
 
                     <ul class=" list-reset flex flex-col">
@@ -69,8 +70,8 @@
                 <!--Categories list end-->
 
                 <!--Orders list-->
-                <!--<div class="categories mt-4">
-                    <p class="text-sm text-gray-600">Orders with this product :</p>
+                <div class="categories mt-4">
+                    <p class="text-sm text-gray-600">Users that ordered this product :</p>
 
                     <ul class=" list-reset flex flex-col">
                         <li
@@ -78,12 +79,12 @@
                                 v-for="(order, index) in product.orders"
                                 :key="index"
                         >
-                            <inertia-link :href="$route('admin.orders.show', {order})">
-                                Order # {{ order.id }}
+                            <inertia-link :href="$route('admin.users.show', {user : order.users[0]})">
+                                {{ order.users[0].name }}
                             </inertia-link>
                         </li>
                     </ul>
-                </div>-->
+                </div>
                 <!--Orders list end-->
 
                 <!--Description-->

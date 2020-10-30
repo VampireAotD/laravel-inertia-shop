@@ -63,6 +63,7 @@ class UserController extends Controller
     public function show($id)
     {
         $user = $this->repository->findUserByIdWithRelations($id);
+
         return Inertia::render('Admin/Users/Show', compact('user'));
     }
 

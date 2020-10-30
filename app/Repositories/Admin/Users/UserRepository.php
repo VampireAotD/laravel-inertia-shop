@@ -37,7 +37,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
      * @param array $relations
      * @return mixed
      */
-    public function findUserByIdWithRelations(int $id, array $relations = ['orders', 'roles'])
+    public function findUserByIdWithRelations(int $id, array $relations = ['orders', 'roles', 'orders.users'])
     {
         $user = $this->findItemById($id);
         return $user->load($relations);
@@ -80,5 +80,31 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             })
             ->latest()
             ->paginate($perPage);
+    }
+
+    /**
+     * Return array of activities for current instance
+     *
+     * @return array
+     */
+    public function getActivityPerMonth(): array
+    {
+        $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        $users = $this->startConditions()->get()->groupBy(function ($user) {
+            return $user->created_at->format('F');
+        });
+
+        $perMonth = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+        foreach ($months as $number => $month) {
+            $users->map(function ($collection, $key) use ($month, &$perMonth, $number) {
+                if ($key == $month) {
+                    $perMonth[$number] = $collection->count();
+                }
+            });
+        }
+
+        return $perMonth;
     }
 }

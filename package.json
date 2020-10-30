@@ -28,10 +28,13 @@
     "dependencies": {
         "@ckeditor/ckeditor5-build-classic": "^22.0.0",
         "@ckeditor/ckeditor5-vue": "^1.0.3",
+        "chart.js": "^2.9.4",
         "laravel-vue-pagination": "^2.3.1",
         "v-viewer": "^1.5.1",
+        "vue-chartjs": "^3.5.1",
         "vue-izitoast": "^1.2.1",
         "vue-slick-carousel": "^1.0.6",
-        "vue-slider-component": "^3.2.5"
+        "vue-slider-component": "^3.2.5",
+        "vue2-smooth-scroll": "^1.5.0"
     }
 }

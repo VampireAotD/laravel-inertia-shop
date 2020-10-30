@@ -46,6 +46,8 @@ use Illuminate\Support\Str;
  * @property-read \Parsedown|string $html_description
  * @property-read mixed|string $main_image_path
  * @property-read mixed $updated_date
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
+ * @property-read int|null $users_count
  */
 class Product extends Model
 {
@@ -82,23 +84,13 @@ class Product extends Model
     }
 
     /**
-     * Product that belongs to orders
+     * Related orders for current product
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function order()
-    {
-       return $this->belongsToMany(Order::class);
-    }
-
-    /**
-     * Related orders for current product
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
     public function orders()
     {
-        return $this->hasMany(Order::class);
+        return $this->belongsToMany(Order::class, UserOrder::class);
     }
 
     /**

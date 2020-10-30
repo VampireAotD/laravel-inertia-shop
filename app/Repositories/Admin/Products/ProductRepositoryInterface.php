@@ -7,6 +7,7 @@ use App\Repositories\Interfaces\FindItemBySlug;
 use App\Repositories\Interfaces\GetItemsCollection;
 use App\Repositories\Interfaces\GetItemsCollectionWithPagination;
 use App\Repositories\Interfaces\SearchWithPagination;
+use Illuminate\Database\Eloquent\Collection;
 
 interface ProductRepositoryInterface extends FindItemBySlug, FindItemById, GetItemsCollection, GetItemsCollectionWithPagination, SearchWithPagination
 {
@@ -34,4 +35,12 @@ interface ProductRepositoryInterface extends FindItemBySlug, FindItemById, GetIt
      * @return mixed
      */
     public function findMaximumAmount(): int;
+
+    /**
+     * Return products collection by array of product id's
+     *
+     * @param array $ids
+     * @return Collection
+     */
+    public function getProductsByIds(array $ids) : Collection;
 }
