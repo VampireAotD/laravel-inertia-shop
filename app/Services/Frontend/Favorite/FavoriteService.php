@@ -3,6 +3,7 @@
 namespace App\Services\Frontend\Favorite;
 
 use App\Models\Product;
+use Carbon\Carbon;
 
 class FavoriteService
 {
@@ -17,7 +18,7 @@ class FavoriteService
         $favorite_list = \Cookie::get('favorite_list');
 
         if (!$favorite_list) {
-            \Cookie::queue('favorite_list', json_encode([$product->id]), time() + 60 * 60 * 24 * 7);
+            \Cookie::queue('favorite_list', json_encode([$product->id]), $this->defaultCookieLifeTime());
         } else {
 
             $favorite_list = json_decode($favorite_list);
@@ -28,7 +29,7 @@ class FavoriteService
 
             $favorite_list[] = $product->id;
 
-            \Cookie::queue('favorite_list', json_encode($favorite_list), time() + 60 * 60 * 24 * 7);
+            \Cookie::queue('favorite_list', json_encode($favorite_list), $this->defaultCookieLifeTime());
         }
 
         return true;
@@ -58,7 +59,7 @@ class FavoriteService
             return;
         }
 
-        \Cookie::queue('favorite_list', json_encode($favorite_list), time() + 60 * 60 * 24 * 7);
+        \Cookie::queue('favorite_list', json_encode($favorite_list), $this->defaultCookieLifeTime());
     }
 
     /**
@@ -67,5 +68,15 @@ class FavoriteService
     public function deleteFavoriteList(): void
     {
         \Cookie::queue(\Cookie::forget('favorite_list'));
+    }
+
+    /**
+     * Return default date for cookie life time
+     *
+     * @return int
+     */
+    private function defaultCookieLifeTime(): int
+    {
+        return strtotime(Carbon::now()->addMonths(6)->toDateTimeString());
     }
 }

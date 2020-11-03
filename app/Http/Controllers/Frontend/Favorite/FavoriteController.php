@@ -9,7 +9,14 @@ use Inertia\Inertia;
 
 class FavoriteController extends Controller
 {
+    /**
+     * @var ProductRepositoryInterface
+     */
     private $productRepository;
+
+    /**
+     * @var FavoriteService
+     */
     private $favoriteService;
 
     public function __construct(ProductRepositoryInterface $productRepository, FavoriteService $favoriteService)
@@ -18,10 +25,15 @@ class FavoriteController extends Controller
         $this->favoriteService = $favoriteService;
     }
 
-
+    /**
+     * List of all products in favorite list
+     *
+     * @return \Inertia\Response
+     */
     public function index()
     {
-        $ids = \Cookie::get('favorite_list');
+        $ids = \Cookie::get('favorite_list') ?? json_encode([]);
+
         $products = $this->productRepository->getProductsByIds(json_decode($ids));
 
         return Inertia::render('Favorite/Index', compact('products'));

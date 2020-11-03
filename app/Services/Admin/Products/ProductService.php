@@ -52,6 +52,9 @@ class ProductService
                         );
                     }
                     \DB::commit();
+
+                    elasticsearch()->addDocumentToIndex('products', $this->product);
+
                     return true;
                 }
             }
@@ -91,6 +94,9 @@ class ProductService
                         }
                     }
                     \DB::commit();
+
+                    elasticsearch()->updateDocumentInIndex('products', $product);
+
                     return true;
                 }
             }

@@ -16,9 +16,9 @@ trait SetSlug
     protected function setSlug(Model $model)
     {
         if ($model->isDirty('slug')) {
-            return $model->slug = Str::slug($model->slug);
+            $model->slug = Str::slug($model->slug);
         }
 
-        return $model->slug = Str::slug($model->name);
+        $model->slug = Str::slug($model->name);
     }
 }

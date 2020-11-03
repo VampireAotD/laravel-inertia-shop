@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\Categories\CategoryController as AdminCategoryCon
 use App\Http\Controllers\Admin\Products\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\Orders\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\Users\UserController;
-use App\Http\Controllers\Frontend\Cart\CartContoller;
+use App\Http\Controllers\Frontend\Cart\CartController;
 use App\Http\Controllers\Frontend\Favorite\FavoriteController;
 use App\Http\Controllers\Frontend\Home\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -68,13 +68,13 @@ Route::group(['middleware' => 'favorite-list', 'cart'], function () {
 
     // Cart
 
-    Route::get('/cart', [CartContoller::class, 'index'])->name('cart');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
 
-    Route::get('/add-to-cart/{product}', [CartContoller::class, 'add'])->name('add-to-cart');
+    Route::get('/add-to-cart/{product}', [CartController::class, 'add'])->name('add-to-cart');
 
-    Route::get('/remove-from-cart/{product}', [CartContoller::class, 'remove'])->name('remove-from-cart');
+    Route::get('/remove-from-cart/{product}', [CartController::class, 'remove'])->name('remove-from-cart');
 
-    Route::get('/destroy-cart', [CartContoller::class, 'destroy'])->name('destroy-cart');
+    Route::get('/destroy-cart', [CartController::class, 'destroy'])->name('destroy-cart');
 
     // Favorite list
 
@@ -82,7 +82,7 @@ Route::group(['middleware' => 'favorite-list', 'cart'], function () {
 
     Route::get('/add-to-favorite/{product}', [FavoriteController::class, 'add'])->name('add-to-favorite');
 
-    Route::get('/remove-from-favorite/{product}', [FavoriteController::class, 'remove'])->name('remove-from-favorite');
+    Route::delete('/remove-from-favorite/{product}', [FavoriteController::class, 'remove'])->name('remove-from-favorite');
 
-    Route::get('/destroy-favorite-list', [FavoriteController::class, 'destroy'])->name('destroy-favorite-list');
+    Route::delete('/destroy-favorite-list', [FavoriteController::class, 'destroy'])->name('destroy-favorite-list');
 });
