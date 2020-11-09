@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Admin\Products;
 
+use App\Models\Product;
 use App\Repositories\Interfaces\FindItemById;
 use App\Repositories\Interfaces\FindItemBySlug;
 use App\Repositories\Interfaces\GetItemsCollection;
@@ -43,4 +44,12 @@ interface ProductRepositoryInterface extends FindItemBySlug, FindItemById, GetIt
      * @return Collection
      */
     public function getProductsByIds(array $ids) : Collection;
+
+    /**
+     * Return collection of similar products
+     *
+     * @param Product $product
+     * @return Collection
+     */
+    public function findSimilarProducts(Product $product) : Collection;
 }

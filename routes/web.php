@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\Users\UserController;
 use App\Http\Controllers\Frontend\Cart\CartController;
 use App\Http\Controllers\Frontend\Favorite\FavoriteController;
 use App\Http\Controllers\Frontend\Home\HomeController;
+use App\Http\Controllers\Frontend\Product\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,7 +25,7 @@ use Illuminate\Support\Facades\Route;
 
 // Admin routes
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanctum', 'authority', 'user-data']], function () {
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanctum', 'role:admin|moderator', 'user-data']], function () {
 
     // Dashboard
     Route::get('/', [AdminHomeController::class, 'index'])->name('dashboard');
@@ -52,7 +53,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanc
     Route::delete('/images/{image}', [ImageController::class, 'destroyImage'])->name('images.destroy-image');
 
     // Orders
-
     Route::resource('orders', AdminOrderController::class)->except(['show'])->names('orders');
 
     Route::get('/orders/{user}/{date}', [AdminOrderController::class, 'show'])->name('orders.show');
@@ -60,14 +60,22 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanc
 
 // Frontend routes
 
-Route::group(['middleware' => 'favorite-list', 'cart'], function () {
+Route::group(['middleware' => ['favorite-list', 'cart']], function () {
 
     // Home
+    Route::get('/', [HomeController::class, 'index'])->name('home');
 
-    Route::get('/', [HomeController::class, 'index'])->middleware(['favorite-list', 'cart'])->name('home');
+    // Profile and API Tokens
+
+    Route::get('user/profile', [\Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController::class, 'show'])->name('profile.show');
+
+    Route::get('user/api-tokens', [\Laravel\Jetstream\Http\Controllers\Inertia\ApiTokenController::class, 'index'])->name('api-tokens.index');
+
+    // Product
+
+    Route::get('/product/{product}', [ProductController::class, 'show'])->name('product');
 
     // Cart
-
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
 
     Route::get('/add-to-cart/{product}', [CartController::class, 'add'])->name('add-to-cart');
@@ -77,12 +85,11 @@ Route::group(['middleware' => 'favorite-list', 'cart'], function () {
     Route::get('/destroy-cart', [CartController::class, 'destroy'])->name('destroy-cart');
 
     // Favorite list
-
     Route::get('/favorite-list', [FavoriteController::class, 'index'])->name('favorite-list');
 
     Route::get('/add-to-favorite/{product}', [FavoriteController::class, 'add'])->name('add-to-favorite');
 
-    Route::delete('/remove-from-favorite/{product}', [FavoriteController::class, 'remove'])->name('remove-from-favorite');
+    Route::get('/remove-from-favorite/{product}', [FavoriteController::class, 'remove'])->name('remove-from-favorite');
 
     Route::delete('/destroy-favorite-list', [FavoriteController::class, 'destroy'])->name('destroy-favorite-list');
 });

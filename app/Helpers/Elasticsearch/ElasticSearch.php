@@ -8,13 +8,61 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ElasticSearch
 {
+    /**
+     * Array of hosts
+     *
+     * @var array
+     */
     private $hosts;
+
+    /**
+     * ElasticSearch client
+     *
+     * @var \Elasticsearch\Client
+     */
     private $builder;
+
+    /**
+     * ElasticSearch query
+     *
+     * @var object
+     *
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/full-text-queries.html
+     */
+    private $query;
+
+    /**
+     * ElasticSearch suggestions
+     *
+     * @var object
+     *
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters.html
+     */
+    private $suggest;
+
+    /**
+     * ElasticSearch highlighting
+     *
+     * @var object
+     *
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/7.9/highlighting.html
+     */
+    private $highlight;
+
+    /**
+     * Size of results in query
+     *
+     * @var int
+     */
+    private $limit;
 
     public function __construct(array $hosts)
     {
         $this->hosts = $hosts;
         $this->builder = ClientBuilder::create()->setHosts($this->hosts)->build();
+        $this->query = (object)[];
+        $this->suggest = (object)[];
+        $this->highlight = (object)[];
     }
 
     /**
@@ -201,20 +249,72 @@ class ElasticSearch
     }
 
     /**
+     * Set query body
+     *
+     * @param array $body
+     * @return $this
+     */
+    public function query(array $body): self
+    {
+        $this->query = $body;
+
+        return $this;
+    }
+
+    /**
+     * Set query suggestions
+     *
+     * @param array $body
+     * @return $this
+     */
+    public function suggest(array $body): self
+    {
+        $this->suggest = $body;
+
+        return $this;
+    }
+
+    /**
+     * Set query suggestions
+     *
+     * @param array $body
+     * @return $this
+     */
+    public function highlight(array $body): self
+    {
+        $this->highlight = $body;
+
+        return $this;
+    }
+
+    /**
+     * Set query limit (size)
+     *
+     * @param int $limit
+     * @return $this
+     */
+    public function limit(int $limit = 25): self
+    {
+        $this->limit = $limit;
+
+        return $this;
+    }
+
+    /**
      * Search for documents in index
      *
      * @param string $indexName
-     * @param array $queryBody
-     * @param int $limit
      * @return array
      */
-    public function search(string $indexName, array $queryBody, int $limit = 25)
+    public function search(string $indexName)
     {
         return $this->builder->search([
             'index' => $indexName,
             'body' => [
-                'size' => $limit,
-                'query' => $queryBody
+                'size' => $this->limit,
+                'query' => $this->query,
+                'suggest' => $this->suggest,
+                'highlight' => $this->highlight
             ]
         ]);
     }

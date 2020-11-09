@@ -39,11 +39,7 @@ class AppServiceProvider extends ServiceProvider
 
         // This data will be available in global, and can be used anywhere by typing : $page.
         Inertia::share([
-            'flash' => function () {
-                return [
-                    'messages' => \session()->get('messages'),
-                ];
-            },
+            'flash' => fn() => ['messages' => \session()->get('messages')],
         ]);
     }
 }

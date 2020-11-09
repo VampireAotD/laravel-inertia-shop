@@ -28,6 +28,10 @@ class JetstreamServiceProvider extends ServiceProvider
         $this->configurePermissions();
 
         Jetstream::deleteUsersUsing(DeleteUser::class);
+
+        //To share some Inertia data like cart or favorite list
+
+        Jetstream::ignoreRoutes();
     }
 
     /**

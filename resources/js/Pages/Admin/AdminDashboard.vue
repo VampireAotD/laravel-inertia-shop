@@ -15,6 +15,10 @@
                         <order-chart :per-month="ordersPerMonth"/>
                     </div>
                 </div>
+
+                <div class="flex mt-2 h-full">
+                    sokcets {{onlineUsers}}
+                </div>
             </div>
         </div>
     </admin-layout>
@@ -34,5 +38,10 @@
 
         props : ['usersPerMonth', 'ordersPerMonth'],
 
+        data(){
+            return {
+                onlineUsers : this.$conn
+            }
+        }
     }
 </script>

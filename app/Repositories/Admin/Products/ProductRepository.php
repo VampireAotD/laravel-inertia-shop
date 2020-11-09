@@ -138,4 +138,23 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
     {
         return $this->startConditions()->whereIn('id', $ids)->get();
     }
+
+    /**
+     * Return collection of similar products
+     *
+     * @param Product $product
+     * @return Collection
+     */
+    public function findSimilarProducts(Product $product): Collection
+    {
+        $categories = $product->categories->pluck('id')->toArray();
+
+        return $this
+            ->startConditions()
+            ->whereHas('categories', function ($query) use ($categories){
+                return $query->whereIn('categories.id', $categories);
+            })
+            ->where('id', '!=', $product->id)
+            ->get();
+    }
 }

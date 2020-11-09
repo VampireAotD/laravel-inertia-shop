@@ -180,6 +180,8 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         if ($product->delete()) {
+            elasticsearch()->deleteDocumentFromIndex('products', $product);
+
             return redirect()
                 ->route('admin.products.index')
                 ->with('messages', [

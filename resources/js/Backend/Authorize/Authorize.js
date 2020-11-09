@@ -5,9 +5,12 @@ export default {
         };
 
         Vue.prototype.$hasRole = function (roleName) {
-            return this.$page.user.roles.map(role => {
+
+            let result = this.$page.user.roles.map(role => {
                 return role.name === roleName
-            }).length > 0 ?? false
+            })
+
+            return result.shift()
         };
     }
 }

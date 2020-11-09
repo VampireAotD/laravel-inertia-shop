@@ -11,6 +11,7 @@ import VueSlider from 'vue-slider-component'
 import Authorize from './Backend/Authorize/Authorize'
 import Viewer from 'v-viewer'
 import VueSmoothScroll from 'vue2-smooth-scroll'
+import Socket from './Socket/Connect'
 
 import 'izitoast/dist/css/iziToast.min.css';
 import 'vue-slick-carousel/dist/vue-slick-carousel.css'
@@ -26,6 +27,7 @@ Vue.use(CKEditor);
 Vue.use(Authorize);
 Vue.use(Viewer);
 Vue.use(VueSmoothScroll)
+Vue.use(Socket)
 
 const app = document.getElementById('app');
 
@@ -43,3 +45,4 @@ new Vue({
             },
         }),
 }).$mount(app);
+

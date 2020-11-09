@@ -55,7 +55,12 @@ class InitializeElasticSearch extends Command
                     'filter' => [
                         'stop_words_russian' => [
                             'type' => 'stop',
-                            'stopwords' => ['найти', 'купить', 'приобрести']
+                            'ignore_case' => true,
+                            'stopwords' => [
+                                'найти',
+                                'купить',
+                                'приобрести'
+                            ]
                         ],
                         'stop_words_english' => [
                             'type' => 'stop',
@@ -65,6 +70,14 @@ class InitializeElasticSearch extends Command
                             'type' => 'nGram',
                             'min_gram' => 3,
                             'max_gram' => 8
+                        ],
+                        'english_stemmer' => [
+                            'type' => 'stemmer',
+                            'language' => 'english'
+                        ],
+                        'russian_stemmer' => [
+                            'type' => 'stemmer',
+                            'language' => 'russian'
                         ]
                     ],
                     'analyzer' => [
@@ -72,17 +85,38 @@ class InitializeElasticSearch extends Command
                             'type' => 'custom',
                             'char_filter' => 'html_strip',
                             'tokenizer' => 'whitespace',
-                            'filter' => ['lowercase', 'stop_words_russian', 'stop_words_english', 'custom_nGram']
+                            'filter' => [
+                                'lowercase',
+                                'stop_words_russian',
+                                'stop_words_english',
+                                'custom_nGram',
+                                'english_stemmer',
+                                'russian_stemmer',
+                            ]
                         ]
                     ]
                 ]
             ],
             'mappings' => [
                 'properties' => [
-                    'name' => ['type' => 'text', 'analyzer' => 'product_analyzer'],
-                    'description' => ['type' => 'text', 'analyzer' => 'product_analyzer'],
-                    'slug' => ['type' => 'text', 'analyzer' => 'product_analyzer'],
-                    'categories.name' => ['type' => 'text', 'analyzer' => 'product_analyzer'],
+                    'name' => [
+                        'type' => 'text',
+                        'analyzer' => 'product_analyzer'
+                    ],
+                    'description' => [
+                        'type' => 'text',
+                        'analyzer' => 'product_analyzer'
+                    ],
+                    'slug' => [
+                        'type' => 'keyword',
+                    ],
+                    'price' => [
+                        'type' => 'text',
+                    ],
+                    'categories.name' => [
+                        'type' => 'text',
+                        'analyzer' => 'product_analyzer'
+                    ],
                 ]
             ]
         ]);
