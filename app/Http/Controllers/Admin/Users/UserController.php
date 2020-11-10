@@ -80,11 +80,16 @@ class UserController extends Controller
 
         if ($user->syncRoles($request->input('role'))) {
 
-            \Log::channel('users')->notice('User granted role for user', [
-                'user' => $request->user()->name,
-                'granted to' => $user->name,
-                'role' => $request->input('role')
-            ]);
+            rabbitmq()->sendMessage([
+                'channel' => 'users',
+                'method' => 'notice',
+                'message' => 'User granted role for user',
+                'additional_information' => [
+                    'user' => $request->user()->name,
+                    'granted to' => $user->name,
+                    'role' => $request->input('role')
+                ]
+            ], 'logs');
 
             return redirect()->route('admin.users.show', $user->id);
         }

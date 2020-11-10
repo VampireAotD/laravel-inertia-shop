@@ -38,10 +38,15 @@ class ProductObserver
      */
     public function created(Product $product)
     {
-        \Log::channel('products')->info('New product was created by user', [
-            'product name' => $product->name,
-            'user' => request()->user()->name ?? 'migrations'
-        ]);
+        rabbitmq()->sendMessage([
+            'channel' => 'products',
+            'method' => 'info',
+            'message' => 'New product was created by user',
+            'additional_information' => [
+                'product name' => $product->name,
+                'user' => request()->user()->name ?? 'migrations'
+            ]
+        ], 'logs');
     }
 
     /**
@@ -62,10 +67,15 @@ class ProductObserver
      */
     public function updated(Product $product)
     {
-        \Log::channel('products')->info('Product was updated by user', [
-            'product name' => $product->name,
-            'user' => request()->user()->name ?? 'migrations'
-        ]);
+        rabbitmq()->sendMessage([
+            'channel' => 'products',
+            'method' => 'info',
+            'message' => 'Product was updated by user',
+            'additional_information' => [
+                'product name' => $product->name,
+                'user' => request()->user()->name ?? 'migrations'
+            ]
+        ], 'logs');
     }
 
     /**
@@ -80,10 +90,17 @@ class ProductObserver
             $this->imageService->deleteImagesFromDB($product);
         }
 
-        \Log::channel('products')->warning('Product was deleted by user', [
-            'product name' => $product->name,
-            'user' => request()->user()->name ?? 'migrations'
-        ]);
+        elasticsearch()->deleteDocumentFromIndex('products', $product);
+
+        rabbitmq()->sendMessage([
+            'channel' => 'products',
+            'method' => 'warning',
+            'message' => 'Product was deleted by user',
+            'additional_information' => [
+                'product name' => $product->name,
+                'user' => request()->user()->name ?? 'migrations'
+            ]
+        ], 'logs');
     }
 
     /**

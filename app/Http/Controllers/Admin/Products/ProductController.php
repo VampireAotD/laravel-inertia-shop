@@ -114,6 +114,7 @@ class ProductController extends Controller
                     'success' => 'Product was successfully added!'
                 ]);
         }
+
         return back()
             ->withErrors([
                 'error' => 'Error while adding product'
@@ -142,7 +143,9 @@ class ProductController extends Controller
     public function edit(string $slug)
     {
         $categoriesList = $this->categoryRepository->getItemsCollection();
+
         $product = $this->repository->getProductBySlugWithRelations($slug, ['images', 'categories:categories.id', 'orders']);
+
         return Inertia::render('Admin/Products/Edit', compact('product', 'categoriesList'));
     }
 
@@ -164,6 +167,7 @@ class ProductController extends Controller
                     'success' => 'Product was successfully added!'
                 ]);
         }
+
         return back()
             ->withErrors([
                 'error' => 'Error while adding product'
@@ -180,14 +184,13 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         if ($product->delete()) {
-            elasticsearch()->deleteDocumentFromIndex('products', $product);
-
             return redirect()
                 ->route('admin.products.index')
                 ->with('messages', [
                     'success' => 'Product was successfully deleted!'
                 ]);
         }
+
         return back()
             ->withErrors([
                 'error' => 'Error while deleting product'

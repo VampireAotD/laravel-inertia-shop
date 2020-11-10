@@ -17,7 +17,7 @@
                 </div>
 
                 <div class="flex mt-2 h-full">
-                    sokcets {{onlineUsers}}
+                    Sockets here {{onlineUsers}}
                 </div>
             </div>
         </div>

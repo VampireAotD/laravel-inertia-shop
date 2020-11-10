@@ -17,10 +17,15 @@ class CategoryObserver
      */
     public function created(Category $category)
     {
-        \Log::channel('categories')->info('New category was created by user', [
-            'category name' => $category->name,
-            'user' => request()->user()->name ?? 'migrations'
-        ]);
+        rabbitmq()->sendMessage([
+            'channel' => 'categories',
+            'method' => 'info',
+            'message' => 'New category was created by user',
+            'additional_information' => [
+                'category name' => $category->name,
+                'user' => request()->user()->name ?? 'migrations'
+            ]
+        ], 'logs');
     }
 
     /**
@@ -41,10 +46,15 @@ class CategoryObserver
      */
     public function updated(Category $category)
     {
-        \Log::channel('categories')->info('Category was updated by user', [
-            'category name' => $category->name,
-            'user' => request()->user()->name ?? 'migrations'
-        ]);
+        rabbitmq()->sendMessage([
+            'channel' => 'categories',
+            'method' => 'info',
+            'message' => 'Category was updated by user',
+            'additional_information' => [
+                'category name' => $category->name,
+                'user' => request()->user()->name ?? 'migrations'
+            ]
+        ], 'logs');
     }
 
     /**
@@ -65,10 +75,15 @@ class CategoryObserver
      */
     public function deleted(Category $category)
     {
-        \Log::channel('categories')->warning('Category was deleted by user', [
-            'category name' => $category->name,
-            'user' => request()->user()->name ?? 'migrations'
-        ]);
+        rabbitmq()->sendMessage([
+            'channel' => 'categories',
+            'method' => 'warning',
+            'message' => 'Category was deleted by user',
+            'additional_information' => [
+                'category name' => $category->name,
+                'user' => request()->user()->name ?? 'migrations'
+            ]
+        ], 'logs');
     }
 
     /**

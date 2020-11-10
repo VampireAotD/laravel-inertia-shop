@@ -25,9 +25,14 @@ class UserObserver
      */
     public function created(User $user)
     {
-        \Log::channel('users')->info('New user was registered', [
-            'user' => $user->name
-        ]);
+        rabbitmq()->sendMessage([
+            'channel' => 'users',
+            'method' => 'info',
+            'message' => 'New user was registered',
+            'additional_information' => [
+                'user' => $user->name
+            ]
+        ], 'logs');
     }
 
     /**
@@ -38,9 +43,14 @@ class UserObserver
      */
     public function updated(User $user)
     {
-        \Log::channel('users')->info('User updated his information', [
-            'user' => $user->name
-        ]);
+        rabbitmq()->sendMessage([
+            'channel' => 'users',
+            'method' => 'info',
+            'message' => 'User updated his information',
+            'additional_information' => [
+                'user' => $user->name
+            ]
+        ], 'logs');
     }
 
     /**
@@ -57,12 +67,17 @@ class UserObserver
             $user->forceFill([
                 'profile_photo_path' => null
             ])->save();
+        }
 
-            \Log::channel('users')->warning('User was deleted by', [
+        rabbitmq()->sendMessage([
+            'channel' => 'users',
+            'method' => 'warning',
+            'message' => 'User was deleted by',
+            'additional_information' => [
                 'user' => $user->name,
                 'deleted by' => request()->user()->name
-            ]);
-        }
+            ]
+        ], 'logs');
     }
 
     /**
