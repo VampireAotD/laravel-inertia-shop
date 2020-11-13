@@ -43,7 +43,7 @@
                 </control-buttons>
             </header>
 
-            <section v-if="userOrders" class="p-4">
+            <!--<section v-if="userOrders" class="p-4">
                 <p class="text-sm text-gray-600">User orders :</p>
                 <ul class=" list-reset flex flex-col">
                     <li
@@ -57,7 +57,7 @@
                         </inertia-link>
                     </li>
                 </ul>
-            </section>
+            </section>-->
 
         </div>
 
@@ -100,7 +100,7 @@
 <script>
     import AdminLayout from './../../../Layouts/AdminLayout'
     import InnerHeader from './../Components/InnerHeader'
-    import ControlButtons from './../../../Assets/ControlButtons'
+    import ControlButtons from '../../../Assets/Backend/ControlButtons'
     import JetDialogModal from '../../../Jetstream/DialogModal'
 
     import UserPermissions from '../../../Mixins/Admin/Users/UserPermissions';
@@ -154,9 +154,9 @@
                 return `${this.user.name} details`
             },
 
-            userOrders() {
+           /* userOrders() {
                 return this.ordersList.length > 0
-            }
+            }*/
         },
 
         filters: {

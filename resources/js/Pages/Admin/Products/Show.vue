@@ -114,7 +114,7 @@
 <script>
     import AdminLayout from './../../../Layouts/AdminLayout'
     import InnerHeader from './../Components/InnerHeader'
-    import ControlButtons from './../../../Assets/ControlButtons'
+    import ControlButtons from '../../../Assets/Backend/ControlButtons'
 
     import DefaultCrudRoutes from './../../../Mixins/Admin/Products/DefaultCrudRoutes'
     import ProductPermissions from '../../../Mixins/Admin/Products/ProductPermissions'

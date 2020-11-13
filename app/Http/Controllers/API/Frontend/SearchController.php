@@ -18,10 +18,10 @@ class SearchController extends Controller
             ->query([
                 'multi_match' => [
                     'query' => request()->input('term') ?? '',
-                    'fields' => ['name^7', 'description^5', 'categories.name^5', 'price^7'],
+                    'fields' => ['name^8', 'description^5', 'categories.name^5', 'price^7'],
                     'analyzer' => 'product_analyzer',
-                    'fuzziness' => 'AUTO',
-                    'prefix_length' => 0,
+                    'type' => 'phrase_prefix',
+                    'tie_breaker' => 0.3
                 ],
             ])
             ->suggest([
@@ -33,6 +33,7 @@ class SearchController extends Controller
                         'analyzer' => 'simple',
                         'sort' => 'score',
                         'suggest_mode' => 'always',
+                        'min_doc_freq' => 1
                     ]
                 ]
             ])

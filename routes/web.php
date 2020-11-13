@@ -28,34 +28,52 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanctum', 'role:admin|moderator', 'user-data']], function () {
 
     // Dashboard
-    Route::get('/', [AdminHomeController::class, 'index'])->name('dashboard');
+    Route::get('/', [AdminHomeController::class, 'index'])->middleware('permission:see dashboard')->name('dashboard');
 
     // Users
     Route::get('users/search', [UserController::class, 'search'])->name('users.search');
 
-    Route::patch('/users/{user}', [UserController::class, 'changeRole'])->name('users.change-role');
+    Route::patch('/users/{user}', [UserController::class, 'changeRole'])
+        ->middleware('permission:change user role')
+        ->name('users.change-role');
 
-    Route::resource('users', UserController::class)->only(['index', 'show', 'destroy'])->names('users');
+    Route::resource('users', UserController::class)
+        ->only(['index', 'show', 'destroy'])
+        ->middleware('permission:see users list|see one user|delete user')
+        ->names('users');
 
     // Categories
     Route::get('categories/search', [AdminCategoryController::class, 'search'])->name('categories.search');
 
-    Route::resource('categories', AdminCategoryController::class)->names('categories');
+    Route::resource('categories', AdminCategoryController::class)
+        ->middleware('permission:see categories list|see one category|create category|edit category|delete category')
+        ->names('categories');
 
     // Products
     Route::get('products/search', [AdminProductController::class, 'search'])->name('products.search');
 
-    Route::resource('products', AdminProductController::class)->names('products');
+    Route::resource('products', AdminProductController::class)
+        ->middleware('permission:see products list|see one product|create product|edit product|delete product')
+        ->names('products');
 
     // Images
-    Route::get('/images/{image}', [ImageController::class, 'updateImage'])->name('images.update-main-image');
+    Route::get('/images/{image}', [ImageController::class, 'updateImage'])
+        ->middleware('permission:update product main image')
+        ->name('images.update-main-image');
 
-    Route::delete('/images/{image}', [ImageController::class, 'destroyImage'])->name('images.destroy-image');
+    Route::delete('/images/{image}', [ImageController::class, 'destroyImage'])
+        ->middleware('permission:remove product images')
+        ->name('images.destroy-image');
 
     // Orders
-    Route::resource('orders', AdminOrderController::class)->except(['show'])->names('orders');
+    Route::resource('orders', AdminOrderController::class)
+        ->except(['show'])
+        ->middleware('permission:see orders list|accept one order|cancel one order|delete order')
+        ->names('orders');
 
-    Route::get('/orders/{user}/{date}', [AdminOrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders/{user}/{date}', [AdminOrderController::class, 'show'])
+        ->middleware('permission:see one order')
+        ->name('orders.show');
 });
 
 // Frontend routes

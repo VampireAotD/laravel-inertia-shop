@@ -27,6 +27,6 @@ class ProductController extends Controller
 
         $similarProducts = $this->repository->findSimilarProducts($product)->random(4);
 
-        return Inertia::render('Product/Show', compact('product', 'similarProducts'));
+        return Inertia::render('Frontend/Product/Show', compact('product', 'similarProducts'));
     }
 }

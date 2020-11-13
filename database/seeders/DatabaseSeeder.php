@@ -39,6 +39,5 @@ class DatabaseSeeder extends Seeder
         Slide::factory(8)->create();
         ProductCategory::factory(250)->create();
         Order::factory(150)->create();
-        UserOrder::factory(250)->create();
     }
 }

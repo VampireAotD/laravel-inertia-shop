@@ -62,20 +62,10 @@ class Order extends Model
     /**
      * Related users for current order
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function users()
     {
-        return $this->belongsToMany(User::class, UserOrder::class)->orderBy('user_id')->groupBy('user_id');
-    }
-
-    /**
-     * Related products for current order
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function products()
-    {
-        return $this->belongsToMany(Product::class, UserOrder::class);
+        return $this->belongsTo(User::class);
     }
 }

@@ -88,7 +88,7 @@
 
 <script>
     import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-    import ImageUploader from './../../../../Assets/ImageUploader'
+    import ImageUploader from '../../../../Assets/Backend/ImageUploader'
 
     export default {
         name: "product-form",

@@ -124,11 +124,11 @@ class User extends Authenticatable
     /**
      * Related orders for current user
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function orders()
     {
-        return $this->belongsToMany(Order::class, UserOrder::class)->orderByDesc('user_id')->groupBy(['user_id', 'created_at']);
+        return $this->hasMany(Order::class);
     }
 
     /**

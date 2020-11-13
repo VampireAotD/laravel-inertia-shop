@@ -61,6 +61,8 @@ class InitializeRabbitMqQueues extends Command
 
             echo now()->format('Y-m-d H:i:s') . ' Received message in logs queue...';
 
+            $start = microtime(true);
+
             $this->newLine();
 
             $messageBody = $this->makeMessageBodyForLogs($message);
@@ -96,13 +98,13 @@ class InitializeRabbitMqQueues extends Command
 
             $message->ack();
 
-            echo now()->format('Y-m-d H:i:s') . ' Processed message in logs queue...';
+            echo now()->format('Y-m-d H:i:s') . ' Message was processed in ' . (microtime(true) - $start) . ' seconds in logs queue...';
 
             $this->newLine();
         };
 
         $emailCallback = function (AMQPMessage $message) {
-            echo 'Email queue : ' . $message->body . $this->newLine();
+            // TODO : Implement email queue logic
         };
 
         rabbitmq()->consume([

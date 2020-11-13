@@ -25,7 +25,7 @@
 <script>
     import AdminLayout from './../../../Layouts/AdminLayout'
     import InnerHeader from './../Components/InnerHeader'
-    import Loader from './../../../Assets/Loader'
+    import Loader from '../../../Assets/Backend/Loader'
     import ProductForm from './Assets/ProductForm'
 
     import ImagesMethods from './../../../Mixins/Admin/Products/ImagesArrayMethods'

@@ -59,7 +59,7 @@
     import AdminLayout from './../../../Layouts/AdminLayout'
     import InnerHeader from './../Components/InnerHeader'
     import SearchForm from './../Components/SearchForm'
-    import Flash from './../../../Assets/Flash'
+    import Flash from '../../../Assets/Backend/Flash'
     import UserInfo from './Assets/UserInfo'
 
     import UserPermissions from '../../../Mixins/Admin/Users/UserPermissions'

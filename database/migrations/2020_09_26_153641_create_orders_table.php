@@ -15,7 +15,9 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
+            $table->longText('order');
             $table->tinyInteger('status')->default(0)->comment('0: order is being processed, 1: order processed');
 
             $table->timestamps();

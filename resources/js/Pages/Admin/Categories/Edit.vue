@@ -26,7 +26,7 @@
     import AdminLayout from './../../../Layouts/AdminLayout'
     import InnerHeader from './../Components/InnerHeader'
     import CategoryForm from './Assets/CategoryForm'
-    import Loader from './../../../Assets/Loader'
+    import Loader from '../../../Assets/Backend/Loader'
 
     export default {
         name: "create",

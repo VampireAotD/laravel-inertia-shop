@@ -24,7 +24,7 @@
 </template>
 
 <script>
-    import ControlButtons from '../../../../Assets/ControlButtons'
+    import ControlButtons from '../../../../Assets/Backend/ControlButtons'
     import DefaultCrudRoutes from '../../../../Mixins/Admin/Users/DefaultCrudRoutes'
 
     export default {

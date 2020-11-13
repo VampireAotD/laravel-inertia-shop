@@ -45,7 +45,7 @@
 <script>
     import AdminLayout from './../../../Layouts/AdminLayout'
     import InnerHeader from './../Components/InnerHeader'
-    import ControlButtons from './../../../Assets/ControlButtons'
+    import ControlButtons from '../../../Assets/Backend/ControlButtons'
 
     import CategoryPermissions from '../../../Mixins/Admin/Categories/CategoryPermissions'
     import DefaultCrudRoutes from './../../../Mixins/Admin/Categories/DefaultCrudRoutes'

@@ -36,7 +36,7 @@ class FavoriteController extends Controller
 
         $products = $this->productRepository->getProductsByIds(json_decode($ids));
 
-        return Inertia::render('Favorite/Index', compact('products'));
+        return Inertia::render('Frontend/Favorite/Index', compact('products'));
     }
 
     /**

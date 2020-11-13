@@ -64,7 +64,7 @@
     import AdminLayout from './../../../Layouts/AdminLayout'
     import InnerHeader from './../Components/InnerHeader'
     import SearchForm from './../Components/SearchForm'
-    import Flash from './../../../Assets/Flash'
+    import Flash from '../../../Assets/Backend/Flash'
     import ProductInfo from './Assets/ProductInfo'
 
     import ProductPermissions from '../../../Mixins/Admin/Products/ProductPermissions'

@@ -1,7 +1,7 @@
 <template>
     <form @submit.prevent class="flex items-center relative w-2/6">
-        <input type="search" class="px-4 w-full" v-model="searchQuery" placeholder="Search..." min="3">
-        <div class="absolute top-36 left-0 z-50 w-full" v-if="searchResults.hits">
+        <input type="search" class="px-4 w-full" v-model="searchQuery" placeholder="Search..." min="3" @blur="showDropDown = false" @focus="showDropDown = true">
+        <div class="absolute top-36 left-0 z-50 w-full" v-if="searchResults.hits && showDropDown">
             <div class="rounded shadow-md my-2 pin-t pin-l bg-white">
                 <ul class="list-reset">
                     <li v-for="product in searchResults.hits.hits">
@@ -45,8 +45,9 @@
 
         data() {
             return {
-                searchQuery: '',
-                searchResults: {}
+                searchQuery : '',
+                searchResults : {},
+                showDropDown : true,
             }
         },
 
@@ -54,6 +55,10 @@
             async search(value) {
                 let response = await axios.post(this.$route('search'), {term: value})
                 this.searchResults = response.data
+            },
+
+            hideDropDown(){
+
             }
         },
 

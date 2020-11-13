@@ -23,9 +23,19 @@ class OrderFactory extends Factory
      */
     public function definition()
     {
+        $order = [];
+
+        for ($i = 0; $i < rand(1, 10); $i++) {
+            $order[] = [
+                'product' => Product::pluck('id')->random(),
+                'amount' => rand(1, 5)
+            ];
+        }
+
         return [
+            'user_id' => User::pluck('id')->random(),
+            'order' => json_encode($order),
             'status' => rand(0, 1),
-            'amount' => $this->faker->numberBetween(2, 5)
         ];
     }
 }

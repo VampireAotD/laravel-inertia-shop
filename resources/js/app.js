@@ -8,10 +8,10 @@ import PortalVue from 'portal-vue';
 import VueIziToast from 'vue-izitoast';
 import CKEditor from '@ckeditor/ckeditor5-vue'
 import VueSlider from 'vue-slider-component'
-import Authorize from './Backend/Authorize/Authorize'
+import Authorize from './Services/Backend/Authorize/Authorize'
 import Viewer from 'v-viewer'
 import VueSmoothScroll from 'vue2-smooth-scroll'
-import Socket from './Socket/Connect'
+import Socket from './Services/Common/Socket/Connect'
 
 import 'izitoast/dist/css/iziToast.min.css';
 import 'vue-slick-carousel/dist/vue-slick-carousel.css'
