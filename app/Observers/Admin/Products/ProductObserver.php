@@ -2,6 +2,7 @@
 
 namespace App\Observers\Admin\Products;
 
+use App\DTO\RabbitMq\LogMessageDto;
 use App\Models\Product;
 use App\Observers\Traits\SetSlug;
 use App\Services\Admin\Interfaces\Images\ImageServiceInterface;
@@ -38,15 +39,12 @@ class ProductObserver
      */
     public function created(Product $product)
     {
-        rabbitmq()->sendMessage([
-            'channel' => 'products',
-            'method' => 'info',
-            'message' => 'New product was created by user',
-            'additional_information' => [
-                'product name' => $product->name,
-                'user' => request()->user()->name ?? 'migrations'
-            ]
-        ], 'logs');
+        $message = new LogMessageDto('products', 'info','New product was created by user', [
+            'category name' => $product->name,
+            'user' => request()->user()->name ?? 'migrations'
+        ]);
+
+        rabbitmq()->sendMessage($message, 'logs');
     }
 
     /**
@@ -67,15 +65,12 @@ class ProductObserver
      */
     public function updated(Product $product)
     {
-        rabbitmq()->sendMessage([
-            'channel' => 'products',
-            'method' => 'info',
-            'message' => 'Product was updated by user',
-            'additional_information' => [
-                'product name' => $product->name,
-                'user' => request()->user()->name ?? 'migrations'
-            ]
-        ], 'logs');
+        $message = new LogMessageDto('products', 'notice','Product was updated by user', [
+            'category name' => $product->name,
+            'user' => request()->user()->name ?? 'migrations'
+        ]);
+
+        rabbitmq()->sendMessage($message, 'logs');
     }
 
     /**
@@ -92,15 +87,12 @@ class ProductObserver
 
         elasticsearch()->deleteDocumentFromIndex('products', $product);
 
-        rabbitmq()->sendMessage([
-            'channel' => 'products',
-            'method' => 'warning',
-            'message' => 'Product was deleted by user',
-            'additional_information' => [
-                'product name' => $product->name,
-                'user' => request()->user()->name ?? 'migrations'
-            ]
-        ], 'logs');
+        $message = new LogMessageDto('products', 'warning','Product was deleted by user', [
+            'category name' => $product->name,
+            'user' => request()->user()->name ?? 'migrations'
+        ]);
+
+        rabbitmq()->sendMessage($message, 'logs');
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\Home;
 
 use App\Repositories\Admin\Orders\OrderRepositoryInterface;
 use App\Repositories\Admin\Users\UserRepositoryInterface;

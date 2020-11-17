@@ -65,7 +65,7 @@ class InitializeRabbitMqQueues extends Command
 
             $this->newLine();
 
-            $messageBody = $this->makeMessageBodyForLogs($message);
+            $messageBody = json_decode($message->body);
 
             switch ($messageBody->method) {
                 case 'info' :
@@ -73,7 +73,7 @@ class InitializeRabbitMqQueues extends Command
                         ->channel($messageBody->channel)
                         ->info(
                             $messageBody->message,
-                            (array)$messageBody->additional_information
+                            (array)$messageBody->additionalInformation
                         );
                     break;
 
@@ -82,7 +82,7 @@ class InitializeRabbitMqQueues extends Command
                         ->channel($messageBody->channel)
                         ->notice(
                             $messageBody->message,
-                            (array)$messageBody->additional_information
+                            (array)$messageBody->additionalInformation
                         );
                     break;
 
@@ -91,7 +91,7 @@ class InitializeRabbitMqQueues extends Command
                         ->channel($messageBody->channel)
                         ->warning(
                             $messageBody->message,
-                            (array)$messageBody->additional_information
+                            (array)$messageBody->additionalInformation
                         );
                     break;
             }
@@ -113,19 +113,5 @@ class InitializeRabbitMqQueues extends Command
         ]);
 
         rabbitmq()->closeConnections();
-    }
-
-    protected function makeMessageBodyForLogs(AMQPMessage $message)
-    {
-        $messageBody = json_decode($message->body);
-        $messageBody->method = $messageBody->method ?? 'warning';
-        $messageBody->channel = $messageBody->channel ?? 'single';
-        $messageBody->message = $messageBody->message ?? 'Something went wrong with log';
-        $messageBody->additional_information = $messageBody->additional_information ?? [
-                'time' => now()->format('Y-m-d H:i:s'),
-                'reason' => 'Empty values'
-            ];
-
-        return $messageBody;
     }
 }

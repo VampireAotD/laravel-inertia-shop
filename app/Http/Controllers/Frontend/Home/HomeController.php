@@ -18,7 +18,7 @@ class HomeController extends Controller
     public function index()
     {
         $products = $this->productRepository->getItemsWithPagination(12);
-        
+
         return Inertia::render('Frontend/Dashboard', compact('products'));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services\Admin\Images;
 
+use App\DTO\RabbitMq\LogMessageDto;
 use App\Models\Image;
 use App\Models\Product;
 use App\Models\Slide;
@@ -43,20 +44,17 @@ class ImageService implements ImageServiceInterface
      * @param UploadedFile $image
      * @return Image
      */
-    public function createImage($model, string $model_type, int $number = 0, string $folder, UploadedFile $image): Image
+    public function createImage($model, string $model_type, string $folder, UploadedFile $image, int $number = 0): Image
     {
         $storage_folder = $this->makeStorageFolder($folder, $model->slug ?? $model->name);
         $alias = $this->makeImageAlias();
 
-        rabbitmq()->sendMessage([
-            'channel' => 'images',
-            'method' => 'info',
-            'message' => 'Set new image for model',
-            'additional_information' => [
-                'model id' => $model->id,
-                'model type' => $model_type,
-            ]
-        ], 'logs');
+        $message = new LogMessageDto('images', 'info', 'Set new image for model', [
+            'model id' => $model->id,
+            'model type' => $model_type,
+        ]);
+
+        rabbitmq()->sendMessage($message, 'logs');
 
         return Image::create([
             'model_type' => $model_type,
@@ -119,15 +117,12 @@ class ImageService implements ImageServiceInterface
     {
         Image::modelImages($image->model_type, $image->model_id)->update(['is_main' => false]);
 
-        rabbitmq()->sendMessage([
-            'channel' => 'images',
-            'method' => 'warning',
-            'message' => 'Updated main image for model',
-            'additional_information' => [
-                'model id' => $image->model_id,
-                'model type' => $image->model_type
-            ]
-        ], 'logs');
+        $message = new LogMessageDto('images', 'notice', 'Updated main image for model', [
+            'model id' => $image->model_id,
+            'model type' => $image->model_type
+        ]);
+
+        rabbitmq()->sendMessage($message, 'logs');
 
         return $image->update([
             'is_main' => true
@@ -142,15 +137,12 @@ class ImageService implements ImageServiceInterface
      */
     public function deleteImage(Image $image): bool
     {
-        rabbitmq()->sendMessage([
-            'channel' => 'images',
-            'method' => 'warning',
-            'message' => 'Deleted image from model',
-            'additional_information' => [
-                'model id' => $image->model_id,
-                'model type' => $image->model_type
-            ]
-        ], 'logs');
+        $message = new LogMessageDto('images', 'warning', 'Deleted image from model', [
+            'model id' => $image->model_id,
+            'model type' => $image->model_type
+        ]);
+
+        rabbitmq()->sendMessage($message, 'logs');
 
         return $this->api->deleteResources($image->alias) && $image->delete();
     }
@@ -163,7 +155,7 @@ class ImageService implements ImageServiceInterface
      */
     private function isMainImage($number): bool
     {
-        return $number === 0 ? true : false;
+        return $number === 0;
     }
 
     /**

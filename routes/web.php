@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Admin\HomeController as AdminHomeController;
+use App\Http\Controllers\Admin\Home\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\Images\ImageController;
 use App\Http\Controllers\Admin\Categories\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\Products\ProductController as AdminProductController;

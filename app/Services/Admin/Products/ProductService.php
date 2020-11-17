@@ -45,9 +45,9 @@ class ProductService
                             $this->imageService->createImage(
                                 $this->product,
                                 Product::class,
-                                $key,
                                 Product::PRODUCTS_FOLDER,
-                                $image
+                                $image,
+                                $key
                             )
                         );
                     }
@@ -86,9 +86,9 @@ class ProductService
                                 $this->imageService->createImage(
                                     $product,
                                     Product::class,
-                                    $key,
                                     Product::PRODUCTS_FOLDER,
-                                    $image
+                                    $image,
+                                    $key
                                 )
                             );
                         }

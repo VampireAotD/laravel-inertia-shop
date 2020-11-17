@@ -2,6 +2,7 @@
 
 namespace App\Helpers\RabbitMq;
 
+use App\DTO\DataTransferObject;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -97,13 +98,13 @@ class RabbitMq
     /**
      * Send message to queue
      *
-     * @param array $messageBody
+     * @param DataTransferObject|string $messageBody
      * @param string $exchangeName
      * @param string $routingKey
      * @param array $options
      */
     public function sendMessage(
-        array $messageBody,
+        $messageBody,
         string $exchangeName,
         string $routingKey = '',
         array $options = [
@@ -111,7 +112,11 @@ class RabbitMq
         ]
     )
     {
-        $message = new AMQPMessage(json_encode($messageBody), $options);
+        if ($messageBody instanceof DataTransferObject) {
+            $messageBody = $messageBody->convert('json');
+        }
+
+        $message = new AMQPMessage($messageBody, $options);
 
         return $this->channel->basic_publish($message, $exchangeName, $routingKey);
     }
@@ -120,22 +125,22 @@ class RabbitMq
      * Read one message from queue
      *
      * @param string $queueName     | Name of the queue to consume
+     * @param \Closure $callable    | Callback function that need to handle incoming message
      * @param string $consumerTag   | Name of the consumer
      * @param bool $noLocal         | Don't receive messages published by this consumer
      * @param bool $noAck           | If we read message from this queue, delete it automatically
      * @param bool $exclusive       | Only this consumer can access queue
      * @param bool $noWait
-     * @param \Closure $callable    | Callback function that need to handle incoming message
      * @return string
      */
     public function readMessage(
         string $queueName,
+        \Closure $callable,
         string $consumerTag = '',
         bool $noLocal = false,
         bool $noAck = false,
         bool $exclusive = false,
-        bool $noWait = false,
-        \Closure $callable
+        bool $noWait = false
     )
     {
         return $this->channel->basic_consume($queueName, $consumerTag, $noLocal, $noAck, $exclusive, $noWait, $callable);
@@ -154,11 +159,6 @@ class RabbitMq
 
             $this->readMessage(
                 $queue['queueName'],
-                '',
-                false,
-                false,
-                false,
-                false,
                 $queue['callback']
             );
         }

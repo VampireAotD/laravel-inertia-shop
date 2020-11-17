@@ -19,7 +19,7 @@ trait HasCdnProfilePhoto
             $imageService = app(ImageServiceInterface::class);
 
             $this->forceFill([
-                'profile_photo_path' => $imageService->createImage($this, $this->className(), 0, $this->profilePhotoFolder(), $photo)->path
+                'profile_photo_path' => $imageService->createImage($this, $this->className(),  $this->profilePhotoFolder(), $photo)->path
             ])->save();
 
             if ($previous) {
@@ -27,7 +27,7 @@ trait HasCdnProfilePhoto
                 $imageService->deleteImagesFromDB($this);
 
                 $this->forceFill([
-                    'profile_photo_path' => $imageService->createImage($this, $this->className(), 0, $this->profilePhotoFolder(), $photo)->path
+                    'profile_photo_path' => $imageService->createImage($this, $this->className(),  $this->profilePhotoFolder(), $photo)->path
                 ])->save();
             }
         });

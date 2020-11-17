@@ -2,6 +2,7 @@
 
 namespace App\Observers\Admin\Categories;
 
+use App\DTO\RabbitMq\LogMessageDto;
 use App\Models\Category;
 use App\Observers\Traits\SetSlug;
 
@@ -17,15 +18,12 @@ class CategoryObserver
      */
     public function created(Category $category)
     {
-        rabbitmq()->sendMessage([
-            'channel' => 'categories',
-            'method' => 'info',
-            'message' => 'New category was created by user',
-            'additional_information' => [
-                'category name' => $category->name,
-                'user' => request()->user()->name ?? 'migrations'
-            ]
-        ], 'logs');
+        $message = new LogMessageDto('categories', 'info','New category was created by user', [
+            'category name' => $category->name,
+            'user' => request()->user()->name ?? 'migrations'
+        ]);
+
+        rabbitmq()->sendMessage($message, 'logs');
     }
 
     /**
@@ -46,15 +44,12 @@ class CategoryObserver
      */
     public function updated(Category $category)
     {
-        rabbitmq()->sendMessage([
-            'channel' => 'categories',
-            'method' => 'info',
-            'message' => 'Category was updated by user',
-            'additional_information' => [
-                'category name' => $category->name,
-                'user' => request()->user()->name ?? 'migrations'
-            ]
-        ], 'logs');
+        $message = new LogMessageDto('categories', 'notice','Category was updated by user', [
+            'category name' => $category->name,
+            'user' => request()->user()->name ?? 'migrations'
+        ]);
+
+        rabbitmq()->sendMessage($message->convert('json'), 'logs');
     }
 
     /**
@@ -75,15 +70,12 @@ class CategoryObserver
      */
     public function deleted(Category $category)
     {
-        rabbitmq()->sendMessage([
-            'channel' => 'categories',
-            'method' => 'warning',
-            'message' => 'Category was deleted by user',
-            'additional_information' => [
-                'category name' => $category->name,
-                'user' => request()->user()->name ?? 'migrations'
-            ]
-        ], 'logs');
+        $message = new LogMessageDto('categories', 'warning','Category was deleted by user', [
+            'category name' => $category->name,
+            'user' => request()->user()->name ?? 'migrations'
+        ]);
+
+        rabbitmq()->sendMessage($message->convert('json'), 'logs');
     }
 
     /**
