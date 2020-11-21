@@ -7,15 +7,12 @@ use App\Models\Image;
 use App\Models\Product;
 use App\Models\Slide;
 use App\Models\User;
-use App\Repositories\Admin\Products\ProductRepositoryInterface;
-use App\Services\Admin\Interfaces\Images\ImageServiceInterface;
 use Cloudinary\Api\Admin\AdminApi;
-use Cloudinary\Api\Upload\UploadApi;
-use Illuminate\Database\Eloquent\Model;
+use Cloudinary\Api\Exception\ApiError;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 
-class ImageService implements ImageServiceInterface
+class ImageService
 {
     private $api;
 
@@ -92,16 +89,26 @@ class ImageService implements ImageServiceInterface
      * @param string $folder
      * @param string $model_type
      * @return bool
-     * @throws \Cloudinary\Api\Exception\ApiError
      */
     public function deleteImagesWithFolderFromCDN($model, string $folder, string $model_type): bool
     {
-        $images = collect(Image::modelImages($model_type, $model->id)->get())->pluck('alias')->toArray();
+        try {
+            $images = collect(Image::modelImages($model_type, $model->id)->get())->pluck('alias')->toArray();
 
-        if ($images) {
-            if ($this->api->deleteResources($images) && $this->api->deleteFolder($folder)) {
-                return true;
+            if ($images) {
+                if ($this->api->deleteResources($images) && $this->api->deleteFolder($folder)) {
+                    return true;
+                }
             }
+        } catch (ApiError $exception) {
+            $message = new LogMessageDto('images', 'warning', 'CDN exception while deleting images and folder', [
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString()
+            ]);
+
+            rabbitmq()->sendMessage($message, 'logs');
         }
 
         return false;
@@ -130,21 +137,43 @@ class ImageService implements ImageServiceInterface
     }
 
     /**
+     * Delete one image from CDN
+     *
      * @param Image $image
      * @return bool
-     * @throws \Cloudinary\Api\Exception\ApiError
-     * @throws \Exception
      */
     public function deleteImage(Image $image): bool
     {
-        $message = new LogMessageDto('images', 'warning', 'Deleted image from model', [
-            'model id' => $image->model_id,
-            'model type' => $image->model_type
-        ]);
+        try {
+            $message = new LogMessageDto('images', 'warning', 'Deleted image from model', [
+                'model id' => $image->model_id,
+                'model type' => $image->model_type
+            ]);
 
-        rabbitmq()->sendMessage($message, 'logs');
+            rabbitmq()->sendMessage($message, 'logs');
 
-        return $this->api->deleteResources($image->alias) && $image->delete();
+            return $this->api->deleteResources($image->alias) && $image->delete();
+        } catch (ApiError $exception) {
+            $message = new LogMessageDto('images', 'warning', 'CDN exception while deleting image', [
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString()
+            ]);
+
+            rabbitmq()->sendMessage($message, 'logs');
+        } catch (\Exception $exception) {
+            $message = new LogMessageDto('images', 'warning', 'Exception while deleting image', [
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString()
+            ]);
+
+            rabbitmq()->sendMessage($message, 'logs');
+        }
+
+        return false;
     }
 
     /**
