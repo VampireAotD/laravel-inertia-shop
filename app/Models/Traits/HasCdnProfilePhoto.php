@@ -2,7 +2,7 @@
 
 namespace App\Models\Traits;
 
-use App\Services\Admin\Interfaces\Images\ImageServiceInterface;
+use App\Services\Admin\Images\ImageService;
 use Illuminate\Http\UploadedFile;
 
 trait HasCdnProfilePhoto
@@ -16,7 +16,7 @@ trait HasCdnProfilePhoto
     public function updateProfilePhoto(UploadedFile $photo)
     {
         tap($this->profile_photo_path, function ($previous) use ($photo) {
-            $imageService = app(ImageServiceInterface::class);
+            $imageService = app(ImageService::class);
 
             $this->forceFill([
                 'profile_photo_path' => $imageService->createImage($this, $this->className(),  $this->profilePhotoFolder(), $photo)->path
@@ -40,7 +40,7 @@ trait HasCdnProfilePhoto
      */
     public function deleteProfilePhoto()
     {
-        $imageService = app(ImageServiceInterface::class);
+        $imageService = app(ImageService::class);
 
         $imageService->deleteImage($this->image()->first());
 

@@ -100,7 +100,7 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
      * @param array $relations
      * @return mixed
      */
-    public function getProductBySlugWithRelations(string $slug, array $relations = ['images', 'categories', 'orders', 'orders.users'])
+    public function getProductBySlugWithRelations(string $slug, array $relations = ['images', 'categories'])
     {
         $product = $this->findItemBySlug($slug);
         return $product->load($relations);

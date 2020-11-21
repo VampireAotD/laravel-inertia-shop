@@ -6,6 +6,12 @@ use App\Models\Product;
 
 class CartService
 {
+    /**
+     * Add new item to cart
+     *
+     * @param Product $product
+     * @return bool
+     */
     public function addToCart(Product $product)
     {
         $cart = session()->get('cart');
@@ -27,6 +33,11 @@ class CartService
         return true;
     }
 
+    /**
+     * Remove item from cart
+     *
+     * @param Product $product
+     */
     public function removeFromCart(Product $product): void
     {
         $cart = session()->get('cart');
@@ -49,6 +60,9 @@ class CartService
         session(['cart' => json_encode($cart)]);
     }
 
+    /**
+     * Clear cart
+     */
     public function deleteCart()
     {
         return session()->forget('cart');

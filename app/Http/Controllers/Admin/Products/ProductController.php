@@ -103,7 +103,7 @@ class ProductController extends Controller
      * Store a newly created resource in storage.
      *
      * @param ProductRequest $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(ProductRequest $request)
     {
@@ -144,7 +144,7 @@ class ProductController extends Controller
     {
         $categoriesList = $this->categoryRepository->getItemsCollection();
 
-        $product = $this->repository->getProductBySlugWithRelations($slug, ['images', 'categories:categories.id', 'orders']);
+        $product = $this->repository->getProductBySlugWithRelations($slug, ['images', 'categories:categories.id']);
 
         return Inertia::render('Admin/Products/Edit', compact('product', 'categoriesList'));
     }
@@ -154,7 +154,7 @@ class ProductController extends Controller
      *
      * @param UpdateProductRequest $request
      * @param string $slug
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(UpdateProductRequest $request, string $slug)
     {
@@ -178,7 +178,7 @@ class ProductController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Product $product
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
     public function destroy(Product $product)

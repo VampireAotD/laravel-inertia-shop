@@ -12,8 +12,6 @@ use App\Repositories\Admin\Products\ProductRepository;
 use App\Repositories\Admin\Products\ProductRepositoryInterface;
 use App\Repositories\Admin\Users\UserRepository;
 use App\Repositories\Admin\Users\UserRepositoryInterface;
-use App\Services\Admin\Images\ImageService;
-use App\Services\Admin\Interfaces\Images\ImageServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -32,10 +30,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ImageRepositoryInterface::class, ImageRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(OrderRepositoryInterface::class, OrderRepository::class);
-
-        // Services
-
-        $this->app->bind(ImageServiceInterface::class, ImageService::class);
     }
 
     /**

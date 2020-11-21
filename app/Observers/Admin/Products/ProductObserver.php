@@ -5,18 +5,18 @@ namespace App\Observers\Admin\Products;
 use App\DTO\RabbitMq\LogMessageDto;
 use App\Models\Product;
 use App\Observers\Traits\SetSlug;
-use App\Services\Admin\Interfaces\Images\ImageServiceInterface;
+use App\Services\Admin\Images\ImageService;
 
 class ProductObserver
 {
     use SetSlug;
 
     /**
-     * @var ImageServiceInterface
+     * @var ImageService
      */
     private $imageService;
 
-    public function __construct(ImageServiceInterface $imageService)
+    public function __construct(ImageService $imageService)
     {
         $this->imageService = $imageService;
     }

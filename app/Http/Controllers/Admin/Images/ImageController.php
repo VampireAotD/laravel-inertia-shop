@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin\Images;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\Admin\Images\ImageRepositoryInterface;
-use App\Services\Admin\Interfaces\Images\ImageServiceInterface;
+use App\Services\Admin\Images\ImageService;
 
 class ImageController extends Controller
 {
@@ -12,7 +12,7 @@ class ImageController extends Controller
 
     private $service;
 
-    public function __construct(ImageRepositoryInterface $imageRepository, ImageServiceInterface $imageService)
+    public function __construct(ImageRepositoryInterface $imageRepository, ImageService $imageService)
     {
         $this->repository = $imageRepository;
         $this->service = $imageService;
@@ -43,9 +43,9 @@ class ImageController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroyImage($id)
+    public function destroyImage(int $id)
     {
         $image = $this->repository->findItemById($id);
 

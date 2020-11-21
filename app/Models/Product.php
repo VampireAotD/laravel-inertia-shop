@@ -90,7 +90,7 @@ class Product extends Model
      */
     public function orders()
     {
-        return $this->belongsToMany(Order::class, UserOrder::class);
+//        return $this->belongsToMany(Order::class);// TODO : make this work
     }
 
     /**

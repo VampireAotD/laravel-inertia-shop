@@ -37,7 +37,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
      * @param array $relations
      * @return mixed
      */
-    public function findUserByIdWithRelations(int $id, array $relations = ['orders', 'roles', 'orders.users'])
+    public function findUserByIdWithRelations(int $id, array $relations = ['roles', 'orders.users'])
     {
         $user = $this->findItemById($id);
         return $user->load($relations);

@@ -170,12 +170,14 @@ class RabbitMq
 
     /**
      * Close all connections to RabbitMQ
-     *
-     * @throws \Exception
      */
     public function closeConnections()
     {
-        $this->channel->close();
-        $this->connection->close();
+        try{
+            $this->channel->close();
+            $this->connection->close();
+        }catch (\Exception $exception){
+            dd('Cannot close connection to Rabbit');
+        }
     }
 }

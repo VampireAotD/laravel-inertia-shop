@@ -2,10 +2,11 @@
 
 namespace App\Services\Admin\Products;
 
+use App\DTO\RabbitMq\LogMessageDto;
 use App\Http\Requests\Products\ProductRequest;
 use App\Http\Requests\Products\UpdateProductRequest;
 use App\Models\Product;
-use App\Services\Admin\Interfaces\Images\ImageServiceInterface;
+use App\Services\Admin\Images\ImageService;
 use Illuminate\Http\UploadedFile;
 
 class ProductService
@@ -16,11 +17,11 @@ class ProductService
     private $product;
 
     /**
-     * @var ImageServiceInterface
+     * @var ImageService
      */
     private $imageService;
 
-    public function __construct(Product $product, ImageServiceInterface $imageService)
+    public function __construct(Product $product, ImageService $imageService)
     {
         $this->product = $product;
         $this->imageService = $imageService;
@@ -58,8 +59,15 @@ class ProductService
                     return true;
                 }
             }
-        } catch (\Throwable $e) {
-            dd($e->getFile(), $e->getMessage(), $e->getLine());
+        } catch (\Throwable $exception) {
+            $message = new LogMessageDto('products', 'warning', 'CDN exception while adding new product', [
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString()
+            ]);
+
+            rabbitmq()->sendMessage($message, 'logs');
         }
 
         return false;
@@ -100,8 +108,15 @@ class ProductService
                     return true;
                 }
             }
-        } catch (\Throwable $e) {
-            dd($e->getFile(), $e->getMessage(), $e->getLine());
+        } catch (\Throwable $exception) {
+            $message = new LogMessageDto('products', 'warning', 'CDN exception while updating product', [
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString()
+            ]);
+
+            rabbitmq()->sendMessage($message, 'logs');
         }
 
         return false;

@@ -2,17 +2,18 @@
 
 namespace App\Observers\Users;
 
+use App\DTO\RabbitMq\LogMessageDto;
 use App\Models\User;
-use App\Services\Admin\Interfaces\Images\ImageServiceInterface;
+use App\Services\Admin\Images\ImageService;
 
 class UserObserver
 {
     /**
-     * @var ImageServiceInterface
+     * @var ImageService
      */
     private $imageService;
 
-    public function __construct(ImageServiceInterface $imageService)
+    public function __construct(ImageService $imageService)
     {
         $this->imageService = $imageService;
     }
@@ -25,14 +26,11 @@ class UserObserver
      */
     public function created(User $user)
     {
-        rabbitmq()->sendMessage([
-            'channel' => 'users',
-            'method' => 'info',
-            'message' => 'New user was registered',
-            'additional_information' => [
-                'user' => $user->name
-            ]
-        ], 'logs');
+        $message = new LogMessageDto('users', 'info','New user was registered', [
+            'user' => $user->name
+        ]);
+
+        rabbitmq()->sendMessage($message, 'logs');
     }
 
     /**
@@ -43,14 +41,11 @@ class UserObserver
      */
     public function updated(User $user)
     {
-        rabbitmq()->sendMessage([
-            'channel' => 'users',
-            'method' => 'info',
-            'message' => 'User updated his information',
-            'additional_information' => [
-                'user' => $user->name
-            ]
-        ], 'logs');
+        $message = new LogMessageDto('users', 'info','User updated his information', [
+            'user' => $user->name
+        ]);
+
+        rabbitmq()->sendMessage($message, 'logs');
     }
 
     /**
@@ -69,15 +64,12 @@ class UserObserver
             ])->save();
         }
 
-        rabbitmq()->sendMessage([
-            'channel' => 'users',
-            'method' => 'warning',
-            'message' => 'User was deleted by',
-            'additional_information' => [
-                'user' => $user->name,
-                'deleted by' => request()->user()->name
-            ]
-        ], 'logs');
+        $message = new LogMessageDto('users', 'warning','User was deleted by', [
+            'user' => $user->name,
+            'deleted by' => request()->user()->name
+        ]);
+
+        rabbitmq()->sendMessage($message, 'logs');
     }
 
     /**

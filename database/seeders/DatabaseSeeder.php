@@ -8,8 +8,6 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Slide;
 use App\Models\User;
-use App\Models\UserOrder;
-use Database\Factories\UserOrderFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder

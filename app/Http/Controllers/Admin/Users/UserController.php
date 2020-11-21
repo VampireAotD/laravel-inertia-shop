@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Users;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Repositories\Admin\Users\UserRepositoryInterface;
+use App\Services\Admin\Users\UserService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -15,9 +16,15 @@ class UserController extends Controller
      */
     private $repository;
 
-    public function __construct(UserRepositoryInterface $userRepository)
+    /**
+     * @var UserService
+     */
+    private $service;
+
+    public function __construct(UserRepositoryInterface $userRepository, UserService $userService)
     {
         $this->repository = $userRepository;
+        $this->service = $userService;
     }
 
     /**
@@ -60,7 +67,7 @@ class UserController extends Controller
      * @param  int $id
      * @return \Inertia\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         $user = $this->repository->findUserByIdWithRelations($id);
 
@@ -78,19 +85,7 @@ class UserController extends Controller
     {
         $user = $this->repository->findItemById($id);
 
-        if ($user->syncRoles($request->input('role'))) {
-
-            rabbitmq()->sendMessage([
-                'channel' => 'users',
-                'method' => 'notice',
-                'message' => 'User granted role for user',
-                'additional_information' => [
-                    'user' => $request->user()->name,
-                    'granted to' => $user->name,
-                    'role' => $request->input('role')
-                ]
-            ], 'logs');
-
+        if ($this->service->changeRole($user, $request)) {
             return redirect()->route('admin.users.show', $user->id);
         }
 
@@ -103,9 +98,9 @@ class UserController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $user = $this->repository->findItemById($id);
 
