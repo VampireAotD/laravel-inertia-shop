@@ -102,12 +102,13 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param Product $product
      * @param ProductRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(ProductRequest $request)
+    public function store(Product $product, ProductRequest $request)
     {
-        if ($this->service->store($request)) {
+        if ($this->service->upsert($product, $request)) {
             return redirect()
                 ->route('admin.products.index')
                 ->with('messages', [
@@ -160,7 +161,7 @@ class ProductController extends Controller
     {
         $product = $this->repository->findItemBySlug($slug);
 
-        if ($this->service->update($request, $product)) {
+        if ($this->service->upsert($product, $request)) {
             return redirect()
                 ->route('admin.products.show', $product->slug)
                 ->with('messages', [
@@ -168,7 +169,8 @@ class ProductController extends Controller
                 ]);
         }
 
-        return back()
+        return redirect()
+            ->route('admin.products.show', $product->slug)
             ->withErrors([
                 'error' => 'Error while adding product'
             ]);
@@ -177,7 +179,7 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Product $product
+     * @param \App\Models\Product $product
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */

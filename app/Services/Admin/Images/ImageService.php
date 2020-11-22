@@ -152,6 +152,16 @@ class ImageService
 
             rabbitmq()->sendMessage($message, 'logs');
 
+            if ($image->is_main) {
+                $next_image = Image::where('model_id', $image->model_id)
+                    ->where('is_main', '!=', Image::IS_MAIN)
+                    ->first();
+
+                if ($next_image) {
+                    $next_image->update(['is_main' => Image::IS_MAIN]);
+                }
+            }
+
             return $this->api->deleteResources($image->alias) && $image->delete();
         } catch (ApiError $exception) {
             $message = new LogMessageDto('images', 'warning', 'CDN exception while deleting image', [

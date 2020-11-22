@@ -152,6 +152,6 @@ class Product extends Model
      */
     public function getMainImagePathAttribute()
     {
-        return $this->images->where('is_main', 1)->first()->path ?? Image::DEFAULT_PRODUCT_IMAGE;
+        return $this->images->where('is_main', Image::IS_MAIN)->first()->path ?? Image::DEFAULT_PRODUCT_IMAGE;
     }
 }

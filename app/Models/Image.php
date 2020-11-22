@@ -39,6 +39,7 @@ class Image extends Model
 
     const DEFAULT_PRODUCT_IMAGE = 'https://res.cloudinary.com/dwcqlqa5y/image/upload/w_1000,ar_16:9,c_fill,g_auto,e_sharpen/v1601644770/angry_emilia.jpg';
     const DEFAULT_SLIDER_IMAGE = 'https://res.cloudinary.com/dwcqlqa5y/image/upload/v1601644881/smiling_madara.jpg';
+    const IS_MAIN = 1;
 
     protected $fillable = ['model_type', 'model_id', 'is_main', 'path', 'alias'];
 
