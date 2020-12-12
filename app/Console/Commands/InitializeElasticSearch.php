@@ -38,10 +38,14 @@ class InitializeElasticSearch extends Command
      */
     public function handle()
     {
+        $bar = $this->output->createProgressBar();
+
         if (elasticsearch()->indexExist('products')) {
             echo 'Deleting index....' . $this->newLine();
 
             elasticsearch()->deleteIndex('products');
+
+            $bar->advance();
         }
 
         echo 'Creating index....' . $this->newLine();
@@ -121,9 +125,13 @@ class InitializeElasticSearch extends Command
             ]
         ]);
 
+        $bar->advance();
+
         echo 'Adding documents to index....' . $this->newLine();
 
         elasticsearch()->addDocumentsToIndex('products', Product::with('categories')->get());
+
+        $bar->advance();
 
         echo 'Index was created!' . $this->newLine();
 

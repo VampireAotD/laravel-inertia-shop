@@ -86,11 +86,11 @@ class Product extends Model
     /**
      * Related orders for current product
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function orders()
     {
-//        return $this->belongsToMany(Order::class);// TODO : make this work
+        return $this->belongsTo(Order::class);
     }
 
     /**

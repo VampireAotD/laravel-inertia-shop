@@ -2,9 +2,9 @@
     <admin-layout :header-title="title">
 
         <inner-header
-                :route="$route('admin.users.index')"
-                title="Users list"
-                classes="bg-transparent hover:bg-blue-500 text-white-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+            :route="$route('admin.users.index')"
+            title="Users list"
+            classes="bg-transparent hover:bg-blue-500 text-white-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
         />
 
         <hr>
@@ -19,13 +19,13 @@
                 <p class="text-sm text-gray-600">Created {{ user.created_date }}</p>
                 <p class="text-sm text-gray-600">Last updated {{ user.updated_date }}</p>
                 <p>Role : <span
-                        class="border bg-gray-200 text-gray-400 px-1">{{ user.roles[0] ? user.role : 'User' }}</span>
+                    class="border bg-gray-200 text-gray-400 px-1">{{ user.roles[0] ? user.role : 'User' }}</span>
                 </p>
 
                 <control-buttons
-                        :routes="routes"
-                        :permissions="permissions"
-                        class="mt-2"
+                    :routes="routes"
+                    :permissions="permissions"
+                    class="mt-2"
                 >
                     <template #additional-links>
                         <inertia-link href="#" title="Change user role" v-if="permissions.changeRole"
@@ -33,7 +33,8 @@
                                       class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                  class="fill-current w-5 h-5">
-                                <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"/>
+                                <path
+                                    d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"/>
                                 <path fill-rule="evenodd"
                                       d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
                                       clip-rule="evenodd"/>
@@ -43,21 +44,21 @@
                 </control-buttons>
             </header>
 
-            <!--<section v-if="userOrders" class="p-4">
-                <p class="text-sm text-gray-600">User orders :</p>
+            <section v-if="userOrders" class="p-4">
+                <p class="text-sm text-gray-600">User orders ({{ totalOrders }}):</p>
                 <ul class=" list-reset flex flex-col">
                     <li
-                            class="relative -mb-px block border p-4 border-grey"
-                            v-for="(order, index) in ordersList"
-                            :key="index"
-                            v-if="order.users[0]"
+                        class="relative -mb-px block border p-4 border-grey"
+                        v-for="(order, index) in ordersList"
+                        :key="index"
+                        v-if="order"
                     >
-                        <inertia-link :href="$route('admin.orders.show', {user : order.users[0], date : order.created_at})">
+                        <inertia-link :href="$route('admin.orders.show', {user : order.user.id, date : order.created_at})">
                             Order #{{ order.id }}
                         </inertia-link>
                     </li>
                 </ul>
-            </section>-->
+            </section>
 
         </div>
 
@@ -73,9 +74,9 @@
                             <select class="form-select block w-full mt-1" v-model="form.role">
                                 <option :value="0" selected>Choose role</option>
                                 <option
-                                        v-for="role in $page.allRoles"
-                                        :selected="user.roles[0] ? (role.id === user.roles[0].id) : null"
-                                        :value="role.id"
+                                    v-for="role in $page.allRoles"
+                                    :selected="user.roles[0] ? (role.id === user.roles[0].id) : null"
+                                    :value="role.id"
                                 >
                                     {{ role.name | ucFirst }}
                                 </option>
@@ -83,8 +84,9 @@
                         </div>
 
                         <div class="w-full px-3 mt-2 flex justify-center">
-                            <input class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border border-green-700 rounded shadow-md cursor-pointer"
-                                   type="submit" value="Submit">
+                            <input
+                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border border-green-700 rounded shadow-md cursor-pointer"
+                                type="submit" value="Submit">
                             <button type="button" @click="changeUserRole = false"
                                     class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 border border-green-700 rounded shadow-md cursor-pointer ml-2">
                                 Cancel
@@ -98,73 +100,77 @@
 </template>
 
 <script>
-    import AdminLayout from './../../../Layouts/AdminLayout'
-    import InnerHeader from './../Components/InnerHeader'
-    import ControlButtons from '../../../Assets/Backend/ControlButtons'
-    import JetDialogModal from '../../../Jetstream/DialogModal'
+import AdminLayout from './../../../Layouts/AdminLayout'
+import InnerHeader from './../Components/InnerHeader'
+import ControlButtons from '../../../Assets/Backend/ControlButtons'
+import JetDialogModal from '../../../Jetstream/DialogModal'
 
-    import UserPermissions from '../../../Mixins/Admin/Users/UserPermissions';
-    import DefaultCrudRoutes from '../../../Mixins/Admin/Users/DefaultCrudRoutes';
+import UserPermissions from '../../../Mixins/Admin/Users/UserPermissions';
+import DefaultCrudRoutes from '../../../Mixins/Admin/Users/DefaultCrudRoutes';
 
-    export default {
-        name: "show",
+export default {
+    name: "show",
 
-        props: {
-            user: {
-                type: Object,
-                required: true
-            }
+    props: {
+        user: {
+            type: Object,
+            required: true
+        }
+    },
+
+    components: {
+        AdminLayout,
+        InnerHeader,
+        ControlButtons,
+        JetDialogModal
+    },
+
+    mixins: [
+        UserPermissions,
+        DefaultCrudRoutes
+    ],
+
+    data() {
+        return {
+            ordersList: this.user.orders,
+            changeUserRole: false,
+            form: this.$inertia.form({
+                '_method': 'patch',
+                role: this.user.roles[0]?.id ?? 0
+            })
+        }
+    },
+
+    methods: {
+        changeRole() {
+            this.form.patch(this.$route('admin.users.change-role', {user: this.user.id}), {
+                preserveScroll: false,
+            }).finally(() => {
+                this.changeUserRole = false
+            })
+        }
+    },
+
+    computed: {
+        title() {
+            return `${this.user.name} details`
         },
 
-        components: {
-            AdminLayout,
-            InnerHeader,
-            ControlButtons,
-            JetDialogModal
+        userOrders() {
+            return this.ordersList.length > 0
         },
 
-        mixins: [
-            UserPermissions,
-            DefaultCrudRoutes
-        ],
+        totalOrders() {
+            return this.ordersList.length
+        }
+    },
 
-        data() {
-            return {
-                ordersList: this.user.orders,
-                changeUserRole: false,
-                form: this.$inertia.form({
-                    '_method': 'patch',
-                    role: this.user.roles[0]?.id ?? 0
-                })
-            }
-        },
-
-        methods: {
-            changeRole() {
-                this.form.patch(this.$route('admin.users.change-role', {user: this.user.id}), {
-                    preserveScroll: false,
-                }).finally(() => {
-                    this.changeUserRole = false
-                })
-            }
-        },
-
-        computed: {
-            title() {
-                return `${this.user.name} details`
-            },
-
-           /* userOrders() {
-                return this.ordersList.length > 0
-            }*/
-        },
-
-        filters: {
-            ucFirst(value) {
-                return value.charAt(0).toUpperCase() + value.slice(1)
-            }
+    filters: {
+        ucFirst(value) {
+            return value.charAt(0).toUpperCase() + value.slice(1)
         }
     }
+}
 </script>
 
 <style scoped>

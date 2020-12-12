@@ -12,7 +12,7 @@ class WebSocket extends Command
      *
      * @var string
      */
-    protected $signature = 'socket:serve';
+    protected $signature = 'websocket:serve';
 
     /**
      * The console command description.
@@ -56,9 +56,10 @@ class WebSocket extends Command
         };
 
         $this->socket->onClose = function ($connection) {
-            if(in_array($connection, $this->connections)){
-                unset($this->connections[array_search($connection, $this->connections)]);
-                echo 'User with id ' . $connection->user_id . ' has disconnected' . $this->newLine();
+            foreach ($this->connections as $index => $currentConnection) {
+                if($connection->user_id === $currentConnection->user_id){
+                    unset($this->connections[$index]);
+                }
             }
 
             $this->connections = array_values($this->connections);
@@ -71,11 +72,12 @@ class WebSocket extends Command
         Worker::runAll();
     }
 
+    /**
+     * Connection handler
+     */
     private function start()
     {
         $this->socket->onWebSocketConnect = function ($connection) {
-
-            $connection->date = strtotime(now()->toString());
 
             if (isset($_GET['user_id'])) {
                 $connection->user_id = $_GET['user_id'];
@@ -83,23 +85,36 @@ class WebSocket extends Command
                 $connection->user_id = 'guest';
             }
 
-            if (!in_array($connection->user_id, $this->connections)) {
+            $connection->date = now()->format('d.m.Y H:i:s');
+            $connection->page = $_GET['on'];
+
+            if(empty($this->connections)){
                 $this->connections[] = $connection;
             }
 
             echo 'User with id ' . $connection->user_id . ' has connected' . $this->newLine();
 
             foreach ($this->connections as $user) {
+                if($user->user_id !== $connection->user_id){
+                    $this->connections[] = $connection;
+                }
+
                 $user->send($this->makeUsersArray($this->connections));
             }
         };
     }
 
+    /**
+     * Make message for socket
+     *
+     * @param array $connections
+     * @return false|string
+     */
     private function makeUsersArray(array $connections){
         $users = [];
 
         foreach ($connections as $connection) {
-            $users[] = $connection->user_id;
+            $users[] = ['id' => $connection->user_id, 'date' => $connection->date, 'page' => $connection->page];
         }
 
         return json_encode($users);

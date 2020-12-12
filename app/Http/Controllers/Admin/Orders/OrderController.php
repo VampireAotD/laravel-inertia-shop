@@ -56,7 +56,7 @@ class OrderController extends Controller
      */
     public function show(User $user, $date)
     {
-        $products = $this->repository->findOrderProductsByUserAndOrderDate($user->id, $date)->pluck('products');
+        $products = $this->repository->findOrderProductsByUserAndOrderDate($user->id, $date);
         dd($products);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Repositories\Admin\Orders;
 
 use App\Models\Order;
+use App\Models\Product;
 use App\Repositories\BaseRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -91,7 +92,7 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
         $productsCollection = [];
 
         $orders = $this->startConditions()
-            ->whereHas('users', function ($query) use ($userId) {
+            ->whereHas('user', function ($query) use ($userId) {
                 return $query->where('users.id', $userId);
             })
             ->where('created_at', $createdAt)
@@ -99,8 +100,8 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
             ->get();
 
         foreach ($orders as $order) {
-            foreach ($order->products as $product) {
-                $productsCollection[] = $product;
+            foreach (json_decode($order->order) as $product) {
+                $productsCollection[] = ['product' => Product::find($product->product), 'amount' => $product->amount];
             }
         }
 
