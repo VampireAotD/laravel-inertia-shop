@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Categories\CategoryController as AdminCategoryCon
 use App\Http\Controllers\Admin\Products\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\Orders\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\Users\UserController;
+use App\Http\Controllers\API\Frontend\RecentViewsController;
 use App\Http\Controllers\Frontend\Cart\CartController;
 use App\Http\Controllers\Frontend\Favorite\FavoriteController;
 use App\Http\Controllers\Frontend\Home\HomeController;
@@ -28,9 +29,11 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanctum', 'role:admin|moderator', 'user-data']], function () {
 
     // Dashboard
+
     Route::get('/', [AdminHomeController::class, 'index'])->middleware('permission:see dashboard')->name('dashboard');
 
     // Users
+
     Route::get('users/search', [UserController::class, 'search'])->name('users.search');
 
     Route::patch('/users/{user}', [UserController::class, 'changeRole'])
@@ -43,6 +46,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanc
         ->names('users');
 
     // Categories
+
     Route::get('categories/search', [AdminCategoryController::class, 'search'])->name('categories.search');
 
     Route::resource('categories', AdminCategoryController::class)
@@ -50,6 +54,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanc
         ->names('categories');
 
     // Products
+
     Route::get('products/search', [AdminProductController::class, 'search'])->name('products.search');
 
     Route::resource('products', AdminProductController::class)
@@ -57,6 +62,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanc
         ->names('products');
 
     // Images
+
     Route::get('/images/{image}', [ImageController::class, 'updateImage'])
         ->middleware('permission:update product main image')
         ->name('images.update-main-image');
@@ -66,6 +72,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanc
         ->name('images.destroy-image');
 
     // Orders
+
     Route::resource('orders', AdminOrderController::class)
         ->except(['show'])
         ->middleware('permission:see orders list|accept one order|cancel one order|delete order')
@@ -81,6 +88,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanc
 Route::group(['middleware' => ['favorite-list', 'cart']], function () {
 
     // Home
+
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
     // Profile and API Tokens
@@ -94,6 +102,7 @@ Route::group(['middleware' => ['favorite-list', 'cart']], function () {
     Route::get('/product/{product}', [ProductController::class, 'show'])->name('product');
 
     // Cart
+
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
 
     Route::get('/add-to-cart/{product}', [CartController::class, 'add'])->name('add-to-cart');
@@ -103,6 +112,7 @@ Route::group(['middleware' => ['favorite-list', 'cart']], function () {
     Route::get('/destroy-cart', [CartController::class, 'destroy'])->name('destroy-cart');
 
     // Favorite list
+
     Route::get('/favorite-list', [FavoriteController::class, 'index'])->name('favorite-list');
 
     Route::get('/add-to-favorite/{product}', [FavoriteController::class, 'add'])->name('add-to-favorite');
@@ -110,4 +120,8 @@ Route::group(['middleware' => ['favorite-list', 'cart']], function () {
     Route::get('/remove-from-favorite/{product}', [FavoriteController::class, 'remove'])->name('remove-from-favorite');
 
     Route::delete('/destroy-favorite-list', [FavoriteController::class, 'destroy'])->name('destroy-favorite-list');
+
+    // Recent views
+
+    Route::get('/recent-views', RecentViewsController::class)->name('recent-views');
 });

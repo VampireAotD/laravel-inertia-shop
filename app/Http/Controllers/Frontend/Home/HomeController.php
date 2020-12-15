@@ -8,6 +8,9 @@ use Inertia\Inertia;
 
 class HomeController extends Controller
 {
+    /**
+     * @var ProductRepositoryInterface
+     */
     private $productRepository;
 
     public function __construct(ProductRepositoryInterface $productRepository)
@@ -15,6 +18,11 @@ class HomeController extends Controller
         $this->productRepository = $productRepository;
     }
 
+    /**
+     * Main page
+     *
+     * @return \Inertia\Response
+     */
     public function index()
     {
         $products = $this->productRepository->getItemsWithPagination(12);

@@ -12,12 +12,14 @@ import Authorize from './Services/Backend/Authorize/Authorize'
 import Viewer from 'v-viewer'
 import VueSmoothScroll from 'vue2-smooth-scroll'
 import Socket from './Services/Common/Socket/Connect'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
 
 import 'izitoast/dist/css/iziToast.min.css';
 import 'vue-slick-carousel/dist/vue-slick-carousel.css'
 import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
 import 'vue-slider-component/theme/default.css'
 import 'viewerjs/dist/viewer.css'
+import 'swiper/swiper-bundle.css'
 
 Vue.use(InertiaApp);
 Vue.use(InertiaForm);
@@ -28,6 +30,7 @@ Vue.use(Authorize);
 Vue.use(Viewer);
 Vue.use(VueSmoothScroll)
 Vue.use(Socket)
+Vue.use(VueAwesomeSwiper)
 
 const app = document.getElementById('app');
 
