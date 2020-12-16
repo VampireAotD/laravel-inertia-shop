@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\IsAuthenticated;
 use App\Http\Middleware\ShareCart;
 use App\Http\Middleware\ShareFavoriteList;
 use App\Http\Middleware\ShareInertiaData;
@@ -71,5 +72,6 @@ class Kernel extends HttpKernel
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
+        'is_authenticated' => IsAuthenticated::class
     ];
 }

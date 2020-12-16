@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Categories\CategoryController as AdminCategoryCon
 use App\Http\Controllers\Admin\Products\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\Orders\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\Users\UserController;
+use App\Http\Controllers\API\Facebook\FacebookLoginController;
 use App\Http\Controllers\API\Frontend\RecentViewsController;
 use App\Http\Controllers\Frontend\Cart\CartController;
 use App\Http\Controllers\Frontend\Favorite\FavoriteController;
@@ -90,6 +91,16 @@ Route::group(['middleware' => ['favorite-list', 'cart']], function () {
     // Home
 
     Route::get('/', [HomeController::class, 'index'])->name('home');
+
+    // Facebook Auth
+
+    Route::get('/facebook/login', [FacebookLoginController::class, 'redirect'])
+        ->middleware('is_authenticated')
+        ->name('facebook-login');
+
+    Route::get('/facebook/callback', [FacebookLoginController::class, 'callback'])
+        ->middleware('is_authenticated')
+        ->name('facebook-callback');
 
     // Profile and API Tokens
 
