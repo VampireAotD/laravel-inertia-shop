@@ -11,14 +11,18 @@ class RecentViewsController extends Controller
 {
     public function __invoke(Request $request)
     {
-        if (Redis::hExists('users', 'user:' . $request->ip())) {
-            $list = json_decode(Redis::hGet('users', 'user:' . $request->ip()), true);
+        if ($request->ajax()) {
+            if (Redis::hExists('users', 'user:' . $request->ip())) {
+                $list = json_decode(Redis::hGet('users', 'user:' . $request->ip()), true);
 
-            usort($list, fn($current, $next) => $current['expire'] > $next['expire']);
+                usort($list, fn($current, $next) => $current['expire'] < $next['expire']);
 
-            return Product::find(collect($list)->pluck('id'));
+                return Product::find(collect($list)->pluck('id'));
+            }
+
+            return [];
         }
 
-        return [];
+        return redirect()->route('home');
     }
 }

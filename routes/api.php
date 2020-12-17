@@ -19,4 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/search', [SearchController::class, 'search'])->name('search');
+// ElasticSearch
+
+Route::post('/search', SearchController::class)->name('search');
+

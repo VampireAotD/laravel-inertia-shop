@@ -12,7 +12,7 @@ class SearchController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function search()
+    public function __invoke()
     {
         $search = elasticsearch()
             ->query([

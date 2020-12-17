@@ -212,7 +212,7 @@
                 </pagination>
 
                 <!--Recent views-->
-                <h3 class="mt-3">Recent views</h3>
+                <h3 class="mt-3 uppercase tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl ">Recent views</h3>
                 <recent-views v-if="issetRecentViews" :products="recentViews" class="mt-3"></recent-views>
             </div>
         </div>
@@ -222,7 +222,7 @@
 <script>
 import AppLayout from '../../Layouts/AppLayout'
 
-import InCart from '../../Mixins/Frontend/InCart'
+import InList from '../../Mixins/Frontend/InList'
 import RecentViews from './Assets/RecentViews'
 
 export default {
@@ -233,7 +233,7 @@ export default {
 
     props: ['products'],
 
-    mixins: [InCart],
+    mixins: [InList],
 
     data() {
         return {
@@ -251,15 +251,7 @@ export default {
             }
 
             this.$inertia.visit(this.$route('home', {page}))
-        },
-
-        inFavoriteList({id}) {
-            if (!this.$page.favorite_list) {
-                return false;
-            }
-
-            return this.$page.favorite_list.includes(id);
-        },
+        }
     },
 
     computed: {
