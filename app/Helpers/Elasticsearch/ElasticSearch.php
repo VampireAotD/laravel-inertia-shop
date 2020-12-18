@@ -135,6 +135,23 @@ class ElasticSearch
     }
 
     /**
+     * Analyzing string by exploding it to words
+     *
+     * Use analyzers to improve analysis
+     *
+     * @param string $indexName
+     * @param array $body
+     * @return array
+     */
+    public function analyzeString(string $indexName, array $body)
+    {
+        return $this->builder->indices()->analyze([
+            'index' => $indexName,
+            'body' => $body
+        ]);
+    }
+
+    /**
      * Update index settings
      *
      * @param string $indexName
@@ -178,11 +195,7 @@ class ElasticSearch
     public function addDocumentsToIndex(string $indexName, Collection $documents)
     {
         foreach ($documents as $document) {
-            $this->builder->index([
-                'index' => $indexName,
-                'id' => $document->id,
-                'body' => $document->toArray()
-            ]);
+            $this->addDocumentToIndex($indexName, $document);
         }
 
         return true;

@@ -20,18 +20,16 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(RolesAndPermissionsSeeder::class);
+        $this->call(CreateAdminSeeder::class);
+
         User::factory(10)
             ->create()
             ->each(function ($user) {
-            /**
-             * @var $user User
-             */
-            if ($user->id === 1) {
-                $user->assignRole('admin');
-            }else{
+                /**
+                 * @var $user User
+                 */
                 $user->assignRole('user');
-            }
-        });
+            });
         Category::factory(15)->create();
         Product::factory(100)->create();
         Slide::factory(8)->create();

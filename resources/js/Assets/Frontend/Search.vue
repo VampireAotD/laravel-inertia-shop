@@ -1,6 +1,11 @@
 <template>
     <form @submit.prevent class="flex items-center relative w-2/6">
-        <input type="search" class="px-4 w-full" v-model="searchQuery" placeholder="Search..." min="3" @blur="showDropDown = false" @focus="showDropDown = true">
+        <input type="search"
+               class="px-4 w-full"
+               v-model="searchQuery"
+               placeholder="Search..."
+               minlength="3"
+        >
         <div class="absolute top-36 left-0 z-50 w-full" v-if="searchResults.hits && showDropDown">
             <div class="rounded shadow-md my-2 pin-t pin-l bg-white">
                 <ul class="list-reset">
@@ -27,10 +32,12 @@
                             class="border-t-2 border-gray-600"
                     >
                         <p
-                                class="p-2 block text-black hover:bg-grey-light cursor-pointer"
-                                @click="searchQuery = searchResults.suggest.product_suggest[0].options[0].text"
+                            class="p-2 block text-black hover:bg-grey-light cursor-pointer"
+                            v-if="searchResults.suggest.product_suggest[0].options[0]"
                         >
-                            Maybe you mean <em>{{searchResults.suggest.product_suggest[0].options[0].text}}</em>?
+                            <span @click="searchQuery = searchResults.suggest.product_suggest[0].options[0].text">
+                                Maybe you mean <em> {{searchResults.suggest.product_suggest[0].options[0].text}} </em> ?
+                            </span>
                         </p>
                     </li>
                 </ul>
@@ -55,16 +62,12 @@
             async search(value) {
                 let response = await axios.post(this.$route('search'), {term: value})
                 this.searchResults = response.data
-            },
-
-            hideDropDown(){
-
             }
         },
 
         watch: {
             searchQuery(value) {
-                if (value.length >= 3) {
+                if (value.trim().length >= 3) {
                     this.search(value)
                 } else {
                     this.searchResults = {}

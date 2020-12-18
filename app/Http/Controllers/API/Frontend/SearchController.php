@@ -14,31 +14,38 @@ class SearchController extends Controller
      */
     public function __invoke()
     {
+        $term = elasticsearch()->analyzeString('products', [
+            'text' => request()->input('term') ?? '',
+            'analyzer' => 'russian_replace_analyzer'
+        ]);
+
+        $analyzed_term = $term['tokens'][0]['token'];
+
         $search = elasticsearch()
             ->query([
                 'multi_match' => [
-                    'query' => request()->input('term') ?? '',
+                    'query' => $analyzed_term,
                     'fields' => ['name^8', 'description^5', 'categories.name^5', 'price^7'],
                     'analyzer' => 'product_analyzer',
-                    'type' => 'phrase_prefix',
-                    'tie_breaker' => 0.3
+                    'fuzziness' => 'AUTO',
+                    'prefix_length' => 3
                 ],
             ])
             ->suggest([
                 'product_suggest' => [
-                    'text' => request()->input('term') ?? '',
+                    'text' => $analyzed_term,
                     'term' => [
                         'field' => 'name',
                         'size' => 1,
                         'analyzer' => 'simple',
                         'sort' => 'score',
                         'suggest_mode' => 'always',
-                        'min_doc_freq' => 1
+                        'min_doc_freq' => 1,
                     ]
                 ]
             ])
             ->highlight([
-                'pre_tags' => '<span style="color:red;">',
+                'pre_tags' => "<span style='color:red;'>",
                 'post_tags' => '</span>',
                 'fields' => [
                     'name' => (object)[]

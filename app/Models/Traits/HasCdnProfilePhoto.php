@@ -10,16 +10,16 @@ trait HasCdnProfilePhoto
     /**
      * Update the user's profile photo.
      *
-     * @param  \Illuminate\Http\UploadedFile $photo
+     * @param \Illuminate\Http\UploadedFile $photo
      * @return void
      */
-    public function updateProfilePhoto(UploadedFile $photo)
+    protected function updateProfilePhoto(UploadedFile $photo)
     {
         tap($this->profile_photo_path, function ($previous) use ($photo) {
             $imageService = app(ImageService::class);
 
             $this->forceFill([
-                'profile_photo_path' => $imageService->createImage($this, $this->className(),  $this->profilePhotoFolder(), $photo)->path
+                'profile_photo_path' => $imageService->createImage($this, $this->className(), $this->profilePhotoFolder(), $photo)->path
             ])->save();
 
             if ($previous) {
@@ -27,7 +27,7 @@ trait HasCdnProfilePhoto
                 $imageService->deleteImagesFromDB($this);
 
                 $this->forceFill([
-                    'profile_photo_path' => $imageService->createImage($this, $this->className(),  $this->profilePhotoFolder(), $photo)->path
+                    'profile_photo_path' => $imageService->createImage($this, $this->className(), $this->profilePhotoFolder(), $photo)->path
                 ])->save();
             }
         });
@@ -38,11 +38,13 @@ trait HasCdnProfilePhoto
      *
      * @return void
      */
-    public function deleteProfilePhoto()
+    protected function deleteProfilePhoto()
     {
         $imageService = app(ImageService::class);
 
-        $imageService->deleteImage($this->image()->first());
+        if ($this->image()->first()) {
+            $imageService->deleteImage($this->image()->first());
+        }
 
         $this->forceFill([
             'profile_photo_path' => null,
@@ -54,7 +56,7 @@ trait HasCdnProfilePhoto
      *
      * @return string
      */
-    public function getProfilePhotoUrlAttribute()
+    protected function getProfilePhotoUrlAttribute()
     {
         return $this->profile_photo_path
             ? $this->profile_photo_path

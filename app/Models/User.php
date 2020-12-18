@@ -61,6 +61,8 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read mixed $updated_date
  * @property-read \App\Models\Image|null $image
  * @property-read int|null $orders_count
+ * @property string $uuid
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUuid($value)
  */
 class User extends Authenticatable
 {

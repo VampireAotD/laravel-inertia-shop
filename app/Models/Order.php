@@ -38,6 +38,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read mixed $updated_date
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUuid($value)
  * @property-read \App\Models\Product|null $product
+ * @property string $order
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrder($value)
  */
 class Order extends Model
 {

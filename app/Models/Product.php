@@ -48,6 +48,8 @@ use Illuminate\Support\Str;
  * @property-read mixed $updated_date
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
  * @property-read int|null $users_count
+ * @property string $uuid
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereUuid($value)
  */
 class Product extends Model
 {

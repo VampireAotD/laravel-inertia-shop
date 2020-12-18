@@ -5,11 +5,13 @@ namespace App\Observers\Admin\Products;
 use App\DTO\RabbitMq\LogMessageDto;
 use App\Models\Product;
 use App\Observers\Traits\SetSlug;
+use App\Observers\Traits\SetUuid;
 use App\Services\Admin\Images\ImageService;
 
 class ProductObserver
 {
     use SetSlug;
+    use SetUuid;
 
     /**
      * @var ImageService
@@ -29,17 +31,18 @@ class ProductObserver
     public function creating(Product $product)
     {
         $this->setSlug($product);
+        $this->setUuid($product);
     }
 
     /**
      * Handle the product "created" event.
      *
-     * @param  \App\Models\Product $product
+     * @param \App\Models\Product $product
      * @return void
      */
     public function created(Product $product)
     {
-        $message = new LogMessageDto('products', 'info','New product was created by user', [
+        $message = new LogMessageDto('products', 'info', 'New product was created by user', [
             'category name' => $product->name,
             'user' => request()->user()->name ?? 'migrations'
         ]);
@@ -60,12 +63,12 @@ class ProductObserver
     /**
      * Handle the product "updated" event.
      *
-     * @param  \App\Models\Product $product
+     * @param \App\Models\Product $product
      * @return void
      */
     public function updated(Product $product)
     {
-        $message = new LogMessageDto('products', 'notice','Product was updated by user', [
+        $message = new LogMessageDto('products', 'notice', 'Product was updated by user', [
             'category name' => $product->name,
             'user' => request()->user()->name ?? 'migrations'
         ]);
@@ -76,18 +79,18 @@ class ProductObserver
     /**
      * Handle the product "deleted" event.
      *
-     * @param  \App\Models\Product $product
+     * @param \App\Models\Product $product
      * @return void
      */
     public function deleted(Product $product)
     {
-        if ($this->imageService->deleteImagesWithFolderFromCDN($product, "products/$product->slug", Product::class)) {
+        if ($this->imageService->deleteImagesWithFolderFromCDN($product, "products/$product->uuid", Product::class)) {
             $this->imageService->deleteImagesFromDB($product);
         }
 
         elasticsearch()->deleteDocumentFromIndex('products', $product);
 
-        $message = new LogMessageDto('products', 'warning','Product was deleted by user', [
+        $message = new LogMessageDto('products', 'warning', 'Product was deleted by user', [
             'category name' => $product->name,
             'user' => request()->user()->name ?? 'migrations'
         ]);
@@ -98,7 +101,7 @@ class ProductObserver
     /**
      * Handle the product "restored" event.
      *
-     * @param  \App\Models\Product $product
+     * @param \App\Models\Product $product
      * @return void
      */
     public function restored(Product $product)
@@ -109,7 +112,7 @@ class ProductObserver
     /**
      * Handle the product "force deleted" event.
      *
-     * @param  \App\Models\Product $product
+     * @param \App\Models\Product $product
      * @return void
      */
     public function forceDeleted(Product $product)

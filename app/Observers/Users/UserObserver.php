@@ -4,10 +4,13 @@ namespace App\Observers\Users;
 
 use App\DTO\RabbitMq\LogMessageDto;
 use App\Models\User;
+use App\Observers\Traits\SetUuid;
 use App\Services\Admin\Images\ImageService;
 
 class UserObserver
 {
+    use SetUuid;
+
     /**
      * @var ImageService
      */
@@ -16,6 +19,17 @@ class UserObserver
     public function __construct(ImageService $imageService)
     {
         $this->imageService = $imageService;
+    }
+
+    /**
+     * Handle the user "creating" event.
+     *
+     * @param  \App\Models\User $user
+     * @return void
+     */
+    public function creating(User $user)
+    {
+        $this->setUuid($user);
     }
 
     /**
@@ -56,7 +70,7 @@ class UserObserver
      */
     public function deleted(User $user)
     {
-        if ($this->imageService->deleteImagesWithFolderFromCDN($user, "users/$user->name", User::class)) {
+        if ($this->imageService->deleteImagesWithFolderFromCDN($user, "users/$user->uuid", User::class)) {
             $this->imageService->deleteImagesFromDB($user);
 
             $user->forceFill([

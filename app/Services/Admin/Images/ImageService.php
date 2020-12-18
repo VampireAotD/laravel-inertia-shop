@@ -43,7 +43,8 @@ class ImageService
      */
     public function createImage($model, string $model_type, string $folder, UploadedFile $image, int $number = 0): Image
     {
-        $storage_folder = $this->makeStorageFolder($folder, $model->slug ?? $model->name);
+        $storage_folder = $this->makeStorageFolder($folder, $model->uuid);
+
         $alias = $this->makeImageAlias();
 
         $message = new LogMessageDto('images', 'info', 'Set new image for model', [
@@ -201,12 +202,12 @@ class ImageService
      * Makes an alias for storage folder on Cloudinary
      *
      * @param string $folder
-     * @param string $modelSlug
+     * @param string $modelAttribute
      * @return string
      */
-    private function makeStorageFolder(string $folder, string $modelSlug)
+    private function makeStorageFolder(string $folder, string $modelAttribute)
     {
-        return "$folder/$modelSlug";
+        return "$folder/$modelAttribute";
     }
 
     /**

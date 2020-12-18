@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Product;
-use Database\Factories\traits\FakerFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -26,6 +25,7 @@ class ProductFactory extends Factory
         return [
             'name' => $name = $this->faker->name . ' product',
             'slug' => Str::slug($name),
+            'uuid' => Str::uuid(),
             'price' => $this->faker->numberBetween(500, 1000),
             'amount' => $this->faker->numberBetween(0, rand(100, 5000)),
             'description' => rand(0, 1) ? $this->faker->realText(rand(100, 5000)) : null,

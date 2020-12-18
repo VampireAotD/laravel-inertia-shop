@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Product;
 use App\Models\Slide;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class SlideFactory extends Factory
 {
@@ -23,7 +24,8 @@ class SlideFactory extends Factory
     public function definition()
     {
         return [
-            'product_id' => Product::pluck('id')->random()
+            'product_id' => Product::pluck('id')->random(),
+            'uuid' => Str::uuid(),
         ];
     }
 }
