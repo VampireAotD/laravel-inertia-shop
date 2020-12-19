@@ -118,7 +118,12 @@ return [
         'users' => [
             'driver' => 'single',
             'path' => storage_path('logs/users.log')
-        ]
+        ],
+
+        'emails' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/emails.log')
+        ],
     ],
 
 ];

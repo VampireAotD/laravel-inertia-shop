@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\DTO\RabbitMq\LogMessageDto;
+use App\Mail\NotifyAdminForNewOrder;
 use Illuminate\Console\Command;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -59,7 +61,7 @@ class InitializeRabbitMqQueues extends Command
         // Callbacks
         $logsCallback = function (AMQPMessage $message) {
 
-            echo now()->format('Y-m-d H:i:s') . ' Received message in logs queue...';
+            echo now()->format('Y-m-d H:i:s') . ' [x] Received message in logs queue...';
 
             $start = microtime(true);
 
@@ -98,13 +100,28 @@ class InitializeRabbitMqQueues extends Command
 
             $message->ack();
 
-            echo now()->format('Y-m-d H:i:s') . ' Message was processed in ' . (microtime(true) - $start) . ' seconds in logs queue...';
+            echo now()->format('Y-m-d H:i:s') . ' [x] Message was processed in ' . (microtime(true) - $start) . ' seconds in logs queue...';
 
             $this->newLine();
         };
 
         $emailCallback = function (AMQPMessage $message) {
-            // TODO : Implement email queue logic
+
+            echo now()->format('Y-m-d H:i:s') . ' [x] Received message in email queue...';
+
+            $start = microtime(true);
+
+            $this->newLine();
+
+            \Mail::send(new NotifyAdminForNewOrder(json_decode($message->body)));
+
+            echo now()->format('Y-m-d H:i:s') . ' [x] Message was processed in ' . (microtime(true) - $start) . ' seconds in email queue...';
+
+            $this->newLine();
+
+            $message->ack();
+
+            rabbitmq()->sendMessage(new LogMessageDto('emails','notice','Sended email'), 'logs');
         };
 
         rabbitmq()->consume([

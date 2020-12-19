@@ -1,7 +1,7 @@
 <template>
     <form @submit.prevent class="flex items-center relative w-2/6">
         <input type="search"
-               class="px-4 w-full"
+               class="border-2 w-full border-gray-300 bg-white h-9 px-5 rounded-lg text-sm focus:outline-none"
                v-model="searchQuery"
                placeholder="Search..."
                minlength="3"

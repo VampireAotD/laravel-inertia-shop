@@ -2,10 +2,40 @@
 
 namespace App\Services\Frontend\Cart;
 
+use App\Events\UserOrdered;
 use App\Models\Product;
+use App\Models\User;
 
 class CartService
 {
+    /**
+     * Process user order
+     *
+     * @param User $user
+     * @return bool
+     */
+    public function order(User $user)
+    {
+        if(session()->get('cart')){
+            $order = $user->orders()->make([
+                'order' => session()->get('cart'),
+            ]);
+
+            if($order->save()){
+                event(new UserOrdered($order));
+
+                session()->forget('cart');
+                session('cart', []);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        return false;
+    }
+
     /**
      * Add new item to cart
      *

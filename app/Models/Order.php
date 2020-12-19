@@ -48,12 +48,12 @@ class Order extends Model
     use DiffForHumansTimestampAttributes;
 
     protected $fillable = [
-        'product_id',
+        'order',
         'status'
     ];
 
     protected $casts = [
-        'product_id' => 'integer',
+        'order' => 'string',
         'status' => 'integer',
     ];
 

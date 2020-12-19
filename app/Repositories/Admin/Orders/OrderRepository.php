@@ -100,9 +100,7 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
             ->get();
 
         foreach ($orders as $order) {
-            foreach (json_decode($order->order) as $product) {
-                $productsCollection[] = ['product' => Product::find($product->product), 'amount' => $product->amount];
-            }
+            $productsCollection[] = Product::whereIn('id', json_decode($order->order))->get();
         }
 
         return collect($productsCollection);

@@ -212,7 +212,8 @@
                 </pagination>
 
                 <!--Recent views-->
-                <h3 class="mt-3 uppercase tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl ">Recent views</h3>
+                <h3 class="mt-3 uppercase tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl ">
+                    Recent views</h3>
                 <recent-views v-if="issetRecentViews" :products="recentViews" class="mt-3"></recent-views>
             </div>
         </div>
@@ -222,12 +223,14 @@
 <script>
 import AppLayout from '../../Layouts/AppLayout'
 
+import Breadcrumbs from "../../Assets/Frontend/Breadcrumbs";
 import InList from '../../Mixins/Frontend/InList'
-import RecentViews from './Assets/RecentViews'
+import RecentViews from '../../Assets/Frontend/RecentViews'
 
 export default {
     components: {
         AppLayout,
+        Breadcrumbs,
         RecentViews
     },
 

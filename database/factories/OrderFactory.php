@@ -26,10 +26,7 @@ class OrderFactory extends Factory
         $order = [];
 
         for ($i = 0; $i < rand(1, 10); $i++) {
-            $order[] = [
-                'product' => Product::pluck('id')->random(),
-                'amount' => rand(1, 5)
-            ];
+            $order[] = Product::pluck('id')->random();
         }
 
         return [

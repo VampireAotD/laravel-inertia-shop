@@ -13,7 +13,7 @@ trait HasCdnProfilePhoto
      * @param \Illuminate\Http\UploadedFile $photo
      * @return void
      */
-    protected function updateProfilePhoto(UploadedFile $photo)
+    public function updateProfilePhoto(UploadedFile $photo)
     {
         tap($this->profile_photo_path, function ($previous) use ($photo) {
             $imageService = app(ImageService::class);
@@ -38,7 +38,7 @@ trait HasCdnProfilePhoto
      *
      * @return void
      */
-    protected function deleteProfilePhoto()
+    public function deleteProfilePhoto()
     {
         $imageService = app(ImageService::class);
 
@@ -56,7 +56,7 @@ trait HasCdnProfilePhoto
      *
      * @return string
      */
-    protected function getProfilePhotoUrlAttribute()
+    public function getProfilePhotoUrlAttribute()
     {
         return $this->profile_photo_path
             ? $this->profile_photo_path
@@ -68,7 +68,7 @@ trait HasCdnProfilePhoto
      *
      * @return string
      */
-    protected function defaultProfilePhotoUrl()
+    public function defaultProfilePhotoUrl()
     {
         return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=7F9CF5&background=EBF4FF';
     }
@@ -78,7 +78,7 @@ trait HasCdnProfilePhoto
      *
      * @return string
      */
-    protected function profilePhotoFolder()
+    public function profilePhotoFolder()
     {
         return $this::USERS_PROFILE_PICTURE_FOLDER;
     }
@@ -92,7 +92,7 @@ trait HasCdnProfilePhoto
      *
      * @return string
      */
-    protected function className()
+    public function className()
     {
         return get_class($this);
     }

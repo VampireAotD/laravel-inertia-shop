@@ -104,9 +104,11 @@ Route::group(['middleware' => ['favorite-list', 'cart']], function () {
 
     // Profile and API Tokens
 
-    Route::get('user/profile', [\Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController::class, 'show'])->name('profile.show');
+    Route::get('user/profile', [\Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController::class, 'show'])
+        ->name('profile.show');
 
-    Route::get('user/api-tokens', [\Laravel\Jetstream\Http\Controllers\Inertia\ApiTokenController::class, 'index'])->name('api-tokens.index');
+    Route::get('user/api-tokens', [\Laravel\Jetstream\Http\Controllers\Inertia\ApiTokenController::class, 'index'])
+        ->name('api-tokens.index');
 
     // Product
 
@@ -116,11 +118,15 @@ Route::group(['middleware' => ['favorite-list', 'cart']], function () {
 
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
 
+    Route::get('/cart/order', [CartController::class, 'order'])
+        ->middleware('auth')
+        ->name('order');
+
     Route::get('/add-to-cart/{product}', [CartController::class, 'add'])->name('add-to-cart');
 
-    Route::get('/remove-from-cart/{product}', [CartController::class, 'remove'])->name('remove-from-cart');
+    Route::delete('/remove-from-cart/{product}', [CartController::class, 'remove'])->name('remove-from-cart');
 
-    Route::get('/destroy-cart', [CartController::class, 'destroy'])->name('destroy-cart');
+    Route::delete('/destroy-cart', [CartController::class, 'destroy'])->name('destroy-cart');
 
     // Favorite list
 
@@ -128,7 +134,7 @@ Route::group(['middleware' => ['favorite-list', 'cart']], function () {
 
     Route::get('/add-to-favorite/{product}', [FavoriteController::class, 'add'])->name('add-to-favorite');
 
-    Route::get('/remove-from-favorite/{product}', [FavoriteController::class, 'remove'])->name('remove-from-favorite');
+    Route::delete('/remove-from-favorite/{product}', [FavoriteController::class, 'remove'])->name('remove-from-favorite');
 
     Route::delete('/destroy-favorite-list', [FavoriteController::class, 'destroy'])->name('destroy-favorite-list');
 

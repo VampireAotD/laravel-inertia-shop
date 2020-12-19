@@ -1,48 +1,84 @@
 <template>
-    <div class="col-span-1 lg:col-span-6">
-        <h4 class="text-3xl text-gray-700 mb-5">Payment information</h4>
-        <div class="p-10 rounded-md shadow-md bg-white">
-            <div class="mb-6">
-                <label class="block mb-3 text-gray-600" for="">Name on card</label>
-                <input type="text" class="border border-gray-500 rounded-md inline-block py-2 px-3 w-full text-gray-600 tracking-wider"/>
+    <app-layout>
+        <div class="container mx-auto">
+            <breadcrumbs :breadcrumbs="breadcrumbs"/>
+
+            <div class="container mx-auto p-3">
+                <h4 class="text-3xl text-gray-700 mb-5">Cart</h4>
+
+                <hr>
+
+                <form @submit.prevent class="p-10 rounded-md shadow-md bg-white mt-2"
+                      v-if="productsListExist">
+                    <item
+                        :key="i"
+                        v-for="(item, i) in products"
+                        :item="item"
+                    />
+
+                    <button
+                        @click="order"
+                        class="h-10 px-5 m-2 text-blue-100 transition-colors duration-150 bg-blue-600 rounded-lg focus:shadow-outline hover:bg-blue-700"
+                    >
+                        Order
+                    </button>
+
+                    <button
+                        @click="destroyCart"
+                        class="h-10 px-5 m-2 text-red-100 transition-colors duration-150 bg-red-700 rounded-lg focus:shadow-outline hover:bg-red-800"
+                        title="Delete all products from your cart"
+                    >
+                        Clear
+                    </button>
+                </form>
+
+                <p
+                    class="text-center py-3"
+                    v-else
+                >
+                    Your cart is empty
+                </p>
             </div>
-            <div class="mb-6">
-                <label class="block mb-3 text-gray-600" for="">Card number</label>
-                <input
-                        type="tel" class="border border-gray-500 rounded-md inline-block py-2 px-3 w-full text-gray-600 tracking-widest"/>
-            </div>
-            <div class="mb-6 flex flex-wrap -mx-3w-full">
-                <div class="w-2/3 px-3">
-                    <label class="block mb-3 text-gray-600" for="">Expiraion date</label>
-                    <div class="flex">
-                        <select class="border border-gray-500 rounded-md inline-block py-2 px-3 w-full text-gray-600 tracking-widest mr-6">
-                            <option>Month</option>
-                        </select>
-                        <select class="border border-gray-500 rounded-md inline-block py-2 px-3 w-full text-gray-600 tracking-widest">
-                            <option>Year</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="w-1/3 px-3">
-                    <label class="block mb-3 text-gray-600" for="">CVC</label>
-                    <input type="tel" class="border border-gray-500 rounded-md inline-block py-2 px-3 w-full text-gray-600 tracking-widest"/>
-                </div>
-            </div>
-            <div class="mb-6 text-right">
-                <span class="text-right font-bold">{{ total }}USD</span>
-            </div>
-            <div>
-                <button @click="finishPayment" class="w-full text-ceenter px-4 py-3 bg-blue-500 rounded-md shadow-md text-white font-semibold">
-                    Confirm payment
-                </button>
-            </div>
+
         </div>
-    </div>
+    </app-layout>
 </template>
 
 <script>
+import AppLayout from '../../../Layouts/AppLayout'
+import Breadcrumbs from "../../../Assets/Frontend/Breadcrumbs";
+import Item from "./Item";
+
     export default {
-        name: "cart"
+        name: "cart",
+
+        components : {
+            AppLayout,
+            Breadcrumbs,
+            Item
+        },
+
+        props : ['products', 'breadcrumbs'],
+
+        methods: {
+            destroyCart() {
+                this.$inertia.delete(this.$route('destroy-cart'), {
+                    preserveScroll: true
+                })
+            },
+
+            order(){
+                this.$inertia.visit(this.$route('order'), {
+                    preserveScroll: true
+                })
+            }
+        },
+
+        computed: {
+            productsListExist() {
+                return this.products.length > 0
+            }
+        }
     }
 </script>
 

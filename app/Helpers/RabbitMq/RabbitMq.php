@@ -102,6 +102,7 @@ class RabbitMq
      * @param string $exchangeName
      * @param string $routingKey
      * @param array $options
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      */
     public function sendMessage(
         $messageBody,
@@ -110,7 +111,7 @@ class RabbitMq
         array $options = [
             'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT
         ]
-    )
+    ) : void
     {
         if ($messageBody instanceof DataTransferObject) {
             $messageBody = $messageBody->convert('json');
@@ -118,7 +119,7 @@ class RabbitMq
 
         $message = new AMQPMessage($messageBody, $options);
 
-        return $this->channel->basic_publish($message, $exchangeName, $routingKey);
+        $this->channel->basic_publish($message, $exchangeName, $routingKey);
     }
 
     /**
@@ -155,7 +156,7 @@ class RabbitMq
     public function consume(array $queues)
     {
         foreach ($queues as $queue) {
-            echo "Now listening to [${queue['queueName']}] queue......." . PHP_EOL;
+            echo "[*] Now listening to [${queue['queueName']}] queue......." . PHP_EOL;
 
             $this->readMessage(
                 $queue['queueName'],

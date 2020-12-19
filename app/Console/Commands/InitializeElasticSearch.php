@@ -150,7 +150,11 @@ class InitializeElasticSearch extends Command
                         'russian_replace_analyzer' => [
                             'type' => 'custom',
                             'tokenizer' => 'keyword',
-                            'char_filter' => 'russian_replace'
+                            'char_filter' => 'russian_replace',
+                            'filter' => [
+                                'hunspell_ru',
+                                'hunspell_en_us',
+                            ]
                         ]
                     ]
                 ],

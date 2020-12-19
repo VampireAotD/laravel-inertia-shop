@@ -155,6 +155,7 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
                 return $query->whereIn('categories.id', $categories);
             })
             ->where('id', '!=', $product->id)
+            ->where('amount', '>', 0)
             ->with('images')
             ->get();
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend\Favorite;
 use App\Http\Controllers\Controller;
 use App\Repositories\Admin\Products\ProductRepositoryInterface;
 use App\Services\Frontend\Favorite\FavoriteService;
+use Diglactic\Breadcrumbs\Breadcrumbs;
 use Inertia\Inertia;
 
 class FavoriteController extends Controller
@@ -36,7 +37,9 @@ class FavoriteController extends Controller
 
         $products = $this->productRepository->getProductsByIds(json_decode($ids));
 
-        return Inertia::render('Frontend/Favorite/Index', compact('products'));
+        $breadcrumbs = Breadcrumbs::generate('favorite');
+
+        return Inertia::render('Frontend/Favorite/Index', compact('products', 'breadcrumbs'));
     }
 
     /**

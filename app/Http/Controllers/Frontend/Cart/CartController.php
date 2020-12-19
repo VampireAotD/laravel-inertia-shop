@@ -5,11 +5,20 @@ namespace App\Http\Controllers\Frontend\Cart;
 use App\Http\Controllers\Controller;
 use App\Repositories\Admin\Products\ProductRepositoryInterface;
 use App\Services\Frontend\Cart\CartService;
+use Diglactic\Breadcrumbs\Breadcrumbs;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class CartController extends Controller
 {
+    /**
+     * @var CartService
+     */
     private $cartService;
+
+    /**
+     * @var ProductRepositoryInterface
+     */
     private $productRepository;
 
     public function __construct(CartService $cartService, ProductRepositoryInterface $productRepository)
@@ -18,10 +27,35 @@ class CartController extends Controller
         $this->productRepository = $productRepository;
     }
 
+    /**
+     * List of products in cart
+     *
+     * @return \Inertia\Response
+     */
     public function index()
     {
-        $ids = session('cart');
-        dd($this->productRepository->getProductsByIds(json_decode($ids)));
+        $ids = session('cart') ?? json_encode([]);
+
+        $products = $this->productRepository->getProductsByIds(json_decode($ids));
+
+        $breadcrumbs = Breadcrumbs::generate('cart');
+
+        return Inertia::render('Frontend/Cart/Index', compact('products', 'breadcrumbs'));
+    }
+
+    /**
+     * Order and clear cart
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function order(Request $request)
+    {
+        if($order = $this->cartService->order($request->user())){
+            return back();
+        }
+
+        return back();
     }
 
     /**
