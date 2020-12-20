@@ -46,6 +46,7 @@
                 type: Object,
                 required: true
             },
+
             routes: {
                 type: Object,
                 required: true

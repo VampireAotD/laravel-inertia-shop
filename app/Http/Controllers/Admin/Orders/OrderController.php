@@ -6,91 +6,79 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\User;
 use App\Repositories\Admin\Orders\OrderRepositoryInterface;
-use Illuminate\Http\Request;
+use App\Services\Admin\Orders\OrderService;
+use Inertia\Inertia;
 
 class OrderController extends Controller
 {
+    /**
+     * @var OrderRepositoryInterface
+     */
     private $repository;
 
-    public function __construct(OrderRepositoryInterface $orderRepository)
+    /**
+     * @var OrderService
+     */
+    private $service;
+
+    public function __construct(OrderRepositoryInterface $orderRepository, OrderService $service)
     {
         $this->repository = $orderRepository;
+        $this->service = $service;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function index()
     {
-        //
+        $orders = $this->repository->getItemsWithPagination();
+
+        return Inertia::render('Admin/Orders/Index', compact('orders'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Accept user order
      *
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      */
-    public function create()
+    public function accept(int $id)
     {
-        //
-    }
+        $order = $this->repository->findItemById($id);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+        if ($this->service->accept($order)) {
+            return back();
+        }
+
+        return back();
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
+     * @param User $user
+     * @param $date
+     * @return \Inertia\Response
      */
     public function show(User $user, $date)
     {
         $products = $this->repository->findOrderProductsByUserAndOrderDate($user->id, $date);
-        dd($products);
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Order $order)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Order $order)
-    {
-        //
+        return Inertia::render('Admin/Orders/Show', compact('products'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Order  $order
+     * @param \App\Models\Order $order
      * @return \Illuminate\Http\Response
      */
     public function destroy(Order $order)
     {
-        //
+        // TODO implement order deleting
     }
 }

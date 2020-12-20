@@ -34,6 +34,11 @@
                                 Users
                             </jet-nav-link>
 
+                            <jet-nav-link :href="$route('admin.orders.index')"
+                                          :active="$page.currentRouteName == 'admin.orders.index'">
+                                Orders
+                            </jet-nav-link>
+
                         </div>
                     </div>
 

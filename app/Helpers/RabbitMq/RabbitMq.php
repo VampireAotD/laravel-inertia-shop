@@ -160,7 +160,8 @@ class RabbitMq
 
             $this->readMessage(
                 $queue['queueName'],
-                $queue['callback']
+                $queue['callback'],
+                $queue['consumerTag'] ?? ''
             );
         }
 

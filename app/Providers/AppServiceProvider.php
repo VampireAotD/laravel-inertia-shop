@@ -41,7 +41,7 @@ class AppServiceProvider extends ServiceProvider
         Inertia::share([
             'flash' => fn() => [
                 'messages' => \session()->get('messages')
-            ],
+            ]
         ]);
     }
 }

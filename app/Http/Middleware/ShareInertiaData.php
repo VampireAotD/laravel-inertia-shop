@@ -4,8 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class ShareInertiaData
@@ -13,17 +13,15 @@ class ShareInertiaData
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
     {
         Inertia::share([
-            'permissions' => fn() => array_merge(
-                ...$request->user()->roles->map(function ($role) {
-                    return $role->permissions->pluck('name')->toArray();
-                })
+            'permissions' => array_merge(
+                ...Permission::all(['name'])->map(fn($permission) => [$permission->name => $request->user()->can($permission->name)])
             ),
 
             'userRole' => $request->user()->roles,

@@ -60,15 +60,18 @@
 
         <!--Upload input-->
         <div class="flex w-full items-center justify-center bg-grey-lighter ">
-            <label class="w-64 flex flex-col items-center p-2 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-black hover:text-white mr-2">
+            <label
+                class="w-64 flex flex-col items-center p-2 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-black hover:text-white mr-2">
                 <svg class="w-8 h-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                    <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z"/>
+                    <path
+                        d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z"/>
                 </svg>
                 <input type='file' class="hidden" name="images[]" accept="image/*" @input="addToFilesArray"
                        :multiple="multiple"/>
             </label>
-            <button class="w-64 p-2 bg-white text-red rounded-lg shadow-lg tracking-wide uppercase border border-red-300 cursor-pointer hover:bg-red-400 hover:text-white"
-                    @click.prevent="resetImagesArray" v-if="issetImages">
+            <button
+                class="w-64 p-2 bg-white text-red rounded-lg shadow-lg tracking-wide uppercase border border-red-300 cursor-pointer hover:bg-red-400 hover:text-white"
+                @click.prevent="resetImagesArray" v-if="issetImages">
                 Reset
             </button>
         </div>
@@ -77,89 +80,89 @@
 </template>
 
 <script>
-    export default {
-        name: "image-uploader",
+export default {
+    name: "image-uploader",
 
-        props: {
-            images: {
-                type: Array
-            },
-            multiple: {
-                type: Boolean
-            },
-            permissions: {
-                type: Object
-            }
+    props: {
+        images: {
+            type: Array
         },
+        multiple: {
+            type: Boolean
+        },
+        permissions: {
+            type: Object
+        }
+    },
 
-        methods: {
-            addToFilesArray(e) {
-                let files = e.target.files
+    methods: {
+        addToFilesArray(e) {
+            let files = e.target.files
 
-                if (this.multiple) {
-                    [...files].map(image => {
-                        if (this.validateImage(image)) {
-                            this.addImage(image)
-                        }
-                    })
-                } else {
-                    if (this.validateImage(files[0])) {
-                        this.addImage(files[0])
+            if (this.multiple) {
+                [...files].map(image => {
+                    if (this.validateImage(image)) {
+                        this.addImage(image)
                     }
-                }
-            },
-
-            validateImage(image) {
-                return image && image.type.match('image/*');
-            },
-
-            addImage(image) {
-                this.images.push(image)
-                this.$emit('file-uploaded', this.images)
-            },
-
-            resetImagesArray() {
-                this.$emit('clear-images-from-uploaded')
-            },
-
-            removeImage(id) {
-                this.images.splice(id, 1)
-            },
-
-            deleteImage(image) {
-                this.$inertia.delete(this.$route('admin.images.destroy-image', {image}), {
-                    preserveScroll: true
                 })
+            } else {
+                if (this.validateImage(files[0])) {
+                    this.addImage(files[0])
+                }
             }
         },
 
-        filters: {
-            createImageUrl(image) {
-                return URL.createObjectURL(image)
-            }
+        validateImage(image) {
+            return image && image.type.match('image/*');
         },
 
-        computed: {
-            issetImages() {
-                return this.images.length > 0 && !this.images.every(image => image.hasOwnProperty('path'))
-            }
+        addImage(image) {
+            this.images.push(image)
+            this.$emit('file-uploaded', this.images)
+        },
+
+        resetImagesArray() {
+            this.$emit('clear-images-from-uploaded')
+        },
+
+        removeImage(id) {
+            this.images.splice(id, 1)
+        },
+
+        deleteImage(image) {
+            this.$inertia.delete(this.$route('admin.images.destroy-image', {image}), {
+                preserveScroll: true
+            })
+        }
+    },
+
+    filters: {
+        createImageUrl(image) {
+            return URL.createObjectURL(image)
+        }
+    },
+
+    computed: {
+        issetImages() {
+            return this.images.length > 0 && !this.images.every(image => image.hasOwnProperty('path'))
         }
     }
+}
 </script>
 
 <style scoped>
-    .image-controls {
-        display: none;
-        position: absolute;
-        top: 0;
-        left: 0;
-        background: rgba(0, 0, 0, 0.5);
-        width: 100%;
-        height: 100%;
-        color: white;
-    }
+.image-controls {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    color: white;
+}
 
-    .image:hover .image-controls {
-        display: inline-flex;
-    }
+.image:hover .image-controls {
+    display: inline-flex;
+}
 </style>

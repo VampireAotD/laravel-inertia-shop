@@ -60,6 +60,7 @@ class Order extends Model
     protected $appends = [
         'created_date',
         'updated_date',
+        'ordered_products'
     ];
 
     /**
@@ -70,5 +71,17 @@ class Order extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Return products that user has ordered
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getOrderedProductsAttribute()
+    {
+        $ids = json_decode($this->order);
+
+        return Product::whereIn('id', $ids)->get(['slug', 'name']);
     }
 }

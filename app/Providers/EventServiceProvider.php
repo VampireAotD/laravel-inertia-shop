@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Events\UserOrdered;
-use App\Listeners\SendNewOrderNotification;
+use App\Listeners\Orders\SendNewOrderNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;

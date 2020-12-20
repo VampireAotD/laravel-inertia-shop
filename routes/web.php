@@ -75,13 +75,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanc
     // Orders
 
     Route::resource('orders', AdminOrderController::class)
-        ->except(['show'])
+        ->only(['index', 'destroy'])
         ->middleware('permission:see orders list|accept one order|cancel one order|delete order')
         ->names('orders');
 
     Route::get('/orders/{user}/{date}', [AdminOrderController::class, 'show'])
         ->middleware('permission:see one order')
         ->name('orders.show');
+
+    Route::get('/accept-order/{order}', [AdminOrderController::class, 'accept'])
+        ->middleware('permission:accept one order')
+        ->name('orders.accept');
 });
 
 // Frontend routes

@@ -3,7 +3,8 @@
 namespace App\Console\Commands;
 
 use App\DTO\RabbitMq\LogMessageDto;
-use App\Mail\NotifyAdminForNewOrder;
+use App\Mail\Orders\DeliverUserOrder;
+use App\Mail\Orders\NotifyAdminForNewOrder;
 use Illuminate\Console\Command;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -42,17 +43,19 @@ class InitializeRabbitMqQueues extends Command
      */
     public function handle()
     {
-        // Queues declaration
-        rabbitmq()->makeQueue('logs_queue', false, true);
-        rabbitmq()->makeQueue('email_queue', false, true);
-
         // Exchanges declaration
         rabbitmq()->makeExchange('logs', 'direct', false, true);
         rabbitmq()->makeExchange('email', 'direct', false, true);
 
+        // Queues declaration
+        rabbitmq()->makeQueue('logs_queue', false, true);
+        rabbitmq()->makeQueue('admin_email_queue', false, true);
+        rabbitmq()->makeQueue('email_queue', false, true);
+
         // Binding queues to exchanges
         rabbitmq()->bindQueueToExchange('logs_queue', 'logs');
-        rabbitmq()->bindQueueToExchange('email_queue', 'email');
+        rabbitmq()->bindQueueToExchange('admin_email_queue', 'email', 'admins');
+        rabbitmq()->bindQueueToExchange('email_queue', 'email', 'users');
 
         echo 'Starting all queues....';
 
@@ -105,9 +108,9 @@ class InitializeRabbitMqQueues extends Command
             $this->newLine();
         };
 
-        $emailCallback = function (AMQPMessage $message) {
+        $adminEmailCallback = function (AMQPMessage $message) {
 
-            echo now()->format('Y-m-d H:i:s') . ' [x] Received message in email queue...';
+            echo now()->format('Y-m-d H:i:s') . ' [x] Received message in admin email queue...';
 
             $start = microtime(true);
 
@@ -121,12 +124,31 @@ class InitializeRabbitMqQueues extends Command
 
             $message->ack();
 
-            rabbitmq()->sendMessage(new LogMessageDto('emails','notice','Sended email'), 'logs');
+            rabbitmq()->sendMessage(new LogMessageDto('emails', 'notice', 'Sended email to admins'), 'logs');
+        };
+
+        $userEmailCallback = function (AMQPMessage $message) {
+            echo now()->format('Y-m-d H:i:s') . ' [x] Received message in users email queue...';
+
+            $start = microtime(true);
+
+            $this->newLine();
+
+            \Mail::send(new DeliverUserOrder(json_decode($message->body)));
+
+            echo now()->format('Y-m-d H:i:s') . ' [x] Message was processed in ' . (microtime(true) - $start) . ' seconds in email queue...';
+
+            $this->newLine();
+
+            $message->ack();
+
+            rabbitmq()->sendMessage(new LogMessageDto('emails', 'notice', 'Sended email'), 'logs');
         };
 
         rabbitmq()->consume([
-            ['queueName' => 'logs_queue', 'callback' => $logsCallback],
-            ['queueName' => 'email_queue', 'callback' => $emailCallback],
+            ['queueName' => 'logs_queue', 'callback' => $logsCallback, 'logs'],
+            ['queueName' => 'admin_email_queue', 'callback' => $adminEmailCallback, 'admin_email_queue'],
+            ['queueName' => 'email_queue', 'callback' => $userEmailCallback, 'user_email_queue'],
         ]);
 
         rabbitmq()->closeConnections();

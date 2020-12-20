@@ -28,7 +28,10 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
      */
     public function findItemById(int $id)
     {
-        // TODO: Implement findItemById() method.
+        return $this
+            ->startConditions()
+            ->where('id', $id)
+            ->firstOrFail();
     }
 
     /**
@@ -40,7 +43,11 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
      */
     public function getItemsWithPagination(int $perPage = 10)
     {
-        // TODO: Implement getItemsWithPagination() method.
+        return $this
+            ->startConditions()
+            ->with(['user:id,name'])
+            ->latest()
+            ->paginate($perPage);
     }
 
     /**

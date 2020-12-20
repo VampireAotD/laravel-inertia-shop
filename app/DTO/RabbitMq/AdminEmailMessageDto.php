@@ -7,16 +7,22 @@ use App\DTO\DataTransferObject;
 class AdminEmailMessageDto extends DataTransferObject
 {
     /**
+     * To which admin
+     *
      * @var string
      */
     private string $to;
 
     /**
+     * User that ordered
+     *
      * @var string
      */
     private string $user;
 
     /**
+     * Products that user ordered
+     *
      * @var array
      */
     private array $products;
