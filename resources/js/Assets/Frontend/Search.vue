@@ -6,6 +6,7 @@
                placeholder="Search..."
                minlength="3"
         >
+
         <div class="absolute top-36 left-0 z-50 w-full" v-if="searchResults.hits && showDropDown">
             <div class="rounded shadow-md my-2 pin-t pin-l bg-white">
                 <ul class="list-reset">

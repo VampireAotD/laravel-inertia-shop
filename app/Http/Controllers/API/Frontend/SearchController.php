@@ -25,10 +25,9 @@ class SearchController extends Controller
             ->query([
                 'multi_match' => [
                     'query' => $analyzed_term,
-                    'fields' => ['name^8', 'description^5', 'categories.name^5', 'price^7'],
+                    'fields' => ['name^8', 'description^5', 'categories.name^5', 'price^5'],
                     'analyzer' => 'product_analyzer',
                     'fuzziness' => 'AUTO',
-                    'prefix_length' => 3
                 ],
             ])
             ->suggest([
@@ -37,21 +36,19 @@ class SearchController extends Controller
                     'term' => [
                         'field' => 'name',
                         'size' => 1,
-                        'analyzer' => 'simple',
+                        'analyzer' => 'product_analyzer',
                         'sort' => 'score',
                         'suggest_mode' => 'always',
-                        'min_doc_freq' => 1,
                     ]
                 ]
             ])
             ->highlight([
-                'pre_tags' => "<span style='color:red;'>",
+                'pre_tags' => '<span style="color : red">',
                 'post_tags' => '</span>',
                 'fields' => [
                     'name' => (object)[]
                 ]
             ])
-            ->limit(5)
             ->search('products');
 
         return response()->json($search, Response::HTTP_OK);

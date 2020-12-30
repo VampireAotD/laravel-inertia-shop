@@ -151,6 +151,6 @@ class User extends Authenticatable
      */
     public function getRoleAttribute()
     {
-        return ucfirst($this->getRoleNames()->first() ?? 'user');
+        return $this->getRoleNames()->first();
     }
 }

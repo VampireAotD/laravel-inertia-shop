@@ -60,7 +60,11 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
      */
     public function getItemsWithPagination(int $perPage = 10)
     {
-        return $this->startConditions()->with('images')->latest()->paginate($perPage);
+        return $this
+            ->startConditions()
+            ->with('images')
+            ->latest()
+            ->paginate($perPage, ['id', 'name', 'slug', 'description', 'price', 'amount', 'created_at']);
     }
 
     /**
@@ -88,7 +92,7 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
                 $q->whereBetween('amount', $amountArray);
             })
             ->latest()
-            ->paginate($perPage);
+            ->paginate($perPage, ['id', 'name', 'slug', 'description', 'price', 'amount', 'created_at']);
     }
 
     /**

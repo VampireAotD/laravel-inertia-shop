@@ -44,7 +44,7 @@ class RemoveFromRecentViews extends Command
             $list = json_decode(Redis::hGet('users', $userList), true);
 
             foreach ($list as $key => $item) {
-                if ($item['expire'] <= now()->timestamp) {
+                if ($item['expire'] >= now()->timestamp) {
                     unset($list[$key]);
                 }
             }

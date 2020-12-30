@@ -24,8 +24,6 @@ class ShareInertiaData
                 ...Permission::all(['name'])->map(fn($permission) => [$permission->name => $request->user()->can($permission->name)])
             ),
 
-            'userRole' => $request->user()->roles,
-
             'allRoles' => Role::all(['id', 'name']),
 
             'previousRoute' => app('router')->getRoutes()->match(app('request')->create(url()->previous()))->getName(),

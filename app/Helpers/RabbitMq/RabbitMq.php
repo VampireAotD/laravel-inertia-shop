@@ -5,6 +5,7 @@ namespace App\Helpers\RabbitMq;
 use App\DTO\DataTransferObject;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
+use PhpAmqpLib\Wire\AMQPTable;
 
 class RabbitMq
 {
@@ -43,6 +44,7 @@ class RabbitMq
      * @param bool $exclusive     | Should this queue be visible to other channels
      * @param bool $autoDelete    | Delete queue after consuming
      * @param bool $noWait        | Wait for server response
+     * @param array $arguments    | Arguments for AMQPTable
      * @return array|null
      */
     public function makeQueue(
@@ -51,10 +53,11 @@ class RabbitMq
         bool $durable = false,
         bool $exclusive = false,
         bool $autoDelete = false,
-        bool $noWait = false
+        bool $noWait = false,
+        array $arguments = []
     )
     {
-        return $this->channel->queue_declare($name, $passive, $durable, $exclusive, $autoDelete, $noWait);
+        return $this->channel->queue_declare($name, $passive, $durable, $exclusive, $autoDelete, $noWait, new AMQPTable($arguments));
     }
 
     /**
@@ -164,6 +167,8 @@ class RabbitMq
                 $queue['consumerTag'] ?? ''
             );
         }
+
+        echo "[*] Press Ctrl + C to shut down all queues." . PHP_EOL;
 
         while ($this->channel->is_consuming()) {
             $this->channel->wait();

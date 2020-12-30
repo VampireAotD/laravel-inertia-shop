@@ -15,27 +15,27 @@
                         <!-- Navigation Links -->
                         <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                             <jet-nav-link :href="$route('admin.dashboard')"
-                                          :active="$page.currentRouteName == 'admin.dashboard'">
+                                          :active="$page.currentRouteName === 'admin.dashboard'">
                                 Dashboard
                             </jet-nav-link>
 
                             <jet-nav-link :href="$route('admin.categories.index')"
-                                          :active="$page.currentRouteName == 'admin.categories.index'">
+                                          :active="$page.currentRouteName === 'admin.categories.index'">
                                 Categories
                             </jet-nav-link>
 
                             <jet-nav-link :href="$route('admin.products.index')"
-                                          :active="$page.currentRouteName == 'admin.products.index'">
+                                          :active="$page.currentRouteName === 'admin.products.index'">
                                 Products
                             </jet-nav-link>
 
                             <jet-nav-link :href="$route('admin.users.index')"
-                                          :active="$page.currentRouteName == 'admin.users.index'">
+                                          :active="$page.currentRouteName === 'admin.users.index'">
                                 Users
                             </jet-nav-link>
 
                             <jet-nav-link :href="$route('admin.orders.index')"
-                                          :active="$page.currentRouteName == 'admin.orders.index'">
+                                          :active="$page.currentRouteName === 'admin.orders.index'">
                                 Orders
                             </jet-nav-link>
 
@@ -99,7 +99,7 @@
                                             <form @submit.prevent="switchToTeam(team)">
                                                 <jet-dropdown-link as="button">
                                                     <div class="flex items-center">
-                                                        <svg v-if="team.id == $page.user.current_team_id"
+                                                        <svg v-if="team.id === $page.user.current_team_id"
                                                              class="mr-2 h-5 w-5 text-green-400" fill="none"
                                                              stroke-linecap="round" stroke-linejoin="round"
                                                              stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
@@ -147,17 +147,17 @@
             <!-- Responsive Navigation Menu -->
             <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
                 <div class="pt-2 pb-3 space-y-1">
-                    <jet-responsive-nav-link href="/admin" :active="$page.currentRouteName == 'dashboard'">
+                    <jet-responsive-nav-link href="/admin" :active="$page.currentRouteName === 'dashboard'">
                         Dashboard
                     </jet-responsive-nav-link>
 
                     <jet-responsive-nav-link :href="$route('admin.categories.index')"
-                                  :active="$page.currentRouteName == 'categories'">
+                                  :active="$page.currentRouteName === 'admin.categories.index'">
                         Categories
                     </jet-responsive-nav-link>
 
                     <jet-responsive-nav-link :href="$route('admin.products.index')"
-                                  :active="$page.currentRouteName == 'admin/products'">
+                                  :active="$page.currentRouteName === 'admin.products.index'">
                         Products
                     </jet-responsive-nav-link>
                 </div>
@@ -178,12 +178,12 @@
 
                     <div class="mt-3 space-y-1">
                         <jet-responsive-nav-link href="/user/profile"
-                                                 :active="$page.currentRouteName == 'profile.show'">
+                                                 :active="$page.currentRouteName === 'profile.show'">
                             Profile
                         </jet-responsive-nav-link>
 
                         <jet-responsive-nav-link href="/user/api-tokens"
-                                                 :active="$page.currentRouteName == 'api-tokens.index'"
+                                                 :active="$page.currentRouteName === 'api-tokens.index'"
                                                  v-if="$page.jetstream.hasApiFeatures">
                             API Tokens
                         </jet-responsive-nav-link>
@@ -205,12 +205,12 @@
 
                             <!-- Team Settings -->
                             <jet-responsive-nav-link :href="'/teams/' + $page.user.current_team.id"
-                                                     :active="$page.currentRouteName == 'teams.show'">
+                                                     :active="$page.currentRouteName === 'teams.show'">
                                 Team Settings
                             </jet-responsive-nav-link>
 
                             <jet-responsive-nav-link href="/teams/create"
-                                                     :active="$page.currentRouteName == 'teams.create'">
+                                                     :active="$page.currentRouteName === 'teams.create'">
                                 Create New Team
                             </jet-responsive-nav-link>
 
@@ -225,7 +225,7 @@
                                 <form @submit.prevent="switchToTeam(team)" :key="team.id">
                                     <jet-responsive-nav-link as="button">
                                         <div class="flex items-center">
-                                            <svg v-if="team.id == $page.user.current_team_id"
+                                            <svg v-if="team.id === $page.user.current_team_id"
                                                  class="mr-2 h-5 w-5 text-green-400" fill="none" stroke-linecap="round"
                                                  stroke-linejoin="round" stroke-width="2" stroke="currentColor"
                                                  viewBox="0 0 24 24">

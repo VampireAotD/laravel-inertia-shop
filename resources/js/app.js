@@ -8,7 +8,7 @@ import PortalVue from 'portal-vue';
 import VueIziToast from 'vue-izitoast';
 import CKEditor from '@ckeditor/ckeditor5-vue'
 import VueSlider from 'vue-slider-component'
-import Authorize from './Services/Backend/Authorize/Authorize'
+import Authorize from './Services/Common/Authorize/Authorize'
 import Viewer from 'v-viewer'
 import VueSmoothScroll from 'vue2-smooth-scroll'
 import Socket from './Services/Common/Socket/Connect'
@@ -35,7 +35,6 @@ Vue.use(VueAwesomeSwiper)
 const app = document.getElementById('app');
 
 Vue.prototype.$route = (...args) => route(...args).url();
-Vue.component('pagination', require('laravel-vue-pagination'));
 Vue.component('slick-slider', require('vue-slick-carousel'));
 Vue.component('VueSlider', VueSlider);
 

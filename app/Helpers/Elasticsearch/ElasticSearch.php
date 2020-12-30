@@ -63,6 +63,7 @@ class ElasticSearch
         $this->query = (object)[];
         $this->suggest = (object)[];
         $this->highlight = (object)[];
+        $this->limit(5);
     }
 
     /**

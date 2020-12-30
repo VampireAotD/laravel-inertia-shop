@@ -4,7 +4,6 @@
         <inner-header
             :route="$route('admin.users.index')"
             title="Users list"
-            classes="bg-transparent hover:bg-blue-500 text-white-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
         />
 
         <hr>
@@ -19,7 +18,7 @@
                 <p class="text-sm text-gray-600">Created {{ user.created_date }}</p>
                 <p class="text-sm text-gray-600">Last updated {{ user.updated_date }}</p>
                 <p>Role : <span
-                    class="border bg-gray-200 text-gray-400 px-1">{{ user.roles[0] ? user.role : 'User' }}</span>
+                    class="border bg-gray-200 text-gray-400 px-1">{{ user.role | ucFirst }}</span>
                 </p>
 
                 <control-buttons

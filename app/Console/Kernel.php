@@ -24,7 +24,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('recent:remove')->daily();
+         $schedule->command('recent:remove')->hourly();
+
+         $schedule->command('db:dump')->daily();
     }
 
     /**

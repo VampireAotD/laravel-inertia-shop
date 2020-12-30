@@ -11,7 +11,7 @@
         </td>
         <td class="border px-4 py-2">{{ product.excerpt | description }}</td>
         <td class="border px-4 py-2">{{ product.price }}</td>
-        <td class="border px-4 py-2">{{ product.amount}} {{ product.count_amount }}</td>
+        <td class="border px-4 py-2">{{ product.count_amount }}</td>
         <td class="border px-4 py-2">{{ product.created_date }}</td>
         <td class="border px-4 py-2">
             <control-buttons

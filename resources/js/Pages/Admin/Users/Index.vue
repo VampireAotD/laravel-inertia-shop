@@ -61,6 +61,7 @@
     import SearchForm from './../Components/SearchForm'
     import Flash from '../../../Assets/Backend/Flash'
     import UserInfo from './Assets/UserInfo'
+    import Pagination from "../../../Assets/Common/Pagination";
 
     import UserPermissions from '../../../Mixins/Admin/Users/UserPermissions'
 
@@ -91,6 +92,7 @@
             InnerHeader,
             SearchForm,
             UserInfo,
+            Pagination,
             Flash
         },
 

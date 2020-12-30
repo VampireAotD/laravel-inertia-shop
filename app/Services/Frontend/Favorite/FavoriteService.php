@@ -77,6 +77,6 @@ class FavoriteService
      */
     private function defaultCookieLifeTime(): int
     {
-        return strtotime(Carbon::now()->addMonths(6)->toDateTimeString());
+        return Carbon::now()->addMonths(6)->diffInMinutes();
     }
 }

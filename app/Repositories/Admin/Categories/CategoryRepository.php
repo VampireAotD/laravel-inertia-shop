@@ -4,7 +4,6 @@ namespace App\Repositories\Admin\Categories;
 
 use App\Models\Category;
 use App\Repositories\BaseRepository;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 class CategoryRepository extends BaseRepository implements CategoryRepositoryInterface
@@ -38,7 +37,10 @@ class CategoryRepository extends BaseRepository implements CategoryRepositoryInt
      */
     public function findItemBySlug(string $slug)
     {
-        return $this->startConditions()->where('slug', $slug)->firstOrFail();
+        return $this
+            ->startConditions()
+            ->where('slug', $slug)
+            ->firstOrFail();
     }
 
     /**
@@ -60,7 +62,10 @@ class CategoryRepository extends BaseRepository implements CategoryRepositoryInt
      */
     public function getItemsWithPagination(int $perPage = 10)
     {
-        return $this->startConditions()->latest()->paginate($perPage);
+        return $this
+            ->startConditions()
+            ->latest()
+            ->paginate($perPage, ['id', 'name', 'slug', 'created_at']);
     }
 
     public function searchWithPagination(Request $request)
@@ -78,7 +83,7 @@ class CategoryRepository extends BaseRepository implements CategoryRepositoryInt
                 $q->where('name', 'like', "%$name%");
             })
             ->latest()
-            ->paginate($perPage);
+            ->paginate($perPage, ['id', 'name', 'slug', 'created_at']);
     }
 
     /**

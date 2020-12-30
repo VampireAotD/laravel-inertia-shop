@@ -43,7 +43,7 @@ class ProductObserver
     public function created(Product $product)
     {
         $message = new LogMessageDto('products', 'info', 'New product was created by user', [
-            'category name' => $product->name,
+            'product name' => $product->name,
             'user' => request()->user()->name ?? 'migrations'
         ]);
 
@@ -69,7 +69,7 @@ class ProductObserver
     public function updated(Product $product)
     {
         $message = new LogMessageDto('products', 'notice', 'Product was updated by user', [
-            'category name' => $product->name,
+            'product name' => $product->name,
             'user' => request()->user()->name ?? 'migrations'
         ]);
 
@@ -91,7 +91,7 @@ class ProductObserver
         elasticsearch()->deleteDocumentFromIndex('products', $product);
 
         $message = new LogMessageDto('products', 'warning', 'Product was deleted by user', [
-            'category name' => $product->name,
+            'product name' => $product->name,
             'user' => request()->user()->name ?? 'migrations'
         ]);
 

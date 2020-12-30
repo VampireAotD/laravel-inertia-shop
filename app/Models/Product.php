@@ -142,7 +142,7 @@ class Product extends Model
      */
     public function getCountAmountAttribute()
     {
-        return Str::plural('item', $this->amount);
+        return $this->amount . ' ' . Str::plural('item', $this->amount);
     }
 
     /**
@@ -154,6 +154,6 @@ class Product extends Model
      */
     public function getMainImagePathAttribute()
     {
-        return $this->images->where('is_main', Image::IS_MAIN)->first()->path ?? Image::DEFAULT_PRODUCT_IMAGE;
+        return $this->images->where('is_main', Image::IS_MAIN)->first()->path ?? env('DEFAULT_PRODUCT_IMAGE');
     }
 }

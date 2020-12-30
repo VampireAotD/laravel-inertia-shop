@@ -5,6 +5,7 @@ namespace App\Services\Frontend\Cart;
 use App\Events\UserOrdered;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Support\Facades\Cookie;
 
 class CartService
 {
@@ -16,12 +17,19 @@ class CartService
      */
     public function order(User $user)
     {
-        if(session()->get('cart')){
+        if ($cart = session()->get('cart')) {
+            if ($favorite_list = Cookie::get('favorite_list')) {
+                $asd = array_values(array_diff(json_decode($favorite_list), json_decode($cart))); // TODO refactor it
+                $json = json_encode($asd);
+
+                Cookie::queue('favorite_list', $json, now()->addMonths(6)->diffInMinutes());
+            }
+
             $order = $user->orders()->make([
-                'order' => session()->get('cart'),
+                'order' => $cart,
             ]);
 
-            if($order->save()){
+            if ($order->save()) {
                 event(new UserOrdered($order));
 
                 session()->forget('cart');

@@ -15,48 +15,48 @@
         <td class="border px-4 py-2">{{ user.created_date }}</td>
         <td class="border px-4 py-2">
             <control-buttons
-                    v-if="user.id !== $page.user.id"
-                    :routes="routes"
-                    :permissions="permissions"
+                v-if="user.id !== $page.user.id"
+                :routes="routes"
+                :permissions="permissions"
             />
         </td>
     </tr>
 </template>
 
 <script>
-    import ControlButtons from '../../../../Assets/Backend/ControlButtons'
-    import DefaultCrudRoutes from '../../../../Mixins/Admin/Users/DefaultCrudRoutes'
+import ControlButtons from '../../../../Assets/Backend/ControlButtons'
+import DefaultCrudRoutes from '../../../../Mixins/Admin/Users/DefaultCrudRoutes'
 
-    export default {
-        name: "user-info",
+export default {
+    name: "user-info",
 
-        props: {
-            user: {
-                type: Object,
-                required: true
-            },
-            permissions: {
-                type: Object
-            },
-            number: {
-                type: Number
-            }
+    props: {
+        user: {
+            type: Object,
+            required: true
         },
-
-        components: {
-            ControlButtons
+        permissions: {
+            type: Object
         },
+        number: {
+            type: Number
+        }
+    },
 
-        mixins: [
-            DefaultCrudRoutes
-        ],
+    components: {
+        ControlButtons
+    },
 
-        computed: {
-            numberInList() {
-                return this.number + 1
-            }
+    mixins: [
+        DefaultCrudRoutes
+    ],
+
+    computed: {
+        numberInList() {
+            return this.number + 1
         }
     }
+}
 </script>
 
 <style scoped>

@@ -2,6 +2,7 @@
 
 namespace App\Services\Admin\Products;
 
+use App\DTO\RabbitMq\ElasticMessage;
 use App\DTO\RabbitMq\LogMessageDto;
 use App\Http\Requests\Products\ProductRequest;
 use App\Http\Requests\Products\UpdateProductRequest;
@@ -49,15 +50,20 @@ class ProductService
                             );
                         }
                     }
-                    \DB::commit();
 
-                    elasticsearch()->addDocumentToIndex('products', $product);
+                    rabbitmq()->sendMessage(
+                        (new ElasticMessage($product->id)),
+                        'elastic',
+                        'documents',
+                    );
+
+                    \DB::commit();
 
                     return true;
                 }
             }
         } catch (\Throwable $exception) {
-            $message = new LogMessageDto('products', 'warning', 'CDN exception while upserting product', [
+            $message = new LogMessageDto('products', 'warning', 'Error while upserting product', [
                 'file' => $exception->getFile(),
                 'line' => $exception->getLine(),
                 'message' => $exception->getMessage()

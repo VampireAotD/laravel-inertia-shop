@@ -42,9 +42,6 @@
 
             <pagination
                     :data="categories"
-                    :limit="3"
-                    @pagination-change-page="paginate"
-                    class="flex justify-center"
             >
             </pagination>
         </div>
@@ -61,6 +58,7 @@
     import SearchForm from './../Components/SearchForm'
     import Flash from '../../../Assets/Backend/Flash'
     import CategoryInfo from './Assets/CategoryInfo'
+    import Pagination from "../../../Assets/Common/Pagination";
 
     import CategoryPermissions from '../../../Mixins/Admin/Categories/CategoryPermissions'
 
@@ -87,6 +85,7 @@
             InnerHeader,
             SearchForm,
             CategoryInfo,
+            Pagination,
             Flash
         },
 

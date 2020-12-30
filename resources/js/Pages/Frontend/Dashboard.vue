@@ -157,9 +157,10 @@
 
                                     <inertia-link
                                         :href="$route('remove-from-cart', {product : product.slug})"
+                                        method="DELETE"
+                                        preserve-scroll
                                         v-else
                                         title="Remove from cart"
-                                        preserve-scroll
                                     >
                                         <svg class="h-7 w-7 fill-black text-gray-500 hover:text-black"
                                              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -184,6 +185,7 @@
 
                                     <inertia-link
                                         :href="$route('remove-from-favorite', {product : product.slug})"
+                                        method="DELETE"
                                         preserve-scroll
                                         v-else
                                         title="Remove from favorite list"
@@ -205,14 +207,10 @@
                 <!--Pagination-->
                 <pagination
                     :data="products"
-                    :limit="3"
-                    @pagination-change-page="paginate"
-                    class="flex justify-center"
-                >
-                </pagination>
+                />
 
                 <!--Recent views-->
-                <h3 class="mt-3 uppercase tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl ">
+                <h3 class="mt-3 uppercase tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl">
                     Recent views</h3>
                 <recent-views v-if="issetRecentViews" :products="recentViews" class="mt-3"></recent-views>
             </div>
@@ -226,12 +224,14 @@ import AppLayout from '../../Layouts/AppLayout'
 import Breadcrumbs from "../../Assets/Frontend/Breadcrumbs";
 import InList from '../../Mixins/Frontend/InList'
 import RecentViews from '../../Assets/Frontend/RecentViews'
+import Pagination from "../../Assets/Common/Pagination";
 
 export default {
     components: {
         AppLayout,
         Breadcrumbs,
-        RecentViews
+        RecentViews,
+        Pagination
     },
 
     props: ['products'],
@@ -246,13 +246,6 @@ export default {
 
     methods: {
         paginate(page = 1) {
-            if (this.$page.currentRouteName === 'admin.products.search') {
-                return this.$inertia.visit(this.$route('admin.products.search', {page}), {
-                    data: this.searchForm,
-                    preserveScroll: false,
-                })
-            }
-
             this.$inertia.visit(this.$route('home', {page}))
         }
     },

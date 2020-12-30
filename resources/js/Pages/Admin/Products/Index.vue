@@ -47,9 +47,6 @@
 
             <pagination
                     :data="products"
-                    :limit="3"
-                    @pagination-change-page="paginate"
-                    class="flex justify-center"
             >
             </pagination>
         </div>
@@ -66,6 +63,7 @@
     import SearchForm from './../Components/SearchForm'
     import Flash from '../../../Assets/Backend/Flash'
     import ProductInfo from './Assets/ProductInfo'
+    import Pagination from "../../../Assets/Common/Pagination";
 
     import ProductPermissions from '../../../Mixins/Admin/Products/ProductPermissions'
 
@@ -112,6 +110,7 @@
             InnerHeader,
             SearchForm,
             ProductInfo,
+            Pagination,
             Flash
         },
 

@@ -124,6 +124,11 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/emails.log')
         ],
+
+        'elastic' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/elastic.log')
+        ],
     ],
 
 ];

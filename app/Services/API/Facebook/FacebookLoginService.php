@@ -42,6 +42,8 @@ class FacebookLoginService
                         'profile_photo_path' => $facebookUser->getAvatar()
                     ]
                 )) {
+                    $user->assignRole('user');
+
                     \DB::commit();
                     Auth::login($user);
                 }

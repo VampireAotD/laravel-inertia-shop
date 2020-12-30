@@ -31,7 +31,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanc
 
     // Dashboard
 
-    Route::get('/', [AdminHomeController::class, 'index'])->middleware('permission:see dashboard')->name('dashboard');
+    Route::get('/', [AdminHomeController::class, 'index'])
+        ->middleware('permission:see dashboard')
+        ->name('dashboard');
 
     // Users
 
@@ -99,11 +101,11 @@ Route::group(['middleware' => ['favorite-list', 'cart']], function () {
     // Facebook Auth
 
     Route::get('/facebook/login', [FacebookLoginController::class, 'redirect'])
-        ->middleware('is_authenticated')
+        ->middleware('guest')
         ->name('facebook-login');
 
     Route::get('/facebook/callback', [FacebookLoginController::class, 'callback'])
-        ->middleware('is_authenticated')
+        ->middleware('guest')
         ->name('facebook-callback');
 
     // Profile and API Tokens

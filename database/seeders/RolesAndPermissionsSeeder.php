@@ -32,18 +32,18 @@ class RolesAndPermissionsSeeder extends Seeder
             Permission::create(['name' => 'accept one order']),
             Permission::create(['name' => 'cancel one order']),
             Permission::create(['name' => 'see users list']),
-            Permission::create(['name' => 'see one user']),
-            Permission::create(['name' => 'change user role']),
+            Permission::create(['name' => 'see one user'])
         ];
 
         $admin_permissions = [
+            Permission::create(['name' => 'change user role']),
             Permission::create(['name' => 'delete category']),
             Permission::create(['name' => 'delete product']),
             Permission::create(['name' => 'delete order']),
             Permission::create(['name' => 'delete user']),
         ];
 
-        $userRole = Role::create(['name' => 'user']);
+        Role::create(['name' => 'user']);
 
         $moderator_role = Role::create(['name' => 'moderator']);
         $moderator_role->syncPermissions($moderator_permissions);

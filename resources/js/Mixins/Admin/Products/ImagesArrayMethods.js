@@ -1,11 +1,12 @@
 export default {
-    methods : {
-        refreshImagesArray(images){
+    methods: {
+        refreshImagesArray(images) {
             this.product.images = images
         },
-        clearImagesFromUploaded(){
-            this.product.images.map( (image, index) => {
-                image.path ?? this.product.images.splice(index)
+
+        clearImagesFromUploaded() {
+            this.product.images.map((image, index) => {
+                return image.path ?? this.product.images.splice(index)
             })
         }
     }

@@ -15,7 +15,7 @@
 
                         <!-- Navigation Links -->
                         <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                            <jet-nav-link href="/" :active="$page.currentRouteName == 'home'">
+                            <jet-nav-link href="/" :active="$page.currentRouteName === 'home'">
                                 Home
                             </jet-nav-link>
 
@@ -35,7 +35,8 @@
                         <div class="ml-3 relative flex items-center" v-if="$page.user">
                             <jet-dropdown align="right" width="48">
                                 <template #trigger>
-                                    <button class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition duration-150 ease-in-out">
+                                    <button
+                                        class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition duration-150 ease-in-out">
                                         <img class="h-8 w-8 rounded-full object-cover"
                                              :src="$page.user.profile_photo_url" :alt="$page.user.name"/>
                                     </button>
@@ -51,7 +52,10 @@
                                         Profile
                                     </jet-dropdown-link>
 
-                                    <jet-dropdown-link href="/admin" v-if="$hasRole('admin') || $hasRole('moderator')">
+                                    <jet-dropdown-link
+                                        href="/admin"
+                                        v-if="$hasRole('admin') || $hasRole('moderator')"
+                                    >
                                         Admin dashboard
                                     </jet-dropdown-link>
 
@@ -91,7 +95,8 @@
                                                              class="mr-2 h-5 w-5 text-green-400" fill="none"
                                                              stroke-linecap="round" stroke-linejoin="round"
                                                              stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                            <path
+                                                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                                         </svg>
                                                         <div>{{ team.name }}</div>
                                                     </div>
@@ -124,13 +129,15 @@
                             <inertia-link class="w-full no-underline hover:text-black leading-3" :href="$route('cart')">
                                 <svg class="fill-current hover:text-black" xmlns="http://www.w3.org/2000/svg" width="24"
                                      height="24" viewBox="0 0 24 24">
-                                    <path d="M21,7H7.462L5.91,3.586C5.748,3.229,5.392,3,5,3H2v2h2.356L9.09,15.414C9.252,15.771,9.608,16,10,16h8 c0.4,0,0.762-0.238,0.919-0.606l3-7c0.133-0.309,0.101-0.663-0.084-0.944C21.649,7.169,21.336,7,21,7z M17.341,14h-6.697L8.371,9 h11.112L17.341,14z"/>
+                                    <path
+                                        d="M21,7H7.462L5.91,3.586C5.748,3.229,5.392,3,5,3H2v2h2.356L9.09,15.414C9.252,15.771,9.608,16,10,16h8 c0.4,0,0.762-0.238,0.919-0.606l3-7c0.133-0.309,0.101-0.663-0.084-0.944C21.649,7.169,21.336,7,21,7z M17.341,14h-6.697L8.371,9 h11.112L17.341,14z"/>
                                     <circle cx="10.5" cy="18.5" r="1.5"/>
                                     <circle cx="17.5" cy="18.5" r="1.5"/>
                                 </svg>
                             </inertia-link>
 
-                            <div class="bg-red-400 rounded-full w-5 h-5 absolute -top-1 -right-1 text-white text-center flex items-center justify-center">
+                            <div
+                                class="bg-red-400 rounded-full w-5 h-5 absolute -top-1 -right-1 text-white text-center flex items-center justify-center">
                                 {{ cartCounter }}
                             </div>
                         </div>
@@ -141,11 +148,13 @@
                                           :href="$route('favorite-list')">
                                 <svg class="fill-current hover:text-black hover:fill-yellow"
                                      xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
-                                    <path d="M16.85,7.275l-3.967-0.577l-1.773-3.593c-0.208-0.423-0.639-0.69-1.11-0.69s-0.902,0.267-1.11,0.69L7.116,6.699L3.148,7.275c-0.466,0.068-0.854,0.394-1,0.842c-0.145,0.448-0.023,0.941,0.314,1.27l2.871,2.799l-0.677,3.951c-0.08,0.464,0.112,0.934,0.493,1.211c0.217,0.156,0.472,0.236,0.728,0.236c0.197,0,0.396-0.048,0.577-0.143l3.547-1.864l3.548,1.864c0.18,0.095,0.381,0.143,0.576,0.143c0.256,0,0.512-0.08,0.729-0.236c0.381-0.277,0.572-0.747,0.492-1.211l-0.678-3.951l2.871-2.799c0.338-0.329,0.459-0.821,0.314-1.27C17.705,7.669,17.316,7.343,16.85,7.275z M13.336,11.754l0.787,4.591l-4.124-2.167l-4.124,2.167l0.788-4.591L3.326,8.5l4.612-0.67l2.062-4.177l2.062,4.177l4.613,0.67L13.336,11.754z"></path>
+                                    <path
+                                        d="M16.85,7.275l-3.967-0.577l-1.773-3.593c-0.208-0.423-0.639-0.69-1.11-0.69s-0.902,0.267-1.11,0.69L7.116,6.699L3.148,7.275c-0.466,0.068-0.854,0.394-1,0.842c-0.145,0.448-0.023,0.941,0.314,1.27l2.871,2.799l-0.677,3.951c-0.08,0.464,0.112,0.934,0.493,1.211c0.217,0.156,0.472,0.236,0.728,0.236c0.197,0,0.396-0.048,0.577-0.143l3.547-1.864l3.548,1.864c0.18,0.095,0.381,0.143,0.576,0.143c0.256,0,0.512-0.08,0.729-0.236c0.381-0.277,0.572-0.747,0.492-1.211l-0.678-3.951l2.871-2.799c0.338-0.329,0.459-0.821,0.314-1.27C17.705,7.669,17.316,7.343,16.85,7.275z M13.336,11.754l0.787,4.591l-4.124-2.167l-4.124,2.167l0.788-4.591L3.326,8.5l4.612-0.67l2.062-4.177l2.062,4.177l4.613,0.67L13.336,11.754z"></path>
                                 </svg>
                             </inertia-link>
 
-                            <div class="bg-red-400 rounded-full w-5 h-5 absolute -top-2 -right-2 text-white text-center flex items-center justify-center">
+                            <div
+                                class="bg-red-400 rounded-full w-5 h-5 absolute -top-2 -right-2 text-white text-center flex items-center justify-center">
                                 {{ favoriteListCounter }}
                             </div>
                         </div>
@@ -156,12 +165,14 @@
                         <button @click="showingNavigationDropdown = ! showingNavigationDropdown"
                                 class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
                             <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                <path :class="{'hidden': showingNavigationDropdown, 'inline-flex': ! showingNavigationDropdown }"
-                                      stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M4 6h16M4 12h16M4 18h16"/>
-                                <path :class="{'hidden': ! showingNavigationDropdown, 'inline-flex': showingNavigationDropdown }"
-                                      stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M6 18L18 6M6 6l12 12"/>
+                                <path
+                                    :class="{'hidden': showingNavigationDropdown, 'inline-flex': ! showingNavigationDropdown }"
+                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16"/>
+                                <path
+                                    :class="{'hidden': ! showingNavigationDropdown, 'inline-flex': showingNavigationDropdown }"
+                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"/>
                             </svg>
                         </button>
                     </div>
@@ -331,61 +342,61 @@
 </template>
 
 <script>
-    import JetApplicationLogo from './../Jetstream/ApplicationLogo'
-    import JetApplicationMark from './../Jetstream/ApplicationMark'
-    import JetDropdown from './../Jetstream/Dropdown'
-    import JetDropdownLink from './../Jetstream/DropdownLink'
-    import JetNavLink from './../Jetstream/NavLink'
-    import JetResponsiveNavLink from './../Jetstream/ResponsiveNavLink'
-    import Search from '../Assets/Frontend/Search'
+import JetApplicationLogo from './../Jetstream/ApplicationLogo'
+import JetApplicationMark from './../Jetstream/ApplicationMark'
+import JetDropdown from './../Jetstream/Dropdown'
+import JetDropdownLink from './../Jetstream/DropdownLink'
+import JetNavLink from './../Jetstream/NavLink'
+import JetResponsiveNavLink from './../Jetstream/ResponsiveNavLink'
+import Search from '../Assets/Frontend/Search'
 
-    export default {
-        components: {
-            JetApplicationLogo,
-            JetApplicationMark,
-            JetDropdown,
-            JetDropdownLink,
-            JetNavLink,
-            JetResponsiveNavLink,
-            Search,
+export default {
+    components: {
+        JetApplicationLogo,
+        JetApplicationMark,
+        JetDropdown,
+        JetDropdownLink,
+        JetNavLink,
+        JetResponsiveNavLink,
+        Search,
+    },
+
+    data() {
+        return {
+            showingNavigationDropdown: false,
+        }
+    },
+
+    methods: {
+        switchToTeam(team) {
+            this.$inertia.put('/current-team', {
+                'team_id': team.id
+            }, {
+                preserveState: false
+            })
         },
 
-        data() {
-            return {
-                showingNavigationDropdown: false,
-            }
+        logout() {
+            axios.post('/logout').then(response => {
+                window.location = '/';
+            })
+        },
+    },
+
+    computed: {
+        path() {
+            return window.location.pathname
         },
 
-        methods: {
-            switchToTeam(team) {
-                this.$inertia.put('/current-team', {
-                    'team_id': team.id
-                }, {
-                    preserveState: false
-                })
-            },
-
-            logout() {
-                axios.post('/logout').then(response => {
-                    window.location = '/';
-                })
-            },
+        cartCounter() {
+            return this.$page.cart ? JSON.parse(this.$page.cart).length : 0
         },
 
-        computed: {
-            path() {
-                return window.location.pathname
-            },
-
-            cartCounter() {
-                return this.$page.cart ? JSON.parse(this.$page.cart).length : 0
-            },
-
-            favoriteListCounter() {
-                return this.$page.favorite_list ? JSON.parse(this.$page.favorite_list).length : 0
-            }
+        favoriteListCounter() {
+            return this.$page.favorite_list ? JSON.parse(this.$page.favorite_list).length : 0
         }
     }
+}
 </script>
 
 <style scoped>

@@ -34,7 +34,7 @@ class ProductController extends Controller
      */
     public function show(string $slug)
     {
-        $product = $this->repository->findItemBySlug($slug);
+        $product = $this->repository->getProductBySlugWithRelations($slug, ['images']);
 
         $similarProducts = $this->repository->findSimilarProducts($product);
 

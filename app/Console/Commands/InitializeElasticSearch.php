@@ -52,18 +52,18 @@ class InitializeElasticSearch extends Command
         $bar = $this->output->createProgressBar();
 
         if (elasticsearch()->indexExist('products')) {
-            echo 'Deleting index....' . $this->newLine();
+            echo $bar->advance() . ' Deleting index....';
+
+            $this->newLine();
 
             elasticsearch()->deleteIndex('products');
-
-            $bar->advance();
 
             $this->newLine();
         }
 
-        echo 'Creating index....' . $this->newLine();
+        echo $bar->advance() . ' Creating index....';
 
-        $bar->advance();
+        $this->newLine();
 
         elasticsearch()->createIndex('products', [
             'settings' => [
@@ -80,13 +80,28 @@ class InitializeElasticSearch extends Command
                     ],
 
                     'filter' => [
-                        'stop_words_russian' => [
+                        'stop_russian_words' => [
                             'type' => 'stop',
                             'ignore_case' => true,
                             'stopwords' => [
                                 'найти',
                                 'купить',
                                 'приобрести'
+                            ]
+                        ],
+
+                        'stop_english_words' => [
+                            'type' => 'stop',
+                            'stopwords' => '_english_'
+                        ],
+
+                        'custom_english_stop_words' => [
+                            'type' => 'stop',
+                            'ignore_case' => true,
+                            'stopwords' => [
+                                'buy',
+                                'find',
+                                'get'
                             ]
                         ],
 
@@ -98,11 +113,6 @@ class InitializeElasticSearch extends Command
                         'hunspell_en_us' => [
                             'type' => 'hunspell',
                             'locale' => 'en_US'
-                        ],
-
-                        'stop_words_english' => [
-                            'type' => 'stop',
-                            'stopwords' => '_english_'
                         ],
 
                         'custom_nGram' => [
@@ -125,22 +135,27 @@ class InitializeElasticSearch extends Command
                     'analyzer' => [
                         'product_analyzer' => [
                             'type' => 'custom',
-                            'char_filter' => 'html_strip',
+
+                            'char_filter' => [
+                                'html_strip',
+                                'russian_replace'
+                            ],
+
                             'tokenizer' => 'whitespace',
+
                             'filter' => [
                                 'lowercase',
-                                'stop_words_russian',
-                                'stop_words_english',
-                                'custom_nGram',
-                                'english_stemmer',
-                                'russian_stemmer',
-
+                                'stop_russian_words',
+                                'stop_english_words',
+                                'custom_english_stop_words'
                             ]
                         ],
 
                         'hunspell_search_analyzer' => [
                             'type' => 'custom',
+
                             'tokenizer' => 'whitespace',
+
                             'filter' => [
                                 'hunspell_ru',
                                 'hunspell_en_us',
@@ -149,8 +164,11 @@ class InitializeElasticSearch extends Command
 
                         'russian_replace_analyzer' => [
                             'type' => 'custom',
+
                             'tokenizer' => 'keyword',
+
                             'char_filter' => 'russian_replace',
+
                             'filter' => [
                                 'hunspell_ru',
                                 'hunspell_en_us',
@@ -190,13 +208,17 @@ class InitializeElasticSearch extends Command
 
         $this->newLine();
 
-        echo 'Adding documents to index....' . $this->newLine();
+        echo $bar->advance() . ' Adding documents to index....';
+
+        $this->newLine(2);
 
         elasticsearch()->addDocumentsToIndex('products', Product::with('categories')->get());
 
-        echo 'Index was created!' . $this->newLine();
+        $bar->finish();
 
-        $bar->advance();
+        $this->newLine();
+
+        echo 'Index was created!' . $this->newLine();
 
         return true;
     }

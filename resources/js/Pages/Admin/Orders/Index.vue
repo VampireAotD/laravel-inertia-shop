@@ -41,9 +41,6 @@
 
             <pagination
                     :data="orders"
-                    :limit="3"
-                    @pagination-change-page="paginate"
-                    class="flex justify-center"
             >
             </pagination>
         </div>
@@ -59,6 +56,7 @@
     import InnerHeader from './../Components/InnerHeader'
     import SearchForm from './../Components/SearchForm'
     import Flash from '../../../Assets/Backend/Flash'
+    import Pagination from "../../../Assets/Common/Pagination";
 
     import OrderInfo from "./Assets/OrderInfo";
 
@@ -105,6 +103,7 @@
             InnerHeader,
             SearchForm,
             OrderInfo,
+            Pagination,
             Flash
         },
 
