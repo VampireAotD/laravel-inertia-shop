@@ -28,7 +28,7 @@
     import Loader from '../../../Assets/Backend/Loader'
 
     export default {
-        name: "create",
+        name: "edit",
 
         props: {
             category: {

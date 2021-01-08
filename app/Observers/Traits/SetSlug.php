@@ -29,10 +29,10 @@ trait SetSlug
      */
     protected function setSlug(Model $model)
     {
-        if ($model->isDirty($this->slugColumn)) {
+        if ($model->isDirty($this->slugColumn) && $model->getAttribute($this->slugColumn)) {
             $model->setAttribute($this->slugColumn, Str::slug($model->getAttribute($this->slugColumn)));
+        } else {
+            $model->setAttribute($this->slugColumn, Str::slug($model->getAttribute($this->nameColumn)));
         }
-
-        $model->setAttribute($this->slugColumn, Str::slug($model->getAttribute($this->nameColumn)));
     }
 }

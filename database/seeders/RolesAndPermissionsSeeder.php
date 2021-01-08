@@ -16,23 +16,23 @@ class RolesAndPermissionsSeeder extends Seeder
     public function run()
     {
         $moderator_permissions = [
-            Permission::create(['name' => 'see dashboard']),
-            Permission::create(['name' => 'see categories list']),
-            Permission::create(['name' => 'see one category']),
+            Permission::create(['name' => 'view dashboard']),
+            Permission::create(['name' => 'view categories list']),
+            Permission::create(['name' => 'view category']),
             Permission::create(['name' => 'create category']),
             Permission::create(['name' => 'edit category']),
-            Permission::create(['name' => 'see products list']),
-            Permission::create(['name' => 'see one product']),
+            Permission::create(['name' => 'view products list']),
+            Permission::create(['name' => 'view product']),
             Permission::create(['name' => 'create product']),
             Permission::create(['name' => 'edit product']),
             Permission::create(['name' => 'update product main image']),
-            Permission::create(['name' => 'remove product images']),
-            Permission::create(['name' => 'see orders list']),
-            Permission::create(['name' => 'see one order']),
-            Permission::create(['name' => 'accept one order']),
-            Permission::create(['name' => 'cancel one order']),
-            Permission::create(['name' => 'see users list']),
-            Permission::create(['name' => 'see one user'])
+            Permission::create(['name' => 'remove product image']),
+            Permission::create(['name' => 'view orders list']),
+            Permission::create(['name' => 'view order']),
+            Permission::create(['name' => 'accept order']),
+            Permission::create(['name' => 'cancel order']),
+            Permission::create(['name' => 'view users list']),
+            Permission::create(['name' => 'view user'])
         ];
 
         $admin_permissions = [
@@ -41,6 +41,14 @@ class RolesAndPermissionsSeeder extends Seeder
             Permission::create(['name' => 'delete product']),
             Permission::create(['name' => 'delete order']),
             Permission::create(['name' => 'delete user']),
+            Permission::create(['name' => 'create permission']),
+            Permission::create(['name' => 'edit permission']),
+            Permission::create(['name' => 'view permission']),
+            Permission::create(['name' => 'delete permission']),
+            Permission::create(['name' => 'create role']),
+            Permission::create(['name' => 'edit role']),
+            Permission::create(['name' => 'view role']),
+            Permission::create(['name' => 'delete role']),
         ];
 
         Role::create(['name' => 'user']);

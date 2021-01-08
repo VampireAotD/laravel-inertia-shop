@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin\Users;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\Users\UserRequest;
 use App\Repositories\Admin\Users\UserRepositoryInterface;
 use App\Services\Admin\Users\UserService;
 use Illuminate\Http\Request;
@@ -14,17 +14,17 @@ class UserController extends Controller
     /**
      * @var UserRepositoryInterface
      */
-    private $repository;
+    private $userRepository;
 
     /**
      * @var UserService
      */
-    private $service;
+    private $userService;
 
     public function __construct(UserRepositoryInterface $userRepository, UserService $userService)
     {
-        $this->repository = $userRepository;
-        $this->service = $userService;
+        $this->userRepository = $userRepository;
+        $this->userService = $userService;
     }
 
     /**
@@ -34,7 +34,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = $this->repository->getItemsWithPagination();
+        $users = $this->userRepository->getItemsWithPagination();
 
         return Inertia::render('Admin/Users/Index', compact('users'));
     }
@@ -47,7 +47,7 @@ class UserController extends Controller
      */
     public function search(Request $request)
     {
-        $users = $this->repository->searchWithPagination($request);
+        $users = $this->userRepository->searchWithPagination($request);
 
         $name = (string)$request->input('name');
         $email = (string)$request->input('email');
@@ -69,7 +69,7 @@ class UserController extends Controller
      */
     public function show(int $id)
     {
-        $user = $this->repository->findUserByIdWithRelations($id);
+        $user = $this->userRepository->findUserByIdWithRelations($id);
 
         return Inertia::render('Admin/Users/Show', compact('user'));
     }
@@ -83,9 +83,9 @@ class UserController extends Controller
      */
     public function changeRole(UserRequest $request, int $id)
     {
-        $user = $this->repository->findItemById($id);
+        $user = $this->userRepository->findItemById($id);
 
-        if ($this->service->changeRole($user, $request)) {
+        if ($this->userService->changeRole($user, $request)) {
             return redirect()->route('admin.users.show', $user->id);
         }
 
@@ -102,7 +102,7 @@ class UserController extends Controller
      */
     public function destroy(int $id)
     {
-        $user = $this->repository->findItemById($id);
+        $user = $this->userRepository->findItemById($id);
 
         if ($user->delete()) {
             return redirect()->route('admin.users.index')->with([

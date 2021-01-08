@@ -19,6 +19,21 @@
                                 Dashboard
                             </jet-nav-link>
 
+                            <jet-nav-link :href="$route('admin.users.index')"
+                                          :active="$page.currentRouteName === 'admin.users.index'">
+                                Users
+                            </jet-nav-link>
+
+                            <jet-nav-link :href="$route('admin.roles.index')"
+                                          :active="$page.currentRouteName === 'admin.roles.index'">
+                                Roles
+                            </jet-nav-link>
+
+                            <jet-nav-link :href="$route('admin.permissions.index')"
+                                          :active="$page.currentRouteName === 'admin.permissions.index'">
+                                Permissions
+                            </jet-nav-link>
+
                             <jet-nav-link :href="$route('admin.categories.index')"
                                           :active="$page.currentRouteName === 'admin.categories.index'">
                                 Categories
@@ -27,11 +42,6 @@
                             <jet-nav-link :href="$route('admin.products.index')"
                                           :active="$page.currentRouteName === 'admin.products.index'">
                                 Products
-                            </jet-nav-link>
-
-                            <jet-nav-link :href="$route('admin.users.index')"
-                                          :active="$page.currentRouteName === 'admin.users.index'">
-                                Users
                             </jet-nav-link>
 
                             <jet-nav-link :href="$route('admin.orders.index')"
@@ -159,6 +169,11 @@
                     <jet-responsive-nav-link :href="$route('admin.products.index')"
                                   :active="$page.currentRouteName === 'admin.products.index'">
                         Products
+                    </jet-responsive-nav-link>
+
+                    <jet-responsive-nav-link :href="$route('admin.permissions.index')"
+                                             :active="$page.currentRouteName === 'admin.permissions.index'">
+                        Permissions
                     </jet-responsive-nav-link>
                 </div>
 

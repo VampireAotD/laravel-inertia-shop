@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin\Products;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Products\ProductRequest;
-use App\Http\Requests\Products\UpdateProductRequest;
+use App\Http\Requests\Product\ProductRequest;
+use App\Http\Requests\Product\UpdateProductRequest;
 use App\Models\Product;
 use App\Repositories\Admin\Categories\CategoryRepositoryInterface;
 use App\Repositories\Admin\Products\ProductRepositoryInterface;
@@ -17,17 +17,17 @@ class ProductController extends Controller
     /**
      * @var ProductRepositoryInterface
      */
-    private $repository;
-
-    /**
-     * @var ProductService
-     */
-    private $service;
+    private $productRepository;
 
     /**
      * @var CategoryRepositoryInterface
      */
     private $categoryRepository;
+
+    /**
+     * @var ProductService
+     */
+    private $productService;
 
     public function __construct(
         ProductRepositoryInterface $productRepository,
@@ -35,9 +35,9 @@ class ProductController extends Controller
         ProductService $productService
     )
     {
-        $this->repository = $productRepository;
+        $this->productRepository = $productRepository;
         $this->categoryRepository = $categoryRepository;
-        $this->service = $productService;
+        $this->productService = $productService;
     }
 
     /**
@@ -47,9 +47,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = $this->repository->getItemsWithPagination();
-        $maximumPrice = $this->repository->findMaximumPrice();
-        $maximumAmount = $this->repository->findMaximumAmount();
+        $products = $this->productRepository->getItemsWithPagination();
+        $maximumPrice = $this->productRepository->findMaximumPrice();
+        $maximumAmount = $this->productRepository->findMaximumAmount();
 
         return Inertia::render('Admin/Products/Index', compact('products', 'maximumPrice', 'maximumAmount'));
     }
@@ -62,15 +62,15 @@ class ProductController extends Controller
      */
     public function search(Request $request)
     {
-        $products = $this->repository->searchWithPagination($request);
+        $products = $this->productRepository->searchWithPagination($request);
 
         $name = (string)$request->input('name');
         $minimumPrice = (int)$request->input('price')[0];
         $minimumAmount = (int)$request->input('amount')[0];
         $perPage = (int)$request->input('perPage');
 
-        $maximumPrice = $this->repository->findMaximumPrice();
-        $maximumAmount = $this->repository->findMaximumAmount();
+        $maximumPrice = $this->productRepository->findMaximumPrice();
+        $maximumAmount = $this->productRepository->findMaximumAmount();
 
         return Inertia::render(
             'Admin/Products/Index',
@@ -108,7 +108,7 @@ class ProductController extends Controller
      */
     public function store(Product $product, ProductRequest $request)
     {
-        if ($this->service->upsert($product, $request)) {
+        if ($this->productService->upsert($product, $request)) {
             return redirect()
                 ->route('admin.products.index')
                 ->with('messages', [
@@ -130,7 +130,7 @@ class ProductController extends Controller
      */
     public function show(string $slug)
     {
-        $product = $this->repository->getProductBySlugWithRelations($slug);
+        $product = $this->productRepository->getProductBySlugWithRelations($slug);
 
         return Inertia::render('Admin/Products/Show', compact('product'));
     }
@@ -145,7 +145,7 @@ class ProductController extends Controller
     {
         $categoriesList = $this->categoryRepository->getItemsCollection();
 
-        $product = $this->repository->getProductBySlugWithRelations($slug, ['images', 'categories:categories.id']);
+        $product = $this->productRepository->getProductBySlugWithRelations($slug, ['images', 'categories:categories.id']);
 
         return Inertia::render('Admin/Products/Edit', compact('product', 'categoriesList'));
     }
@@ -159,9 +159,9 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, string $slug)
     {
-        $product = $this->repository->findItemBySlug($slug);
+        $product = $this->productRepository->findItemBySlug($slug);
 
-        if ($this->service->upsert($product, $request)) {
+        if ($this->productService->upsert($product, $request)) {
             return redirect()
                 ->route('admin.products.show', $product->slug)
                 ->with('messages', [

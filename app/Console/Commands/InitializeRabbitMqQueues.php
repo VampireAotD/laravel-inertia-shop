@@ -78,11 +78,9 @@ class InitializeRabbitMqQueues extends Command
         // Callbacks
         $logsCallback = function (AMQPMessage $message) {
 
-            echo now()->format('Y-m-d H:i:s') . ' [x] Received message in logs queue...';
+            $this->line(now()->format('Y-m-d H:i:s') . ' [x] Received message in logs queue...');
 
             $start = microtime(true);
-
-            $this->newLine();
 
             $messageBody = json_decode($message->body);
 
@@ -117,24 +115,18 @@ class InitializeRabbitMqQueues extends Command
 
             $message->ack();
 
-            echo now()->format('Y-m-d H:i:s') . ' [x] Message was processed in ' . (microtime(true) - $start) . ' seconds in logs queue for ' . $messageBody->channel . ' channel...';
-
-            $this->newLine();
+            $this->info(now()->format('Y-m-d H:i:s') . ' [x] Message was processed in ' . (microtime(true) - $start) . ' seconds in logs queue for ' . $messageBody->channel . ' channel...');
         };
 
         $adminEmailCallback = function (AMQPMessage $message) {
 
-            echo now()->format('Y-m-d H:i:s') . ' [x] Received message in admin email queue...';
+            $this->line(now()->format('Y-m-d H:i:s') . ' [x] Received message in admin email queue...');
 
             $start = microtime(true);
 
-            $this->newLine();
-
             \Mail::send(new NotifyAdminForNewOrder(json_decode($message->body)));
 
-            echo now()->format('Y-m-d H:i:s') . ' [x] Message was processed in ' . (microtime(true) - $start) . ' seconds in email queue...';
-
-            $this->newLine();
+            $this->info(now()->format('Y-m-d H:i:s') . ' [x] Message was processed in ' . (microtime(true) - $start) . ' seconds in email queue...');
 
             $message->ack();
 
@@ -142,17 +134,14 @@ class InitializeRabbitMqQueues extends Command
         };
 
         $userEmailCallback = function (AMQPMessage $message) {
-            echo now()->format('Y-m-d H:i:s') . ' [x] Received message in users email queue...';
+
+            $this->line(now()->format('Y-m-d H:i:s') . ' [x] Received message in users email queue...');
 
             $start = microtime(true);
 
-            $this->newLine();
-
             \Mail::send(new DeliverUserOrder(json_decode($message->body)));
 
-            echo now()->format('Y-m-d H:i:s') . ' [x] Message was processed in ' . (microtime(true) - $start) . ' seconds in email queue...';
-
-            $this->newLine();
+            $this->info(now()->format('Y-m-d H:i:s') . ' [x] Message was processed in ' . (microtime(true) - $start) . ' seconds in email queue...');
 
             $message->ack();
 
@@ -160,11 +149,10 @@ class InitializeRabbitMqQueues extends Command
         };
 
         $elasticDocumentCallback = function (AMQPMessage $message) {
-            echo now()->format('Y-m-d H:i:s') . ' [x] Received message in elastic queue...';
+
+            $this->line(now()->format('Y-m-d H:i:s') . ' [x] Received message in elastic queue...');
 
             $start = microtime(true);
-
-            $this->newLine();
 
             $messageBody = json_decode($message->body);
 
@@ -175,11 +163,10 @@ class InitializeRabbitMqQueues extends Command
 
                 $message->ack();
 
-                echo now()->format('Y-m-d H:i:s') . ' [x] Message was processed in ' . (microtime(true) - $start) . ' seconds in elastic queue...';
+                $this->info(now()->format('Y-m-d H:i:s') . ' [x] Message was processed in ' . (microtime(true) - $start) . ' seconds in elastic queue...');
 
-                $this->newLine();
             } catch (\Exception $exception) {
-                echo now()->format('Y-m-d H:i:s') . ' [-] Message is corrupted, sending it to retry queue...';
+                $this->warn(now()->format('Y-m-d H:i:s') . ' [-] Message is corrupted, sending it to retry queue...');
 
                 if ($this->messageRejectedFirstTime($message)) {
 
@@ -194,16 +181,12 @@ class InitializeRabbitMqQueues extends Command
                 }
 
                 if ($this->messageOutOfRetries($message)) { // Can be replaced by delivering this message to another queue
-                    $this->newLine();
-
-                    echo now()->format('Y-m-d H:i:s') . ' [X] Message was deleted after reaching retry limit...';
+                    $this->error(now()->format('Y-m-d H:i:s') . ' [x] Message was deleted after reaching retry limit...');
 
                     $message->ack();
                 } else {
                     $message->nack();
                 }
-
-                $this->newLine();
             }
         };
 

@@ -13,6 +13,7 @@ import Viewer from 'v-viewer'
 import VueSmoothScroll from 'vue2-smooth-scroll'
 import Socket from './Services/Common/Socket/Connect'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
+import translate from "./Mixins/Common/translate";
 
 import 'izitoast/dist/css/iziToast.min.css';
 import 'vue-slick-carousel/dist/vue-slick-carousel.css'
@@ -37,6 +38,8 @@ const app = document.getElementById('app');
 Vue.prototype.$route = (...args) => route(...args).url();
 Vue.component('slick-slider', require('vue-slick-carousel'));
 Vue.component('VueSlider', VueSlider);
+
+Vue.mixin(translate)
 
 new Vue({
     render: (h) =>

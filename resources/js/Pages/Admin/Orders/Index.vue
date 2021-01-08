@@ -7,9 +7,9 @@
         >
             <search-form
                     :search-form="searchForm"
-                    search-link="admin.products.search"
+                    search-link="admin.orders.search"
                     :per-page="perPage"
-                    reset-link="admin.products.index"
+                    reset-link="admin.orders.index"
             />
         </inner-header>
 

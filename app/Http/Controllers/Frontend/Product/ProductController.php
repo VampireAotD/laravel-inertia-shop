@@ -13,17 +13,17 @@ class ProductController extends Controller
     /**
      * @var ProductRepositoryInterface
      */
-    private $repository;
+    private $productRepository;
 
     /**
      * @var ProductService
      */
-    private $service;
+    private $productService;
 
-    public function __construct(ProductRepositoryInterface $repository, ProductService $service)
+    public function __construct(ProductRepositoryInterface $productRepository, ProductService $productService)
     {
-        $this->repository = $repository;
-        $this->service = $service;
+        $this->productRepository = $productRepository;
+        $this->productService = $productService;
     }
 
     /**
@@ -34,11 +34,11 @@ class ProductController extends Controller
      */
     public function show(string $slug)
     {
-        $product = $this->repository->getProductBySlugWithRelations($slug, ['images']);
+        $product = $this->productRepository->getProductBySlugWithRelations($slug, ['images']);
 
-        $similarProducts = $this->repository->findSimilarProducts($product);
+        $similarProducts = $this->productRepository->findSimilarProducts($product);
 
-        $this->service->additionalActions($product, request()->ip());
+        $this->productService->additionalActions($product, request()->ip());
 
         $breadcrumbs = Breadcrumbs::generate('product', $product);
 

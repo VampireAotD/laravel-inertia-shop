@@ -19,10 +19,9 @@ class CartService
     {
         if ($cart = session()->get('cart')) {
             if ($favorite_list = Cookie::get('favorite_list')) {
-                $asd = array_values(array_diff(json_decode($favorite_list), json_decode($cart))); // TODO refactor it
-                $json = json_encode($asd);
+                $products = array_values(array_diff(json_decode($favorite_list), json_decode($cart)));
 
-                Cookie::queue('favorite_list', $json, now()->addMonths(6)->diffInMinutes());
+                Cookie::queue('favorite_list', json_encode($products), now()->addMonths(6)->diffInMinutes());
             }
 
             $order = $user->orders()->make([

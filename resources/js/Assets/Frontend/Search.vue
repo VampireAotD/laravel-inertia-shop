@@ -3,7 +3,7 @@
         <input type="search"
                class="border-2 w-full border-gray-300 bg-white h-9 px-5 rounded-lg text-sm focus:outline-none"
                v-model="searchQuery"
-               placeholder="Search..."
+               :placeholder="__('header.search')"
                minlength="3"
         >
 

@@ -14,6 +14,9 @@ use Illuminate\Support\Str;
 
 class ImageService
 {
+    /**
+     * @var AdminApi
+     */
     private $api;
 
     public function __construct(AdminApi $adminApi)

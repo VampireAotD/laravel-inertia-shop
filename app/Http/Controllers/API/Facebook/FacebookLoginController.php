@@ -8,11 +8,14 @@ use Laravel\Socialite\Facades\Socialite;
 
 class FacebookLoginController extends Controller
 {
-    private $service;
+    /**
+     * @var FacebookLoginService
+     */
+    private $facebookLoginService;
 
-    public function __construct(FacebookLoginService $service)
+    public function __construct(FacebookLoginService $facebookLoginService)
     {
-        $this->service = $service;
+        $this->facebookLoginService = $facebookLoginService;
     }
 
     /**
@@ -34,7 +37,8 @@ class FacebookLoginController extends Controller
     public function callback()
     {
         $user = Socialite::driver('facebook')->stateless()->user();
-        if ($this->service->loginOrCreate($user)) {
+
+        if ($this->facebookLoginService->loginOrCreate($user)) {
             return redirect()->route('home');
         }
 

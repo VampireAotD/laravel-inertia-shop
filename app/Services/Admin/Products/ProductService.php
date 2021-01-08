@@ -4,8 +4,8 @@ namespace App\Services\Admin\Products;
 
 use App\DTO\RabbitMq\ElasticMessage;
 use App\DTO\RabbitMq\LogMessageDto;
-use App\Http\Requests\Products\ProductRequest;
-use App\Http\Requests\Products\UpdateProductRequest;
+use App\Http\Requests\Product\ProductRequest;
+use App\Http\Requests\Product\UpdateProductRequest;
 use App\Models\Product;
 use App\Services\Admin\Images\ImageService;
 use Illuminate\Http\UploadedFile;
@@ -35,7 +35,7 @@ class ProductService
     {
         try {
             \DB::beginTransaction();
-            if ($product->fill($request->input())->save()) {
+            if ($product->fill($request->validated())->save()) {
                 if ($product->categories()->sync($request->input('categories'))) {
                     foreach ($request->images as $key => $image) {
                         if ($image instanceof UploadedFile) {

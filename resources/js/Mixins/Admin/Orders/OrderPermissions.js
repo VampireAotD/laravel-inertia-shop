@@ -2,9 +2,9 @@ export default {
     data() {
         return {
             permissions: {
-                accept : this.$can('accept one order'),
-                cancel: this.$can('cancel one order'),
-                view: this.$can('see one order'),
+                accept : this.$can('accept order'),
+                cancel: this.$can('cancel order'),
+                view: this.$can('view order'),
                 destroy: this.$can('delete order'),
             }
         }

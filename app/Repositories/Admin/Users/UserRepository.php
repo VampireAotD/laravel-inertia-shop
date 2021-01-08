@@ -40,6 +40,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function findUserByIdWithRelations(int $id, array $relations = ['roles', 'orders.user', 'orders'])
     {
         $user = $this->findItemById($id);
+
         return $user->load($relations);
     }
 
@@ -106,5 +107,15 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         }
 
         return $perMonth;
+    }
+
+    /**
+     * Return collection of entities
+     *
+     * @return mixed
+     */
+    public function getItemsCollection()
+    {
+        return $this->startConditions()->latest()->get();
     }
 }

@@ -8,14 +8,23 @@ use App\Services\Admin\Images\ImageService;
 
 class ImageController extends Controller
 {
-    private $repository;
+    /**
+     * @var ImageRepositoryInterface
+     */
+    private $imageRepository;
 
-    private $service;
+    /**
+     * @var ImageService
+     */
+    private $imageService;
 
-    public function __construct(ImageRepositoryInterface $imageRepository, ImageService $imageService)
+    public function __construct(
+        ImageRepositoryInterface $imageRepository,
+        ImageService $imageService
+    )
     {
-        $this->repository = $imageRepository;
-        $this->service = $imageService;
+        $this->imageRepository = $imageRepository;
+        $this->imageService = $imageService;
     }
 
     /**
@@ -26,9 +35,9 @@ class ImageController extends Controller
      */
     public function updateImage(int $id)
     {
-        $image = $this->repository->findItemById($id);
+        $image = $this->imageRepository->findItemById($id);
 
-        if ($this->service->updateMainImage($image)) {
+        if ($this->imageService->updateMainImage($image)) {
             return back();
         }
 
@@ -42,14 +51,14 @@ class ImageController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroyImage(int $id)
     {
-        $image = $this->repository->findItemById($id);
+        $image = $this->imageRepository->findItemById($id);
 
-        if ($this->service->deleteImage($image)) {
+        if ($this->imageService->deleteImage($image)) {
             return back();
         }
 

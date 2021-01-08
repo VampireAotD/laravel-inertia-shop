@@ -14,17 +14,17 @@ class OrderController extends Controller
     /**
      * @var OrderRepositoryInterface
      */
-    private $repository;
+    private $orderRepository;
 
     /**
      * @var OrderService
      */
-    private $service;
+    private $orderService;
 
-    public function __construct(OrderRepositoryInterface $orderRepository, OrderService $service)
+    public function __construct(OrderRepositoryInterface $orderRepository, OrderService $orderService)
     {
-        $this->repository = $orderRepository;
-        $this->service = $service;
+        $this->orderRepository = $orderRepository;
+        $this->orderService = $orderService;
     }
 
     /**
@@ -34,7 +34,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = $this->repository->getItemsWithPagination();
+        $orders = $this->orderRepository->getItemsWithPagination();
 
         return Inertia::render('Admin/Orders/Index', compact('orders'));
     }
@@ -48,9 +48,9 @@ class OrderController extends Controller
      */
     public function accept(int $id)
     {
-        $order = $this->repository->findItemById($id);
+        $order = $this->orderRepository->findItemById($id);
 
-        if ($this->service->accept($order)) {
+        if ($this->orderService->accept($order)) {
             return back();
         }
 
@@ -66,7 +66,7 @@ class OrderController extends Controller
      */
     public function show(User $user, $date)
     {
-        $products = $this->repository->findOrderProductsByUserAndOrderDate($user->id, $date);
+        $products = $this->orderRepository->findOrderProductsByUserAndOrderDate($user->id, $date);
 
         return Inertia::render('Admin/Orders/Show', compact('products'));
     }

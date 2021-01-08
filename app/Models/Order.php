@@ -41,6 +41,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $order
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrder($value)
+ * @property-read \Illuminate\Support\Collection $ordered_products
  */
 class Order extends Model
 {

@@ -37,6 +37,7 @@
                 type: Object,
                 required: true
             },
+
             categoriesList : {
                 type : Array,
                 required: true

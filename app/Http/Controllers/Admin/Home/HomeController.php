@@ -8,7 +8,14 @@ use Inertia\Inertia;
 
 class HomeController
 {
+    /**
+     * @var UserRepositoryInterface
+     */
     private $userRepository;
+
+    /**
+     * @var OrderRepositoryInterface
+     */
     private $orderRepository;
 
     public function __construct(UserRepositoryInterface $userRepository, OrderRepositoryInterface $orderRepository)

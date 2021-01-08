@@ -3,14 +3,17 @@
 use App\Http\Controllers\Admin\Home\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\Images\ImageController;
 use App\Http\Controllers\Admin\Categories\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\Permissions\PermissionController;
 use App\Http\Controllers\Admin\Products\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\Orders\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\Roles\RoleController;
 use App\Http\Controllers\Admin\Users\UserController;
 use App\Http\Controllers\API\Facebook\FacebookLoginController;
 use App\Http\Controllers\API\Frontend\RecentViewsController;
 use App\Http\Controllers\Frontend\Cart\CartController;
 use App\Http\Controllers\Frontend\Favorite\FavoriteController;
 use App\Http\Controllers\Frontend\Home\HomeController;
+use App\Http\Controllers\Frontend\Language\LanguageController;
 use App\Http\Controllers\Frontend\Product\ProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,7 +35,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanc
     // Dashboard
 
     Route::get('/', [AdminHomeController::class, 'index'])
-        ->middleware('permission:see dashboard')
+        ->middleware('permission:view dashboard')
         ->name('dashboard');
 
     // Users
@@ -45,15 +48,27 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanc
 
     Route::resource('users', UserController::class)
         ->only(['index', 'show', 'destroy'])
-        ->middleware('permission:see users list|see one user|delete user')
+        ->middleware('permission:view users list|view user|delete user')
         ->names('users');
+
+    // Roles
+
+    Route::resource('roles', RoleController::class)
+        ->middleware('role:admin')
+        ->names('roles');
+
+    // Permissions
+
+    Route::resource('permissions', PermissionController::class)
+        ->middleware('role:admin')
+        ->names('permissions');
 
     // Categories
 
     Route::get('categories/search', [AdminCategoryController::class, 'search'])->name('categories.search');
 
     Route::resource('categories', AdminCategoryController::class)
-        ->middleware('permission:see categories list|see one category|create category|edit category|delete category')
+        ->middleware('permission:view categories list|view category|create category|edit category|delete category')
         ->names('categories');
 
     // Products
@@ -61,7 +76,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanc
     Route::get('products/search', [AdminProductController::class, 'search'])->name('products.search');
 
     Route::resource('products', AdminProductController::class)
-        ->middleware('permission:see products list|see one product|create product|edit product|delete product')
+        ->middleware('permission:view products list|view product|create product|edit product|delete product')
         ->names('products');
 
     // Images
@@ -78,15 +93,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth:sanc
 
     Route::resource('orders', AdminOrderController::class)
         ->only(['index', 'destroy'])
-        ->middleware('permission:see orders list|accept one order|cancel one order|delete order')
+        ->middleware('permission:view orders list|accept order|cancel order|delete order')
         ->names('orders');
 
     Route::get('/orders/{user}/{date}', [AdminOrderController::class, 'show'])
-        ->middleware('permission:see one order')
+        ->middleware('permission:view order')
         ->name('orders.show');
 
     Route::get('/accept-order/{order}', [AdminOrderController::class, 'accept'])
-        ->middleware('permission:accept one order')
+        ->middleware('permission:accept order')
         ->name('orders.accept');
 });
 
@@ -115,6 +130,11 @@ Route::group(['middleware' => ['favorite-list', 'cart']], function () {
 
     Route::get('user/api-tokens', [\Laravel\Jetstream\Http\Controllers\Inertia\ApiTokenController::class, 'index'])
         ->name('api-tokens.index');
+
+    // Change language
+
+    Route::get('/change-language/{lang}', LanguageController::class)
+        ->name('change-language');
 
     // Product
 

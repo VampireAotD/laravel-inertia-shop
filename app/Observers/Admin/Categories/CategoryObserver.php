@@ -37,6 +37,16 @@ class CategoryObserver
     }
 
     /**
+     * Handle the category "updating" event.
+     *
+     * @param Category $category
+     */
+    public function updating(Category $category)
+    {
+        $this->setSlug($category);
+    }
+
+    /**
      * Handle the category "updated" event.
      *
      * @param  \App\Models\Category $category
@@ -50,16 +60,6 @@ class CategoryObserver
         ]);
 
         rabbitmq()->sendMessage($message->convert('json'), 'logs');
-    }
-
-    /**
-     * Handle the category "updating" event.
-     *
-     * @param Category $category
-     */
-    public function updating(Category $category)
-    {
-        $this->setSlug($category);
     }
 
     /**

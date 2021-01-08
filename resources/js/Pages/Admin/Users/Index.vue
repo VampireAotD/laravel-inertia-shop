@@ -42,9 +42,6 @@
 
             <pagination
                     :data="users"
-                    :limit="3"
-                    @pagination-change-page="paginate"
-                    class="flex justify-center"
             >
             </pagination>
         </div>

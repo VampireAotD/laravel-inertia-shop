@@ -3,7 +3,7 @@
 namespace App\Services\Admin\Users;
 
 use App\DTO\RabbitMq\LogMessageDto;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\Users\UserRequest;
 use App\Models\User;
 use \Symfony\Component\Serializer\Exception\ExceptionInterface;
 

@@ -55,6 +55,7 @@ class FacebookLoginService
                 'line' => $exception->getLine(),
                 'message' => $exception->getMessage(),
             ]), 'logs');
+
             return false;
         }
 

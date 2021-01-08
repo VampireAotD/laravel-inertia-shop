@@ -16,14 +16,14 @@
                         <!-- Navigation Links -->
                         <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                             <jet-nav-link href="/" :active="$page.currentRouteName === 'home'">
-                                Home
+                                {{ __('header.home') }}
                             </jet-nav-link>
 
                             <a href="#about"
                                class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out"
                                v-smooth-scroll
                             >
-                                About
+                                {{ __('header.about') }}
                             </a>
                         </div>
                     </div>
@@ -32,6 +32,8 @@
 
                     <!-- Settings Dropdown -->
                     <div class="hidden sm:flex sm:items-center sm:justify-between sm:ml-6">
+                        <language-selection/>
+
                         <div class="ml-3 relative flex items-center" v-if="$page.user">
                             <jet-dropdown align="right" width="48">
                                 <template #trigger>
@@ -119,14 +121,18 @@
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6 ml-3" v-else>
                             <div class="ml-3 relative flex items-center">
-                                <a href="/login">Login</a>
-                                <a class="pl-3" href="/register">Register</a>
+                                <a href="/login">{{ __('header.login') }}</a>
+                                <a class="pl-3" href="/register">{{ __('header.register') }}</a>
                             </div>
                         </div>
 
                         <!--Cart-->
                         <div class="relative ml-3">
-                            <inertia-link class="w-full no-underline hover:text-black leading-3" :href="$route('cart')">
+                            <inertia-link
+                                class="w-full no-underline hover:text-black leading-3"
+                                :href="$route('cart')"
+                                :title="__('header.cart')"
+                            >
                                 <svg class="fill-current hover:text-black" xmlns="http://www.w3.org/2000/svg" width="24"
                                      height="24" viewBox="0 0 24 24">
                                     <path
@@ -144,8 +150,11 @@
 
                         <!--Favorite list-->
                         <div class="relative ml-3 pt-1">
-                            <inertia-link class="w-full no-underline hover:text-black leading-4"
-                                          :href="$route('favorite-list')">
+                            <inertia-link
+                                class="w-full no-underline hover:text-black leading-4"
+                                :href="$route('favorite-list')"
+                                :title="__('header.favorite-list')"
+                            >
                                 <svg class="fill-current hover:text-black hover:fill-yellow"
                                      xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
                                     <path
@@ -349,9 +358,11 @@ import JetDropdownLink from './../Jetstream/DropdownLink'
 import JetNavLink from './../Jetstream/NavLink'
 import JetResponsiveNavLink from './../Jetstream/ResponsiveNavLink'
 import Search from '../Assets/Frontend/Search'
+import LanguageSelection from "../Assets/Frontend/LanguageSelection";
 
 export default {
     components: {
+        LanguageSelection,
         JetApplicationLogo,
         JetApplicationMark,
         JetDropdown,

@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Admin\Categories;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CategoryRequest;
+use App\Http\Requests\Category\CategoryRequest;
+use App\Http\Requests\Category\UpdateCategoryRequest;
 use App\Models\Category;
 use App\Repositories\Admin\Categories\CategoryRepositoryInterface;
 use Illuminate\Http\Request;
@@ -16,11 +17,11 @@ class CategoryController extends Controller
      *
      * @var CategoryRepositoryInterface
      */
-    private $repository;
+    private $categoryRepository;
 
     public function __construct(CategoryRepositoryInterface $categoryRepository)
     {
-        $this->repository = $categoryRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -30,7 +31,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = $this->repository->getItemsWithPagination();
+        $categories = $this->categoryRepository->getItemsWithPagination();
+
         return Inertia::render('Admin/Categories/Index', compact('categories'));
     }
 
@@ -42,7 +44,7 @@ class CategoryController extends Controller
      */
     public function search(Request $request)
     {
-        $categories = $this->repository->searchWithPagination($request);
+        $categories = $this->categoryRepository->searchWithPagination($request);
 
         $name = (string)$request->input('name');
         $perPage = (int)$request->input('perPage');
@@ -70,7 +72,7 @@ class CategoryController extends Controller
      */
     public function store(CategoryRequest $request, Category $category)
     {
-        if ($category->fill($request->input())->save()) {
+        if ($category->fill($request->validated())->save()) {
             return redirect()
                 ->route('admin.categories.index')
                 ->with('messages', [
@@ -92,7 +94,8 @@ class CategoryController extends Controller
      */
     public function show(string $slug)
     {
-        $category = $this->repository->getCategoryBySlugWithRelations($slug, ['products:name,slug']);
+        $category = $this->categoryRepository->getCategoryBySlugWithRelations($slug, ['products:name,slug']);
+
         return Inertia::render('Admin/Categories/Show', compact('category'));
     }
 
@@ -104,25 +107,26 @@ class CategoryController extends Controller
      */
     public function edit(string $slug)
     {
-        $category = $this->repository->findItemBySlug($slug);
+        $category = $this->categoryRepository->findItemBySlug($slug);
+
         return Inertia::render('Admin/Categories/Edit', compact('category'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param CategoryRequest $request
+     * @param UpdateCategoryRequest $request
      * @param string $slug
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(CategoryRequest $request, string $slug)
+    public function update(UpdateCategoryRequest $request, string $slug)
     {
         /**
          * @var $category Category
          */
-        $category = $this->repository->findItemBySlug($slug);
+        $category = $this->categoryRepository->findItemBySlug($slug);
 
-        if ($category->update($request->input())) {
+        if ($category->update($request->validated())) {
             return redirect()
                 ->route('admin.categories.index')
                 ->with('messages', [

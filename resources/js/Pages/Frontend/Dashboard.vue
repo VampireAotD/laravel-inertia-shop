@@ -1,11 +1,5 @@
 <template>
     <app-layout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Dashboard
-            </h2>
-        </template>
-
         <!--Carousel-->
         <div class="carousel relative container mx-auto" style="max-width:1600px;">
             <div class="carousel-inner relative overflow-hidden w-full">
