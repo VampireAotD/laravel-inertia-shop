@@ -39,6 +39,7 @@ class InitializeElasticSearch extends Command
     public function __construct()
     {
         parent::__construct();
+
         $this->replacementArray = $this->getRussianReplacementArray();
     }
 
@@ -49,21 +50,17 @@ class InitializeElasticSearch extends Command
      */
     public function handle()
     {
+        $start = microtime(true);
+
         $bar = $this->output->createProgressBar();
 
         if (elasticsearch()->indexExist('products')) {
-            echo $bar->advance() . ' Deleting index....';
-
-            $this->newLine();
+            $this->line($bar->advance() . ' Deleting index....');
 
             elasticsearch()->deleteIndex('products');
-
-            $this->newLine();
         }
 
-        echo $bar->advance() . ' Creating index....';
-
-        $this->newLine();
+        $this->line($bar->advance() . ' Creating index....');
 
         elasticsearch()->createIndex('products', [
             'settings' => [
@@ -206,19 +203,13 @@ class InitializeElasticSearch extends Command
             ]
         ]);
 
-        $this->newLine();
+        $this->line($bar->advance() . ' Adding documents to index....');
 
-        echo $bar->advance() . ' Adding documents to index....';
+        Product::with('categories')->get()->chunk(1000)->map(function ($collection) {
+            elasticsearch()->addDocumentsToIndex('products', $collection);
+        });
 
-        $this->newLine(2);
-
-        elasticsearch()->addDocumentsToIndex('products', Product::with('categories')->get());
-
-        $bar->finish();
-
-        $this->newLine();
-
-        echo 'Index was created!' . $this->newLine();
+        $this->line($bar->finish() . ' Index was created in ' . (microtime(true) - $start) . ' seconds!');
 
         return true;
     }

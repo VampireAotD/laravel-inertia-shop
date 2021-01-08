@@ -195,7 +195,7 @@ class ElasticSearch
      */
     public function addDocumentsToIndex(string $indexName, Collection $documents)
     {
-        foreach ($documents as $document) {
+        foreach ($this->iterateDocuments($documents) as $document) {
             $this->addDocumentToIndex($indexName, $document);
         }
 
@@ -342,5 +342,18 @@ class ElasticSearch
     public function deleteIndex(string $indexName)
     {
         return $this->builder->indices()->delete(['index' => $indexName]);
+    }
+
+    /**
+     * Iterate collection of documents
+     *
+     * @param Collection $documents
+     * @return \Generator
+     */
+    protected function iterateDocuments(Collection $documents)
+    {
+        foreach ($documents as $document) {
+            yield $document;
+        }
     }
 }
