@@ -43,7 +43,7 @@ class ProductService
                                 $this->imageService->createImage(
                                     $product,
                                     Product::class,
-                                    Product::PRODUCTS_FOLDER,
+                                    config('cloudinary-variables.product-default-folder'),
                                     $image,
                                     $key
                                 )

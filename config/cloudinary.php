@@ -19,6 +19,7 @@ return [
     |
     |
     */
+
     'notification_url' => env('CLOUDINARY_NOTIFICATION_URL'),
 
 
@@ -32,6 +33,7 @@ return [
     |
     |
     */
+
     'cloud_url' => env('CLOUDINARY_URL'),
 
     /**

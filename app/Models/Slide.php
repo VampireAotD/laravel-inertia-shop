@@ -29,8 +29,6 @@ class Slide extends Model
 {
     use HasFactory;
 
-    const SLIDES_FOLDER = 'slides';
-
     protected $fillable = [
         'product_id'
     ];

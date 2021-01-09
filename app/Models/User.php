@@ -63,6 +63,14 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read int|null $orders_count
  * @property string $uuid
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUuid($value)
+ * @property string|null $stripe_id
+ * @property string|null $card_brand
+ * @property string|null $card_last_four
+ * @property string|null $trial_ends_at
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCardBrand($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCardLastFour($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereStripeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereTrialEndsAt($value)
  */
 class User extends Authenticatable
 {
@@ -73,11 +81,6 @@ class User extends Authenticatable
     use TwoFactorAuthenticatable;
     use HasRoles;
     use DiffForHumansTimestampAttributes;
-
-    /**
-     * Folder witch contains user profile photo
-     */
-    const USERS_PROFILE_PICTURE_FOLDER = 'users';
 
     /**
      * The attributes that are mass assignable.

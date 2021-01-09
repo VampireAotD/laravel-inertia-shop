@@ -56,8 +56,6 @@ class Product extends Model
     use HasFactory;
     use DiffForHumansTimestampAttributes;
 
-    const PRODUCTS_FOLDER = 'products';
-
     protected $fillable = [
         'name',
         'slug',
@@ -154,6 +152,7 @@ class Product extends Model
      */
     public function getMainImagePathAttribute()
     {
-        return $this->images->where('is_main', Image::IS_MAIN)->first()->path ?? env('DEFAULT_PRODUCT_IMAGE');
+        return $this->images->where('is_main', Image::IS_MAIN)->first()->path
+            ?? config('cloudinary-variables.product-default-image');
     }
 }

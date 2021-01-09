@@ -80,7 +80,7 @@ trait HasCdnProfilePhoto
      */
     public function profilePhotoFolder()
     {
-        return $this::USERS_PROFILE_PICTURE_FOLDER;
+        return config('cloudinary-variables.user-default-folder');
     }
 
     /**

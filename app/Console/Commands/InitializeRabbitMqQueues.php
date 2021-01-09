@@ -2,10 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\DTO\RabbitMq\LogMessageDto;
-use App\Mail\Orders\DeliverUserOrder;
-use App\Mail\Orders\NotifyAdminForNewOrder;
-use App\Models\Product;
 use Illuminate\Console\Command;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpAmqpLib\Wire\AMQPTable;
@@ -27,6 +23,13 @@ class InitializeRabbitMqQueues extends Command
     protected $description = 'Runs RabbitMQ queues';
 
     /**
+     * Array of callbacks
+     *
+     * @var array
+     */
+    private $callbacks;
+
+    /**
      * Create a new command instance.
      *
      * @return void
@@ -34,6 +37,8 @@ class InitializeRabbitMqQueues extends Command
     public function __construct()
     {
         parent::__construct();
+
+        $this->callbacks = include('Assets/RabbitMq/callbacks.php');
     }
 
     /**
@@ -71,130 +76,15 @@ class InitializeRabbitMqQueues extends Command
         rabbitmq()->bindQueueToExchange('elastic_documents', 'elastic', 'documents');
         rabbitmq()->bindQueueToExchange('elastic_retry', 'elastic', 'retry');
 
-        echo 'Starting all queues....';
+        $this->line('Starting all queues....');
 
-        $this->newLine(2);
-
-        // Callbacks
-        $logsCallback = function (AMQPMessage $message) {
-
-            $this->line(now()->format('Y-m-d H:i:s') . ' [x] Received message in logs queue...');
-
-            $start = microtime(true);
-
-            $messageBody = json_decode($message->body);
-
-            switch ($messageBody->method) {
-                case 'info' :
-                    logs()
-                        ->channel($messageBody->channel)
-                        ->info(
-                            $messageBody->message,
-                            (array)$messageBody->additionalInformation
-                        );
-                    break;
-
-                case 'notice' :
-                    logs()
-                        ->channel($messageBody->channel)
-                        ->notice(
-                            $messageBody->message,
-                            (array)$messageBody->additionalInformation
-                        );
-                    break;
-
-                case 'warning' :
-                    logs()
-                        ->channel($messageBody->channel)
-                        ->warning(
-                            $messageBody->message,
-                            (array)$messageBody->additionalInformation
-                        );
-                    break;
-            }
-
-            $message->ack();
-
-            $this->info(now()->format('Y-m-d H:i:s') . ' [x] Message was processed in ' . (microtime(true) - $start) . ' seconds in logs queue for ' . $messageBody->channel . ' channel...');
-        };
-
-        $adminEmailCallback = function (AMQPMessage $message) {
-
-            $this->line(now()->format('Y-m-d H:i:s') . ' [x] Received message in admin email queue...');
-
-            $start = microtime(true);
-
-            \Mail::send(new NotifyAdminForNewOrder(json_decode($message->body)));
-
-            $this->info(now()->format('Y-m-d H:i:s') . ' [x] Message was processed in ' . (microtime(true) - $start) . ' seconds in email queue...');
-
-            $message->ack();
-
-            rabbitmq()->sendMessage(new LogMessageDto('emails', 'notice', 'Sended email to admins'), 'logs');
-        };
-
-        $userEmailCallback = function (AMQPMessage $message) {
-
-            $this->line(now()->format('Y-m-d H:i:s') . ' [x] Received message in users email queue...');
-
-            $start = microtime(true);
-
-            \Mail::send(new DeliverUserOrder(json_decode($message->body)));
-
-            $this->info(now()->format('Y-m-d H:i:s') . ' [x] Message was processed in ' . (microtime(true) - $start) . ' seconds in email queue...');
-
-            $message->ack();
-
-            rabbitmq()->sendMessage(new LogMessageDto('emails', 'notice', 'Sended email'), 'logs');
-        };
-
-        $elasticDocumentCallback = function (AMQPMessage $message) {
-
-            $this->line(now()->format('Y-m-d H:i:s') . ' [x] Received message in elastic queue...');
-
-            $start = microtime(true);
-
-            $messageBody = json_decode($message->body);
-
-            try {
-                $product = Product::find($messageBody->documentId);
-
-                elasticsearch()->addDocumentToIndex($messageBody->indexName, $product);
-
-                $message->ack();
-
-                $this->info(now()->format('Y-m-d H:i:s') . ' [x] Message was processed in ' . (microtime(true) - $start) . ' seconds in elastic queue...');
-
-            } catch (\Exception $exception) {
-                $this->warn(now()->format('Y-m-d H:i:s') . ' [-] Message is corrupted, sending it to retry queue...');
-
-                if ($this->messageRejectedFirstTime($message)) {
-
-                    $error_message = new LogMessageDto('elastic', 'warning', 'Elastic', [
-                        'file' => $exception->getFile(),
-                        'line' => $exception->getLine(),
-                        'message' => $exception->getMessage(),
-                        'trace' => $exception->getTraceAsString()
-                    ]);
-
-                    rabbitmq()->sendMessage($error_message, 'logs');
-                }
-
-                if ($this->messageOutOfRetries($message)) { // Can be replaced by delivering this message to another queue
-                    $this->error(now()->format('Y-m-d H:i:s') . ' [x] Message was deleted after reaching retry limit...');
-
-                    $message->ack();
-                } else {
-                    $message->nack();
-                }
-            }
-        };
+        $this->newLine();
 
         rabbitmq()->consume([
-            ['queueName' => 'logs_queue', 'callback' => $logsCallback, 'logs'],
-            ['queueName' => 'admin_email_queue', 'callback' => $adminEmailCallback, 'admin_email_queue'],
-            ['queueName' => 'email_queue', 'callback' => $userEmailCallback, 'user_email_queue'],
-            ['queueName' => 'elastic_documents', 'callback' => $elasticDocumentCallback, 'elastic_documents'],
+            ['queueName' => 'logs_queue', 'callback' => $this->callbacks['logCallback'], 'logs'],
+            ['queueName' => 'admin_email_queue', 'callback' => $this->callbacks['adminEmailCallback'], 'admin_email_queue'],
+            ['queueName' => 'email_queue', 'callback' => $this->callbacks['userEmailCallback'], 'user_email_queue'],
+            ['queueName' => 'elastic_documents', 'callback' => $this->callbacks['elasticDocumentCallback'], 'elastic_documents'],
         ]);
 
         rabbitmq()->closeConnections();

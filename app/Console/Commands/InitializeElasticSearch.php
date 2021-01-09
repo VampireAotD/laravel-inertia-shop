@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Console\Commands\Traits\Replacements;
-use App\Models\Product;
+use App\Repositories\Admin\Products\ProductRepositoryInterface;
 use Illuminate\Console\Command;
 
 class InitializeElasticSearch extends Command
@@ -32,15 +32,22 @@ class InitializeElasticSearch extends Command
     protected $replacementArray;
 
     /**
+     * @var ProductRepositoryInterface
+     */
+    private $productRepository;
+
+    /**
      * Create a new command instance.
      *
-     * @return void
+     * @param ProductRepositoryInterface $productRepository
      */
-    public function __construct()
+    public function __construct(ProductRepositoryInterface $productRepository)
     {
         parent::__construct();
 
         $this->replacementArray = $this->getRussianReplacementArray();
+
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -55,6 +62,7 @@ class InitializeElasticSearch extends Command
         $bar = $this->output->createProgressBar();
 
         if (elasticsearch()->indexExist('products')) {
+
             $this->line($bar->advance() . ' Deleting index....');
 
             elasticsearch()->deleteIndex('products');
@@ -205,7 +213,7 @@ class InitializeElasticSearch extends Command
 
         $this->line($bar->advance() . ' Adding documents to index....');
 
-        Product::with('categories')->get()->chunk(1000)->map(function ($collection) {
+        $this->productRepository->getItemsCollection()->chunk(1000)->map(function ($collection) {
             elasticsearch()->addDocumentsToIndex('products', $collection);
         });
 

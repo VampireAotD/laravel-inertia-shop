@@ -29,7 +29,7 @@ class UserOrdered
     public function __construct(Order $order)
     {
         $email = new AdminEmailMessageDto(
-            env('ADMIN_MAIl'),
+            config('admin.email'),
             $order->user->name,
             json_decode($order->order)
         );

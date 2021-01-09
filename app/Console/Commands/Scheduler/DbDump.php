@@ -41,9 +41,9 @@ class DbDump extends Command
      */
     public function handle()
     {
-        $db = env('DB_DATABASE');
-        $user = env('DB_USERNAME');
-        $password = env('DB_PASSWORD');
+        $db = config('database.connections.mysql.database');
+        $user = config('database.connections.mysql.username');
+        $password = config('database.connections.mysql.password');
         $directory = rtrim($this->argument('path'), '/');
 
         if (!realpath($directory) && !is_dir($directory)) {
@@ -53,23 +53,21 @@ class DbDump extends Command
         $backup = base_path($directory . DIRECTORY_SEPARATOR . $this->argument('filename') . date('dmY') . '.sql');
 
         if ($this->option('single') === 'true') {
-            echo '[x] Creating dump file with all tables...';
-
-            $this->newLine();
+            $this->line('[x] Creating dump file with all tables...');
 
             exec("mysqldump --user=$user --password=$password --databases $db > $backup");
 
-            echo '[x] Dump file has been created!';
+            $this->line('[x] Dump file has been created!');
         }
 
         if ($this->option('separate') === 'true') {
-            echo '[x] Creating dump file for each table in database...';
+            $this->line('[x] Creating dump file for each table in database...');
 
             $this->newLine();
 
             exec("mysqldump --user=$user --password=$password --tab=$backup $db");
 
-            echo '[x] Dump file has been created!';
+            $this->line('[x] Dump file has been created!');
         }
 
         return true;

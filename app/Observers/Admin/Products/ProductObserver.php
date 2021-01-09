@@ -84,7 +84,9 @@ class ProductObserver
      */
     public function deleted(Product $product)
     {
-        if ($this->imageService->deleteImagesWithFolderFromCDN($product, "products/$product->uuid", Product::class)) {
+        $folder = config('cloudinary-variables.product-default-folder') . $product->uuid;
+
+        if ($this->imageService->deleteImagesWithFolderFromCDN($product, $folder, Product::class)) {
             $this->imageService->deleteImagesFromDB($product);
         }
 
